@@ -10,14 +10,20 @@ const OutfitSection = React.createClass({
 })
 
 const DaySection = React.createClass({
+  getInitialState: function () {
+    return {
+      outfits: this.props.day.outfits
+    }
+  },
   addOutfit: function () {
     console.log('clicked add outfit')
     const newOutfit = {}
-    console.log(this.props.day)
-    this.props.day.outfits.push(newOutfit)
+    let tempOutfits = this.state.outfits
+    tempOutfits.push(newOutfit)
+    this.setState({ outfits: tempOutfits })
   },
   render() {
-    const outfits = this.props.day.outfits.map(function(outfit, index) {
+    const outfits = this.state.outfits.map(function(outfit, index) {
       return (
         <OutfitSection key={index} outfit={outfit} />
       )
@@ -25,6 +31,7 @@ const DaySection = React.createClass({
     return (
       <div>
         <h4>{this.props.day.date.toString()}</h4>
+        {outfits}
         <button onClick={this.addOutfit}>Add Outfit</button>
       </div>
     )
@@ -40,7 +47,7 @@ export default React.createClass({
   render() {
     const days = this.props.days.map(function(day, index) {
       return(
-        <DaySection key={index} day={day} />
+        <DaySection key={index} index={index} day={day} />
       )
     })
     return (
