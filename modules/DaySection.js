@@ -4,7 +4,7 @@ import { OutfitSection } from './OutfitSection'
 export const DaySection = React.createClass({
   getInitialState: function () {
     return {
-      outfits: this.props.day.outfits
+      outfits: this.props.day.outfits //array of outfits for the given day
     }
   },
   addOutfit: function () {
