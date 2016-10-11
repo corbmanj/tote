@@ -13,14 +13,23 @@ export const OutfitSection = React.createClass({
     let obj = this.state.outfit
     obj.disabled = true
     this.setState({ outfit: obj })
+    this.props.updateDay(this.props.index, this.state.outfit)
+  },
+  removeOutfit: function () {
+    let obj = this.state.outfit
+    obj.disabled = false
+    this.setState({ outfit: obj })
   },
   changeOutfitType: function (ev) {
-    this.setState({outfitType: ev.target.value}) 
+    let tempOutfit = outfitTypes.find((item) => {
+      return (item.name === ev.target.value)
+    })
+    this.setState({ outfit: tempOutfit, outfitType: ev.target.value })
   },
   toggleItem: function (name, isChecked) {
-    console.log('toggled item', name, isChecked)
     let tempOutfit = this.state.outfit
-    tempOutfit.items.forEach(function (item) {
+
+    tempOutfit.items.forEach((item) => {
       if (item.type === name) { item.isNotIncluded = !isChecked }
     })
     this.setState({ outfit: tempOutfit })
@@ -35,6 +44,7 @@ export const OutfitSection = React.createClass({
       <div>
         <div>This is an outfit</div>
         <select onChange={this.changeOutfitType}>
+          <option value={null}>Select one...</option>
           {outfitNames}
         </select>
         <br />
@@ -42,10 +52,10 @@ export const OutfitSection = React.createClass({
           <CheckboxSection 
             outfit="hello"
             outfitType={this.state.outfitType}
-            toggle="toggle"
-            disabled={false}/>
+            toggle={this.toggleItem}
+            disabled={this.state.outfit.disabled}/>
         : null}
-        <button onClick={this.saveOutfit}>Save Outfit</button>
+        {this.state.outfit.disabled ? <button onClick={this.removeOutfit}>Remove Outfit</button> : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>}
       </div>
     )
   }

@@ -1,5 +1,4 @@
 import React from 'react'
-import NavLink from './NavLink'
 
 export default React.createClass({
   getInitialState: function () {
@@ -14,7 +13,6 @@ export default React.createClass({
     stateObj.days = []
     let i = this.state.startDate.getTime()
     while (i <= this.state.endDate.getTime()) {
-      console.log(i)
       let newDay = {
         date: new Date(i),
         low: 55,
@@ -33,7 +31,6 @@ export default React.createClass({
     let obj = {}
     obj[ev.target.name] = new Date(ev.target.value)
     this.setState(obj)
-    console.log(new Date(ev.target.value))
   },
   render() {
     return (

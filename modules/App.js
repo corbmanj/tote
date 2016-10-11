@@ -10,7 +10,8 @@ export default React.createClass({
   getInitialState: function () {
     return {
       numDays: 0,
-      currentStage: 'home'
+      currentStage: 'home',
+      tote: {}
     }
   },
   updateStage: function (newStage) {
@@ -26,7 +27,7 @@ export default React.createClass({
         return <Schedule updateState={this.updateState} />
         break
       case 'select':
-        return <SelectOutfits updateState={this.updateState} days={this.state.days} />
+        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>
         break
       case 'assign':
         return <AssignItems updateState={this.updateState} />
