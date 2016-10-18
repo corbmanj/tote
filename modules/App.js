@@ -1,5 +1,4 @@
 import React from 'react'
-import NavLink from './NavLink'
 import Schedule from './Schedule'
 import SelectOutfits from './SelectOutfits'
 import AssignItems from './AssignItems'
@@ -16,7 +15,6 @@ export default React.createClass({
   },
   updateStage: function (newStage) {
     this.setState({ currentStage: newStage.target.value })
-    console.log(newStage.target.value)
   },
   updateState: function (stateObj) {
     this.setState(stateObj)
@@ -30,13 +28,13 @@ export default React.createClass({
         return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>
         break
       case 'assign':
-        return <AssignItems updateState={this.updateState} />
+        return <AssignItems updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>
         break
       case 'packing':
-        return <PackingList updateState={this.updateState} />
+        return <PackingList updateState={this.updateState} tote={this.state.tote} />
         break
       case 'print':
-        return <OutfitList updateState={this.updateState} />
+        return <OutfitList updateState={this.updateState} days={this.state.days} />
         break
       default:
         return (

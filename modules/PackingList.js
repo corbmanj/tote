@@ -1,13 +1,19 @@
 import React from 'react'
-import NavLink from './NavLink'
+import UnnamedItems from './UnnamedItems'
+import NamedItems from './NamedItems'
 
 export default React.createClass({
+  updateStage () {
+    console.log('all done')
+  },
   render() {
     return (
-      <div>  
-        <div>Packing List</div>
-        <button><NavLink to="/print">Print Your Tote</NavLink></button>
+      <div>
+        <h3>Packing List</h3>
+        <UnnamedItems items={this.props.tote.unnamed} />
+        <NamedItems items={this.props.tote.namedItems} />
+        <button onClick={this.updateStage}>All Done</button>
       </div>
-      )
+    )
   }
 })

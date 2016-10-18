@@ -7,14 +7,17 @@ export const DaySection = React.createClass({
       outfits: this.props.day.outfits
     }
   },
-  updateDay: function (key, outfit) {
+  updateDay: function (key, outfit, inc) {
     let tempState = this.state.outfits
-    tempState[key]['outfit'] = outfit
+    if (inc === 1) {
+      tempState[key]['outfit'] = outfit
+    } else {
+      tempState[key]['outfit'] = {}
+    }
     this.setState({outfits: tempState})
-    this.props.updateTote(this.props.index, key, outfit)
+    this.props.updateTote(this.props.index, key, outfit, inc)
   },
   addOutfit: function () {
-    console.log('clicked add outfit')
     const newOutfit = {id: this.state.outfits.length || 0}
     let tempOutfits = this.state.outfits
     tempOutfits.push(newOutfit)

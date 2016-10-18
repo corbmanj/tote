@@ -1,22 +1,25 @@
 import React from 'react'
 import { DaySection } from './DaySection'
-import PackingList from './PackingList'
 
 export default React.createClass({
+  getInitialState: function () {
+    return {tote: this.props.tote}
+  },
   updateOutfits: function () {
     let stateObj = {}
     stateObj.currentStage = 'assign'
     this.props.updateState(stateObj)
   },
-  updateTote: function (dayKey, outfitKey, outfit) {
+  updateTote: function (dayKey, outfitKey, outfit, inc) {
     let stateObj = {}
+    stateObj.tote = this.state.tote
+    stateObj.tote.unnamed = stateObj.tote.unnamed || {}
     outfit.items.map((item) => {
       if (item.dropdown === false && !item.isNotIncluded) {
-        console.log(item)
+        stateObj.tote.unnamed[item.type] = stateObj.tote.unnamed[item.type] ? stateObj.tote.unnamed[item.type] + inc : 1
       }
     })
-    // stateObj.tote.days = []
-    // stateObj.tote.days[key].outfits = outfits
+    this.props.updateState(stateObj)
   },
   render() {
     const days = this.props.days.map((day, index) => {
@@ -28,7 +31,6 @@ export default React.createClass({
       <div>  
         <div>Select Outfits</div>
         {days}
-        <PackingList />
         <button onClick={this.updateOutfits}>Assign Items</button>
       </div>
       )

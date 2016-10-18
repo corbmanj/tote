@@ -6,19 +6,23 @@ export const OutfitSection = React.createClass({
   getInitialState: function () {
     return {
       outfit: this.props.outfit,
+      disabled: false,
       outfitTypes: outfitTypes
     }
   },
   saveOutfit: function () {
-    let obj = this.state.outfit
+    this.setState({ disabled: true })
+    /*let obj = this.state.outfit
     obj.disabled = true
-    this.setState({ outfit: obj })
-    this.props.updateDay(this.props.index, this.state.outfit)
+    this.setState({ outfit: obj })*/
+    this.props.updateDay(this.props.index, this.state.outfit, 1)
   },
   removeOutfit: function () {
-    let obj = this.state.outfit
+    this.setState({ disabled: false })
+    /*let obj = this.state.outfit
     obj.disabled = false
-    this.setState({ outfit: obj })
+    this.setState({ outfit: obj })*/
+    this.props.updateDay(this.props.index, this.state.outfit, -1)
   },
   changeOutfitType: function (ev) {
     let tempOutfit = outfitTypes.find((item) => {
@@ -43,7 +47,7 @@ export const OutfitSection = React.createClass({
     return (
       <div>
         <div>This is an outfit</div>
-        <select onChange={this.changeOutfitType}>
+        <select onChange={this.changeOutfitType} disabled={this.state.disabled}>
           <option value={null}>Select one...</option>
           {outfitNames}
         </select>
@@ -53,9 +57,9 @@ export const OutfitSection = React.createClass({
             outfit="hello"
             outfitType={this.state.outfitType}
             toggle={this.toggleItem}
-            disabled={this.state.outfit.disabled}/>
+            disabled={this.state.disabled}/>
         : null}
-        {this.state.outfit.disabled ? <button onClick={this.removeOutfit}>Remove Outfit</button> : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>}
+        {this.state.disabled ? <button onClick={this.removeOutfit}>Remove Outfit</button> : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>}
       </div>
     )
   }
