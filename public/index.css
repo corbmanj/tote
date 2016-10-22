@@ -1,3 +1,20 @@
 .active {
-  color: green;
+  color: lightgreen;
+}
+
+.navLink {
+  border: none;
+  background: none;
+  font-size: 1em;
+}
+
+.disabled {
+  border: none;
+  background: none;
+  font-size: 1em;
+  color: lightgray;
+}
+
+.navLink:hover {
+  color: lightgreen;
 }

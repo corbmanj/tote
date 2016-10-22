@@ -4,6 +4,7 @@ import SelectOutfits from './SelectOutfits'
 import AssignItems from './AssignItems'
 import PackingList from './PackingList'
 import OutfitList from './OutfitList'
+import NavMenu from './NavMenu'
 
 export default React.createClass({
   getInitialState: function () {
@@ -17,6 +18,7 @@ export default React.createClass({
     this.setState({ currentStage: newStage.target.value })
   },
   updateState: function (stateObj) {
+    console.log(stateObj)
     this.setState(stateObj)
   },
   renderStage: function(stage) {
@@ -46,6 +48,21 @@ export default React.createClass({
     }
   },
   render() {
-    return this.renderStage(this.state.currentStage)
+    return (
+      <div>
+        <NavMenu
+          updateState={this.updateState}
+          active={this.state.currentStage}
+          tote={this.state.tote}
+          home={!this.state.tote}
+          schedule={!this.state.tote}
+          select={!this.state.days}
+          assign={!this.state.tote.unnamed}
+          packing={!this.state.tote.namedItems}
+          print={!this.state.tote.namedItems}
+        />
+        {this.renderStage(this.state.currentStage)}
+      </div>
+    )
   }
 })
