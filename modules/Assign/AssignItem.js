@@ -22,11 +22,17 @@ export const AssignItem = React.createClass({
         </select>
     )
   },
+  renderSaveButton () {
+    return <button onClick={this.saveOption}>Save</button>
+  },
+  renderRemoveButton () {
+    return <button onClick={this.removeOption}>Remove</button>
+  },
   renderInput () {
     return (
       <span>
         <input type="text" onChange={this.updateOptions} disabled={this.state.disableInput}/>
-        <button onClick={this.saveOption}>Save</button>
+        {this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}
       </span>
     )
   },
@@ -40,6 +46,15 @@ export const AssignItem = React.createClass({
     stateArray.push(newItem)
     this.props.updateNamedItems(stateArray)
     this.props.updateOutfit(this.state.itemName, this.props.item.parentType)
+  },
+  removeOption () {
+    this.setState({ disableInput: false, addNew: false })
+    let stateArray = this.props.namedItems
+    const removeIndex = stateArray.findIndex( el => {return el.name === this.state.itemName} )
+    console.log('removeIndex =', removeIndex)
+    stateArray.splice(removeIndex, 1)
+    this.props.updateNamedItems(stateArray)
+    this.props.updateOutfit(null, this.props.item.parentType)
   },
   handleSelectChange (ev) {
     switch (ev.target.value) {

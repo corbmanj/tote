@@ -4,7 +4,6 @@ import NamedItems from './NamedItems'
 
 export default React.createClass({
   updateStage () {
-    console.log('all done')
   },
   render() {
     return (

@@ -1,10 +1,10 @@
 import React from 'react'
-import Schedule from './Schedule'
-import SelectOutfits from './SelectOutfits'
-import AssignItems from './AssignItems'
-import PackingList from './PackingList'
-import OutfitList from './OutfitList'
-import NavMenu from './NavMenu'
+import Schedule from './Schedule/Schedule'
+import SelectOutfits from './Select/SelectOutfits'
+import AssignItems from './Assign/AssignItems'
+import PackingList from './Packing/PackingList'
+import OutfitList from './Print/OutfitList'
+import NavMenu from './NavBar/NavMenu'
 
 export default React.createClass({
   getInitialState: function () {
@@ -18,13 +18,12 @@ export default React.createClass({
     this.setState({ currentStage: newStage.target.value })
   },
   updateState: function (stateObj) {
-    console.log(stateObj)
     this.setState(stateObj)
   },
   renderStage: function(stage) {
     switch (stage) {
       case 'schedule':
-        return <Schedule updateState={this.updateState} />
+        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate}/>
         break
       case 'select':
         return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>

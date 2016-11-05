@@ -3,7 +3,6 @@ import NavItem from './NavItem'
 
 export default React.createClass({
   updateState (ev) {
-    console.log(ev.target)
     this.props.updateState({currentStage: ev.target.value})
     this.forceUpdate()
   },

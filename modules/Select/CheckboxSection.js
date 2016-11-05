@@ -3,7 +3,6 @@ import outfitTypes from './outfitTypes'
 
 export const CheckboxSection = React.createClass({
   toggleItem: function (ev) {
-    console.log(ev)
     this.props.toggle(ev.target.value, ev.target.checked)
   },
   render() {

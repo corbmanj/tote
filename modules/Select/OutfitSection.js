@@ -6,22 +6,17 @@ export const OutfitSection = React.createClass({
   getInitialState: function () {
     return {
       outfit: this.props.outfit,
-      disabled: false,
+      disabled: this.props.outfit.outfit && this.props.outfit.outfit.name,
+      outfitType: this.props.outfit.outfit ? this.props.outfit.outfit.name : null,
       outfitTypes: outfitTypes
     }
   },
   saveOutfit: function () {
     this.setState({ disabled: true })
-    /*let obj = this.state.outfit
-    obj.disabled = true
-    this.setState({ outfit: obj })*/
     this.props.updateDay(this.props.index, this.state.outfit, 1)
   },
   removeOutfit: function () {
     this.setState({ disabled: false })
-    /*let obj = this.state.outfit
-    obj.disabled = false
-    this.setState({ outfit: obj })*/
     this.props.updateDay(this.props.index, this.state.outfit, -1)
   },
   changeOutfitType: function (ev) {
@@ -47,7 +42,7 @@ export const OutfitSection = React.createClass({
     return (
       <div>
         <div>This is an outfit</div>
-        <select onChange={this.changeOutfitType} disabled={this.state.disabled}>
+        <select onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
           <option value={null}>Select one...</option>
           {outfitNames}
         </select>

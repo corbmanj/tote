@@ -14,10 +14,8 @@ export default React.createClass({
     stateObj.days[dayIndex].outfits[outfitIndex].outfit.items.filter((item) => {
       return item.parentType === parentType
     }).map((item) => {
-      console.log(item)
       item.name = itemName
     })
-    console.log(itemName, parentType, outfitIndex, dayIndex)
     this.props.updateState(stateObj)
   },
   updateStage: function () {

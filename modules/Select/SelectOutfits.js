@@ -3,7 +3,9 @@ import { DaySection } from './DaySection'
 
 export default React.createClass({
   getInitialState: function () {
-    return {tote: this.props.tote}
+    return {
+      tote: this.props.tote
+    }
   },
   updateOutfits: function () {
     let stateObj = {}
@@ -24,13 +26,18 @@ export default React.createClass({
   render() {
     const days = this.props.days.map((day, index) => {
       return(
-        <DaySection key={index} index={index} day={day} updateTote={this.updateTote}/>
+        <DaySection
+          key={index}
+          index={index}
+          day={day}
+          updateTote={this.updateTote}
+        />
       )
     })
     return (
       <div>  
         <div>Select Outfits</div>
-        {days}
+          {days}
         <button onClick={this.updateOutfits}>Assign Items</button>
       </div>
       )
