@@ -6,21 +6,6 @@ export default React.createClass({
     this.props.updateState({currentStage: ev.target.value})
     this.forceUpdate()
   },
-  // isDisabled (stage) {
-  //   switch (stage){
-  //     case 'home':
-  //     case 'schedule':
-  //       return this.props.tote
-  //     case 'select':
-  //       return this.props.tote.days
-  //     case 'assign':
-  //       return this.props.tote.unnamed
-  //     case 'packing':
-  //       return this.props.tote.namedItems
-  //     case 'print':
-  //       return this.props.tote.namedItems
-  //   }
-  // },
   stages: ['home', 'schedule', 'select', 'assign', 'packing', 'print'],
   render() {
     const navLinks = this.stages.map((stage, index) => {

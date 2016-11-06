@@ -18,3 +18,8 @@
 .navLink:hover {
   color: lightgreen;
 }
+
+.outfit {
+  text-indent: 10px;
+  margin: 10px;
+}

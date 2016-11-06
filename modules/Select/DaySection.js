@@ -36,7 +36,7 @@ export const DaySection = React.createClass({
     })
     return (
       <div>
-        <h4>{this.props.day.date.toString()}</h4>
+        <h4>{this.props.day.date.format('ddd, MMM Do YYYY')}</h4>
         {outfits}
         <button onClick={this.addOutfit}>Add Outfit</button>
       </div>

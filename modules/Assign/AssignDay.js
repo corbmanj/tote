@@ -20,7 +20,7 @@ export const AssignDay = React.createClass({
     })
     return (
       <div>
-        <h4>Day {this.props.day.date.toString()}</h4>
+        <h3>{this.props.day.date.format('ddd, MMM Do YYYY')}</h3>
         {outfits}
       </div>
     )

@@ -41,7 +41,7 @@ export const OutfitSection = React.createClass({
     }, this)
     return (
       <div>
-        <div>This is an outfit</div>
+        <h4 className="outfit">Outfit {this.props.index+1}</h4>
         <select onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
           <option value={null}>Select one...</option>
           {outfitNames}

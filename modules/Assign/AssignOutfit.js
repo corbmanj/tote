@@ -21,7 +21,11 @@ export const AssignOutfit = React.createClass({
       )
     })
     return (
-      <div>{items}<hr /></div>
+      <div>
+        <h4 className="outfit">Outfit {this.props.index+1}: {this.props.outfit.name}</h4>
+        <div>{items}</div>
+        <hr />
+      </div>
     )
   }
 })
