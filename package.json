@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "engines" : {
-    "node" : "4.4.3"
+    "node" : "4.4.3",
+    "npm" : "2.15.1"
   },
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",

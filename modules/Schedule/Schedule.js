@@ -53,7 +53,6 @@ export default React.createClass({
           Start Date: <input defaultValue={this.state.startDate} type="date" name="startDate" onChange={this.updateDate} />
           <br />
           End Date: <input defaultValue={this.state.endDate} type="date" name="endDate" onChange={this.updateDate} />
-          { typeof this.state.endDate}
           <br />
           Destination: <input type="text" placeholder="City, St" />
         </form>
