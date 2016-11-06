@@ -3,8 +3,9 @@ import React from 'react'
 export const AssignItem = React.createClass({
   getInitialState () {
     return {
-      addNew: false,
-      disableInput: false
+      addNew: !!this.props.item.name,
+      disableInput: !!this.props.item.name,
+      itemName: this.props.item.name || null
     }
   },
   renderSelect () {
@@ -31,7 +32,7 @@ export const AssignItem = React.createClass({
   renderInput () {
     return (
       <span>
-        <input type="text" onChange={this.updateOptions} disabled={this.state.disableInput}/>
+        <input defaultValue={this.state.itemName} type="text" onChange={this.updateOptions} disabled={this.state.disableInput}/>
         {this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}
       </span>
     )
@@ -69,9 +70,9 @@ export const AssignItem = React.createClass({
   },
   render() {
     return (
-      <label> {this.props.item.type}
-        {this.state.addNew ? this.renderInput() : this.renderSelect()} |
-      </label>
+      <div> {this.props.item.type}: &nbsp;
+        {this.state.addNew ? this.renderInput() : this.renderSelect()}
+      </div>
     )
   }
 })

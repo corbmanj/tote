@@ -21,7 +21,10 @@ export const DaySection = React.createClass({
     const newOutfit = {id: this.state.outfits.length || 0}
     let tempOutfits = this.state.outfits
     tempOutfits.push(newOutfit)
-    this.setState({ outfits: tempOutfits })
+    this.setState({ outfits: tempOutfits, activeOutfit: newOutfit.id })
+  },
+  updateActiveOutfit: function (index) {
+    this.setState({activeOutfit: index})
   },
   render() {
     const outfits = this.state.outfits.map((outfit, index) => {
@@ -31,13 +34,15 @@ export const DaySection = React.createClass({
           index={index}
           outfit={outfit}
           updateDay={this.updateDay}
+          activeOutfit={this.state.activeOutfit}
+          updateActiveOutfit={this.updateActiveOutfit}
         />
       )
     })
     return (
       <div>
         <h4>{this.props.day.date.format('ddd, MMM Do YYYY')}</h4>
-        {outfits}
+          {outfits}
         <button onClick={this.addOutfit}>Add Outfit</button>
       </div>
     )

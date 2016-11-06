@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import outfitTypes from './outfitTypes'
 import { CheckboxSection } from './CheckboxSection'
 
@@ -25,6 +26,9 @@ export const OutfitSection = React.createClass({
     })
     this.setState({ outfit: tempOutfit, outfitType: ev.target.value })
   },
+  updateActiveOutfit: function () {
+    this.props.updateActiveOutfit(this.props.index)
+  },
   toggleItem: function (name, isChecked) {
     let tempOutfit = this.state.outfit
 
@@ -33,28 +37,48 @@ export const OutfitSection = React.createClass({
     })
     this.setState({ outfit: tempOutfit })
   },
-  render() {
+  renderOutfitDetails: function () {
     const outfitNames = this.state.outfitTypes.map(function (type, key) {
-      return (
-        <option key={key} value={type.name}>{type.name}</option>
-      )
-    }, this)
+        return (
+          <option key={key} value={type.name}>{type.name}</option>
+        )
+      }, this)
     return (
       <div>
-        <h4 className="outfit">Outfit {this.props.index+1}</h4>
         <select onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
           <option value={null}>Select one...</option>
           {outfitNames}
         </select>
         <br />
-        {this.state.outfitType ? 
-          <CheckboxSection 
+        {this.state.outfitType ?
+          <CheckboxSection
             outfit="hello"
             outfitType={this.state.outfitType}
             toggle={this.toggleItem}
             disabled={this.state.disabled}/>
-        : null}
-        {this.state.disabled ? <button onClick={this.removeOutfit}>Remove Outfit</button> : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>}
+          : null}
+        {this.state.disabled ?
+          <button onClick={this.removeOutfit}>Remove Outfit</button>
+          : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>}
+      </div>
+    )
+  },
+  render () {
+    return (
+      <div>
+        <h4 className="outfit" onClick={this.updateActiveOutfit}>
+          {this.props.activeOutfit === this.props.index ? 'v ' : '> '}Outfit {this.props.index+1}
+        </h4>
+        <ReactCSSTransitionGroup
+          transitionName="example"
+          transitionAppear={true}
+          transitionAppearTimeout={500}
+          transitionEnterTimeout={500}
+          transitionLeaveTimeout={0}
+          transitionLeave={false}
+        >
+          {this.props.activeOutfit === this.props.index ? this.renderOutfitDetails() : null}
+        </ReactCSSTransitionGroup>
       </div>
     )
   }

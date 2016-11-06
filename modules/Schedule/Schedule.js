@@ -50,9 +50,20 @@ export default React.createClass({
       <div>  
         <h2>Schedule</h2>
         <form>
-          Start Date: <input defaultValue={this.state.startDate} type="date" name="startDate" onChange={this.updateDate} />
+          Start Date:
+          <input
+            defaultValue={this.state.startDate ? this.state.startDate.format('YYYY-MM-DD') : null}
+            type="date"
+            name="startDate"
+            onChange={this.updateDate}
+          />
           <br />
-          End Date: <input defaultValue={this.state.endDate} type="date" name="endDate" onChange={this.updateDate} />
+            End Date:
+          <input
+            defaultValue={this.state.endDate ? this.state.endDate.format('YYYY-MM-DD') : null}
+            type="date" name="endDate"
+            onChange={this.updateDate}
+          />
           <br />
           Destination: <input type="text" placeholder="City, St" />
         </form>
