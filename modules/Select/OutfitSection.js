@@ -6,7 +6,7 @@ import { CheckboxSection } from './CheckboxSection'
 export const OutfitSection = React.createClass({
   getInitialState: function () {
     return {
-      outfit: this.props.outfit,
+      outfit: this.props.outfit.outfit,
       disabled: this.props.outfit.outfit && this.props.outfit.outfit.name,
       outfitType: this.props.outfit.outfit ? this.props.outfit.outfit.name : null,
       outfitTypes: outfitTypes
@@ -21,9 +21,9 @@ export const OutfitSection = React.createClass({
     this.props.updateDay(this.props.index, this.state.outfit, -1)
   },
   changeOutfitType: function (ev) {
-    let tempOutfit = outfitTypes.find((item) => {
+    let tempOutfit = JSON.parse(JSON.stringify(outfitTypes.find((item) => {
       return (item.name === ev.target.value)
-    })
+    })))
     this.setState({ outfit: tempOutfit, outfitType: ev.target.value })
   },
   updateActiveOutfit: function () {
@@ -52,14 +52,16 @@ export const OutfitSection = React.createClass({
         <br />
         {this.state.outfitType ?
           <CheckboxSection
-            outfit="hello"
+            outfit={this.state.outfit}
             outfitType={this.state.outfitType}
             toggle={this.toggleItem}
-            disabled={this.state.disabled}/>
-          : null}
+            disabled={this.state.disabled}
+          /> : null
+        }
         {this.state.disabled ?
           <button onClick={this.removeOutfit}>Remove Outfit</button>
-          : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>}
+          : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
+        }
       </div>
     )
   },

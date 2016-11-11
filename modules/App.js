@@ -3,7 +3,7 @@ import Schedule from './Schedule/Schedule'
 import SelectOutfits from './Select/SelectOutfits'
 import AssignItems from './Assign/AssignItems'
 import PackingList from './Packing/PackingList'
-import OutfitList from './Print/OutfitList'
+import OutfitsList from './Print/OutfitsList'
 import NavMenu from './NavBar/NavMenu'
 
 export default React.createClass({
@@ -35,7 +35,7 @@ export default React.createClass({
         return <PackingList updateState={this.updateState} tote={this.state.tote} />
         break
       case 'print':
-        return <OutfitList updateState={this.updateState} days={this.state.days} />
+        return <OutfitsList updateState={this.updateState} days={this.state.days} />
         break
       default:
         return (

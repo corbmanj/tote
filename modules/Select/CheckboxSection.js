@@ -6,22 +6,20 @@ export const CheckboxSection = React.createClass({
     this.props.toggle(ev.target.value, ev.target.checked)
   },
   render() {
-    const itemObj = outfitTypes.find((type) => {
-      return type.name === this.props.outfitType
-    })
-    const checkboxes = itemObj.items.map(function (item, key) {
+    const checkboxes = this.props.outfit.items.map((item, key) => {
       return (
         <label key={key}>
           <input 
             type="checkbox" 
             value={item.type} 
-            defaultChecked={true} 
+            defaultChecked={!item.isNotIncluded}
             onClick={this.toggleItem}
             disabled={this.props.disabled}
           />
           {item.type}
         </label>
-      )}, this)
+      )
+    })
     return <form>{checkboxes}</form>
   }
 })

@@ -1,14 +1,17 @@
 import React from 'react'
-import NavLink from './NavLink'
 
 export default React.createClass({
   render() {
+    const items = this.props.outfit.items.map(item => {
+      if (item.name) {
+        return <span>{item.parentType}: {item.name},</span>
+      } else { return null }
+    })
     return (
-      <div>  
-        <div>Printable Tote</div>
-        <div>You're done!</div>
-        <button><NavLink to='/'>Home</NavLink></button>
+      <div>
+        <h3>Outfit {this.props.index+1} - {this.props.outfit.name}</h3>
+        {items}
       </div>
-      )
+    )
   }
 })

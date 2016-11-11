@@ -4,6 +4,9 @@ import NamedItems from './NamedItems'
 
 export default React.createClass({
   updateStage () {
+    let stateObj = {}
+    stateObj.currentStage = 'print'
+    this.props.updateState(stateObj)
   },
   render() {
     return (
