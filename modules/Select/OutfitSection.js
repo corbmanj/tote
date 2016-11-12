@@ -45,7 +45,7 @@ export const OutfitSection = React.createClass({
       }, this)
     return (
       <div>
-        <select onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
+        <select className="outfittype-select" onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
           <option value={null}>Select one...</option>
           {outfitNames}
         </select>
@@ -58,10 +58,12 @@ export const OutfitSection = React.createClass({
             disabled={this.state.disabled}
           /> : null
         }
+        <span>
         {this.state.disabled ?
-          <button onClick={this.removeOutfit}>Remove Outfit</button>
-          : <button disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
+          <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
+          : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
         }
+        </span>
       </div>
     )
   },
