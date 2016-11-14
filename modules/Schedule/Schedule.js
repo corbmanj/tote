@@ -22,17 +22,6 @@ export default React.createClass({
     } else { return dateStr }
   },
   updateSchedule () {
-    fetch('https://api.darksky.net/forecast/d309e32e8c63522fabf78f33fac01ca4/30.2672,97.7431')
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server");
-        }
-        return response.json();
-      })
-      .then(function(body) {
-        console.log(body);
-      });
-
     let stateObj = {}
     stateObj.startDate = moment(this.state.startDate)
     stateObj.endDate = moment(this.state.endDate)

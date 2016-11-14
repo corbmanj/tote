@@ -2,9 +2,9 @@ import React from 'react'
 
 export default React.createClass({
   render() {
-    const items = this.props.outfit.items.map(item => {
+    const items = this.props.outfit.items.map((item, key) => {
       if (item.name) {
-        return <span>{item.parentType}: {item.name},</span>
+        return <span key={key}>{item.parentType}: {item.name},</span>
       } else { return null }
     })
     return (
