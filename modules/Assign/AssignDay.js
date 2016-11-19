@@ -1,10 +1,13 @@
 import React from 'react'
 import { AssignOutfit } from './AssignOutfit'
+import '../../public/skycons'
 
 export const AssignDay = React.createClass({
   getInitialState() {
     return {activeOutfit: 0}
   },
+
+
   updateOutfit: function (itemName, parentType, outfitIndex) {
     this.props.updateOutfit(itemName, parentType, outfitIndex, this.props.index)
   },

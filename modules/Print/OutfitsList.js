@@ -4,7 +4,8 @@ import DayList from './DayList'
 export default React.createClass({
   render() {
     const days = this.props.days.map((day, index) => {
-      return <DayList key={index} index={index} day={day} />
+      const imageName = day.icon + index
+      return <DayList key={index} index={index} image={imageName} day={day} />
     })
     return (
       <div>  

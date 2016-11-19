@@ -25,11 +25,13 @@ export default React.createClass({
   },
   render() {
     const days = this.props.days.map((day, index) => {
+      const imageName = day.icon + index
       return(
         <DaySection
           key={index}
           index={index}
           day={day}
+          image={imageName}
           updateTote={this.updateTote}
         />
       )
