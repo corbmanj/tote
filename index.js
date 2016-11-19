@@ -2,11 +2,11 @@ import React from 'react'
 import { render } from 'react-dom'
 import { Router, Route, browserHistory, IndexRoute } from 'react-router'
 import App from './modules/App'
-import Schedule from './modules/Schedule'
-import SelectOutfits from './modules/SelectOutfits'
-import AssignItems from './modules/AssignItems'
-import PackingList from './modules/PackingList'
-import OutfitList from './modules/OutfitList'
+import Schedule from './modules/Schedule/Schedule'
+import SelectOutfits from './modules/Select/SelectOutfits'
+import AssignItems from './modules/Assign/AssignItems'
+import PackingList from './modules/Packing/PackingList'
+import OutfitList from './modules/Print/OutfitList'
 
 render((
   <Router history={browserHistory}>
