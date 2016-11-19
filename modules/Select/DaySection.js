@@ -1,11 +1,17 @@
 import React from 'react'
 import { OutfitSection } from './OutfitSection'
+import './../../public/skycons'
 
 export const DaySection = React.createClass({
   getInitialState: function () {
     return {
       outfits: this.props.day.outfits
     }
+  },
+  componentDidMount () {
+    var icons = new Skycons({"resizeClear": true})
+    icons.add(this.props.image, this.props.day.icon)
+    icons.play()
   },
   updateDay: function (key, outfit, inc) {
     let tempState = this.state.outfits
@@ -41,7 +47,9 @@ export const DaySection = React.createClass({
     })
     return (
       <div>
-        <h4>{this.props.day.date.format('ddd, MMM Do YYYY')}</h4>
+        <h4>{this.props.day.date.format('ddd, MMM Do YYYY')}<canvas id={this.props.image} width="42" height="42"></canvas></h4>
+        <p>{this.props.day.summary}</p>
+        <p>High: {this.props.day.high} Low: {this.props.day.low}</p>
           {outfits}
         <button onClick={this.addOutfit}>Add Outfit</button>
       </div>
