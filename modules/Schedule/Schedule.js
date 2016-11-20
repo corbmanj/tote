@@ -3,7 +3,7 @@ import moment from 'moment'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
-const baseUrl = 'http://localhost:8080'
+const baseUrl = 'https://localhost:8080'
 
 export default React.createClass({
   getInitialState () {
