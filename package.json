@@ -1,6 +1,6 @@
 {
-  "name": "tutorial",
-  "version": "1.0.0",
+  "name": "tote-app",
+  "version": "0.0.2",
   "description": "",
   "main": "index.js",
   "engines": {
@@ -10,10 +10,10 @@
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "webpack-dev-server --host 0.0.0.0 --port=8081 --hot --inline --content-base public --history-api-fallback & node server.js",
-    "start:prod": "webpack && node server.js",
-    "postinstall": "webpack && node server.js"
+    "start:prod": "webpack && node server.js &&",
+    "postinstall": "npm run start"
   },
-  "author": "",
+  "author": "Jordan Corbman",
   "license": "ISC",
   "dependencies": {
     "babel-core": "^6.5.1",
