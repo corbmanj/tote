@@ -26,7 +26,7 @@ export default React.createClass({
   updateSchedule () {
     let that = this
     let stateObj = {}
-    fetch(`${baseUrl}/api/googleapis/maps/${this.state.cityState}`)
+    fetch(`/api/googleapis/maps/${this.state.cityState}`)
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -48,7 +48,7 @@ export default React.createClass({
           let newDay = {
             date: moment(stateObj.startDate).add(i, 'd')
           }
-          fetch(`${baseUrl}/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)
+          fetch(`/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)
             .then(function(response) {
               if (response.status >= 400) {
                 throw new Error("Bad response from server")
