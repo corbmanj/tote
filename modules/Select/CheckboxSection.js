@@ -1,5 +1,4 @@
 import React from 'react'
-import outfitTypes from './outfitTypes'
 
 export const CheckboxSection = React.createClass({
   toggleItem: function (ev) {

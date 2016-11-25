@@ -1,3 +1,4 @@
+/* NAVBAR */
 .active {
   color: lightgreen;
 }
@@ -18,6 +19,32 @@
 .navLink:hover {
   color: lightgreen;
 }
+/* ------------------ */
+
+/* FLEXBOX COMPONENTS */
+.flex-container {
+  display: -webkit-flex;
+  display: flex;
+  width: 95%;
+  margin: auto;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.flex-outfits {
+  border: solid grey 1px;
+  -webkit-flex: 5;
+  flex: 5;
+  min-width: 250px;
+}
+
+.flex-additional {
+  border: solid grey 1px;
+  -webkit-flex: 2;
+  flex: 2;
+}
+
+/* --------------------- */
 
 .outfit {
   text-indent: 10px;

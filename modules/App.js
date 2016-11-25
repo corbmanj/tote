@@ -11,7 +11,9 @@ export default React.createClass({
     return {
       numDays: 0,
       currentStage: 'home',
-      tote: {}
+      tote: {
+        additionalItemTypes: ['electronics', 'bags', 'toiletries', 'entertainment', 'snacks', 'misc']
+      }
     }
   },
   updateStage: function (newStage) {
@@ -23,7 +25,7 @@ export default React.createClass({
   renderStage: function(stage) {
     switch (stage) {
       case 'schedule':
-        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate}/>
+        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city}/>
         break
       case 'select':
         return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>

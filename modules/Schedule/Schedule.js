@@ -3,14 +3,14 @@ import moment from 'moment'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
-const baseUrl = 'https://localhost:8080'
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default React.createClass({
   getInitialState () {
     return {
       numDays: 0,
-      startDate: this.props.startDate ?  this.props.startDate.format('YYYY-MM-DD') : null,
-      endDate: this.props.endDate ? this.props.endDate.format('YYYY-MM-DD') : null,
+      startDate: this.props.startDate ?  moment(this.props.startDate).format('YYYY-MM-DD') : null,
+      endDate: this.props.endDate ? moment(this.props.endDate).format('YYYY-MM-DD') : null
     }
   },
   dateToString (dateObj) {
@@ -26,7 +26,7 @@ export default React.createClass({
   updateSchedule () {
     let that = this
     let stateObj = {}
-    fetch(`/api/googleapis/maps/${this.state.cityState}`)
+    fetch(`${baseUrl}/api/googleapis/maps/${this.props.city}`)
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -43,12 +43,11 @@ export default React.createClass({
         stateObj.numDays = stateObj.endDate.diff(stateObj.startDate, 'd')+1
         let i = 0
         let j = 0
-        let isDone = false
         while (i < stateObj.numDays) {
           let newDay = {
             date: moment(stateObj.startDate).add(i, 'd')
           }
-          fetch(`/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)
+          fetch(`${baseUrl}/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)
             .then(function(response) {
               if (response.status >= 400) {
                 throw new Error("Bad response from server")
@@ -56,7 +55,6 @@ export default React.createClass({
               return response.json()
             })
             .then(function(ds) {
-              console.log(ds)
               newDay.low = ds.daily.data[0].temperatureMin
               newDay.high = ds.daily.data[0].temperatureMax
               newDay.precip = ds.daily.data[0].precipProbability
@@ -87,16 +85,16 @@ export default React.createClass({
     this.setState(obj)
   },
   updateCityState (ev) {
-    this.setState({cityState: ev.target.value})
+    this.props.updateState({city: ev.target.value})
   },
   render() {
     return (
-      <div>  
+      <div>
         <h2>Schedule</h2>
         <form>
           Start Date:
           <input
-            defaultValue={this.state.startDate ? this.state.startDate.format('YYYY-MM-DD') : null}
+            defaultValue={this.state.startDate ? moment(this.state.startDate).format('YYYY-MM-DD') : null}
             type="date"
             name="startDate"
             onChange={this.updateDate}
@@ -104,12 +102,12 @@ export default React.createClass({
           <br />
             End Date:
           <input
-            defaultValue={this.state.endDate ? this.state.endDate.format('YYYY-MM-DD') : null}
+            defaultValue={this.state.endDate ? moment(this.state.endDate).format('YYYY-MM-DD') : null}
             type="date" name="endDate"
             onChange={this.updateDate}
           />
           <br />
-          Destination: <input onChange={this.updateCityState} type="text" placeholder="City, St" />
+          Destination: <input onChange={this.updateCityState} type="text" value={this.props.city || "City, St"} />
         </form>
         <button value='select' onClick={this.updateSchedule}>Select Outfits</button>
       </div>
