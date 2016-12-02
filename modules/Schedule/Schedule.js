@@ -107,9 +107,19 @@ export default React.createClass({
             onChange={this.updateDate}
           />
           <br />
-          Destination: <input onChange={this.updateCityState} type="text" value={this.props.city || "City, St"} />
+          Destination:
+          <input
+            onChange={this.updateCityState}
+            type="text"
+            value={this.props.city || "City, St"}
+            onFocus={e => e.target.select()}
+          />
         </form>
-        <button value='select' onClick={this.updateSchedule}>Select Outfits</button>
+        <button
+          value='select'
+          onClick={this.updateSchedule}
+          disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
+        >Select Outfits</button>
       </div>
       )
   }

@@ -1,6 +1,6 @@
 export default [
     {
-      name: 'workout',
+      type: 'workout',
       items: [
         {
           parentType: 'shoes',
@@ -50,7 +50,7 @@ export default [
       ]
     },
     {
-      name: 'work',
+      type: 'work',
       items: [
         {
           parentType: 'shoes',
@@ -119,7 +119,7 @@ export default [
         }],
     },
     {
-      name: 'casual',
+      type: 'casual',
       items: [
         {
           parentType: 'shoes',
@@ -189,12 +189,12 @@ export default [
       ],
     },
     {
-      name: 'sleep',
+      type: 'sleep',
       items: [
         {
-          parentType: null,
+          parentType: 'Sleep Socks',
           type: 'Sleep Socks',
-          dropdown: false
+          dropdown: true
         },
         {
           parentType: 'bottoms',
@@ -203,7 +203,7 @@ export default [
         },
         {
           parentType: null,
-          type: 'Undies',
+          type: 'rundies',
           dropdown: false
         },
         {
@@ -224,7 +224,7 @@ export default [
       ],
     },
     {
-      name: 'formal',
+      type: 'formal',
       items: [
         {
           parentType: 'shoes',
@@ -294,7 +294,7 @@ export default [
       ]
     },
     {
-      name: 'other',
+      type: 'other',
       items: [
         {
           parentType: 'shoes',

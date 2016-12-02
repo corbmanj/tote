@@ -32,7 +32,14 @@ export const AssignItem = React.createClass({
   renderInput () {
     return (
       <span>
-        <input defaultValue={this.state.itemName} type="text" onChange={this.updateOptions} disabled={this.state.disableInput}/>
+        <input
+          defaultValue={this.state.itemName}
+          type="text"
+          onChange={this.updateOptions}
+          disabled={this.state.disableInput}
+          autoFocus
+          onFocus={e => e.target.select()}
+        />
         {this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}
       </span>
     )
@@ -49,7 +56,7 @@ export const AssignItem = React.createClass({
     this.props.updateOutfit(this.state.itemName, this.props.item.parentType)
   },
   removeOption () {
-    this.setState({ disableInput: false, addNew: false })
+    this.setState({ disableInput: false, addNew: false, itemName: null })
     let stateArray = this.props.namedItems
     const removeIndex = stateArray.findIndex( el => {return el.name === this.state.itemName} )
     console.log('removeIndex =', removeIndex)
@@ -60,6 +67,7 @@ export const AssignItem = React.createClass({
   handleSelectChange (ev) {
     switch (ev.target.value) {
       case 'select':
+        console.log('chose select')
         break
       case 'add':
         this.setState({ addNew: true })

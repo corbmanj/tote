@@ -5,6 +5,7 @@ import AssignItems from './Assign/AssignItems'
 import PackingList from './Packing/PackingList'
 import OutfitsList from './Print/OutfitsList'
 import NavMenu from './NavBar/NavMenu'
+import '../node_modules/@blueprintjs/core/dist/blueprint.css'
 
 export default React.createClass({
   getInitialState: function () {

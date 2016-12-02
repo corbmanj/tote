@@ -11,7 +11,7 @@ export default React.createClass({
   updateOutfit: function (itemName, parentType, outfitIndex, dayIndex) {
     let stateObj = {}
     stateObj.days = this.props.days
-    stateObj.days[dayIndex].outfits[outfitIndex].outfit.items.filter((item) => {
+    stateObj.days[dayIndex].outfits[outfitIndex].items.filter((item) => {
       return item.parentType === parentType
     }).map((item) => {
       item.name = itemName

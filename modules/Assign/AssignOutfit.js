@@ -11,7 +11,7 @@ export const AssignOutfit = React.createClass({
   },
   renderItems: function () {
     const items = this.props.outfit.items.filter((item) => {
-      return item.dropdown === true
+      return item.dropdown === true && item.isNotIncluded !== true
     }).map((item, index) => {
       return (
         <AssignItem
@@ -29,7 +29,7 @@ export const AssignOutfit = React.createClass({
   render() {
     return (
       <div>
-        <h4 className="outfit" onClick={this.updateActiveOutfit}>Outfit {this.props.index+1}: {this.props.outfit.name}</h4>
+        <h4 className="outfit" onClick={this.updateActiveOutfit} on>Outfit {this.props.index+1}: {this.props.outfit.type}</h4>
         <ReactCSSTransitionGroup
           transitionName="example"
           transitionAppear={true}

@@ -2,6 +2,7 @@ import React from 'react'
 import { DaySection } from './DaySection'
 import { AdditionalItems } from './AdditionalItems'
 import { AdditionalItemSection } from './AdditionalItemSection'
+import { Tree, ITreeNode } from "@blueprintjs/core"
 
 export default React.createClass({
   getInitialState: function () {
@@ -23,6 +24,13 @@ export default React.createClass({
         stateObj.tote.unnamed[item.type] = stateObj.tote.unnamed[item.type] ? stateObj.tote.unnamed[item.type] + inc : 1
       }
     })
+    this.props.updateState(stateObj)
+  },
+  updateOutfitName: function (dayKey, outfitKey, name) {
+    let stateObj = {}
+    stateObj.days = this.props.days
+    console.log(stateObj.days)
+    stateObj.days[dayKey].outfits[outfitKey].realName = name
     this.props.updateState(stateObj)
   },
   addItem: function () {
@@ -52,6 +60,7 @@ export default React.createClass({
           day={day}
           image={imageName}
           updateTote={this.updateTote}
+          updateOutfitName={this.updateOutfitName}
         />
       )
     })
@@ -81,12 +90,40 @@ export default React.createClass({
         />
       )
     }) : null
+
+    const nodes = [
+      {
+        hasCaret: true,
+        iconName: "folder-close",
+        label: "Folder 0",
+      },
+      {
+        iconName: "folder-open",
+        isExpanded: true,
+        label: "Folder 1",
+        childNodes: [
+          {iconName: "document", label: "Item 0"},
+          {iconName: "pt-icon-tag", label: "Tag 1"},
+          {
+            hasCaret: true,
+            iconName: "pt-icon-folder-close",
+            label: "Folder 2"
+          }
+        ]
+      }
+    ]
     return (
       <div className="flex-container">
+        <Tree
+          contents={nodes}
+        />
         <div className="flex-outfits">
           <h3>Select Outfits</h3>
             {days}
-          <button onClick={this.updateOutfits}>Assign Items</button>
+          <button
+            style={{float: 'right'}}
+            onClick={this.updateOutfits}
+          >Assign Items</button>
         </div>
         <div className="flex-additional">
           <h3>Other Items to Pack</h3>
@@ -95,6 +132,6 @@ export default React.createClass({
           <button onClick={this.addItem}>Add additional item</button>
         </div>
       </div>
-      )
+    )
   }
 })

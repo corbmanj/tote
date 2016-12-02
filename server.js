@@ -2,6 +2,8 @@ var express = require('express')
 var path = require('path')
 var compression = require('compression')
 require('isomorphic-fetch')
+var city = require('./lib/cityResponse.json')
+var weather = require('./lib/weatherResponse.json')
 
 var app = express()
 
@@ -21,6 +23,9 @@ var darksky_excludes = '?exclude=currently,hourly,flags'
 app.get('/api/darksky/:lat/:lng/:time', function(req, res) {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  if (process.env.NODE_ENV !== 'production') {
+    return res.status(200).json(weather)
+  }
   try {
     // Retrieves location coordinates (latitude and longitude) from client request query
     var coordinates = req.params.lat+','+req.params.lng+','+req.params.time
@@ -47,6 +52,9 @@ var google_prefix = 'https://maps.googleapis.com/maps/api/geocode/json?address='
 app.get('/api/googleapis/maps/:cityState', function(req, res) {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  if (process.env.NODE_ENV !== 'production') {
+    return res.status(200).json(city)
+  }
   try {
     var coordinates = req.params.cityState
     var url = google_prefix + coordinates

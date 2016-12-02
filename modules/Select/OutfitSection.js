@@ -6,25 +6,72 @@ import { CheckboxSection } from './CheckboxSection'
 export const OutfitSection = React.createClass({
   getInitialState: function () {
     return {
-      outfit: this.props.outfit.outfit,
-      disabled: this.props.outfit.outfit && this.props.outfit.outfit.name,
-      outfitType: this.props.outfit.outfit ? this.props.outfit.outfit.name : null,
+      outfit: this.props.outfit,
+      //realName: this.props.outfit.realName,
+      disabled: this.props.outfit && this.props.outfit.type,
+      outfitType: this.props.outfit ? this.props.outfit.type : null,
       outfitTypes: outfitTypes
     }
+  },
+  selectText (e) {
+    e.target.select()
   },
   saveOutfit: function () {
     this.setState({ disabled: true })
     this.props.updateDay(this.props.index, this.state.outfit, 1)
   },
-  removeOutfit: function () {
+  editOutfit: function () {
     this.setState({ disabled: false })
     this.props.updateDay(this.props.index, this.state.outfit, -1)
   },
+  removeOutfit: function () {
+    this.props.updateDay(this.props.index, this.state.outfit, 0)
+  },
+  renameOutfit: function () {
+    let tempState = this.state
+    //tempState.outfit.realName = ''
+    tempState.renaming = true
+    this.setState({tempState})
+  },
+  updateName: function (e) {
+    let tempState = this.state.outfit
+    tempState.realName = e.target.value
+    console.log(tempState)
+    this.setState({tempState})
+  },
+  stopRenaming: function () {
+    this.setState({renaming: false})
+    this.props.updateName(this.props.index, this.state.outfit.realName)
+  },
+  renderRenaming: function () {
+    return (
+      <span>
+        <input
+          autoFocus
+          onFocus={this.selectText}
+          type="text"
+          value={this.state.outfit.realName}
+          onChange={this.updateName}
+          onBlur={this.stopRenaming}
+        />
+      </span>
+    )
+  },
+  renderName: function () {
+    return this.state.outfit.realName
+  },
   changeOutfitType: function (ev) {
     let tempOutfit = JSON.parse(JSON.stringify(outfitTypes.find((item) => {
-      return (item.name === ev.target.value)
+      return (item.type === ev.target.value)
     })))
-    this.setState({ outfit: tempOutfit, outfitType: ev.target.value })
+    this.setState({
+      outfit: {
+        items: tempOutfit.items,
+        type: tempOutfit.type,
+        realName: this.state.outfit.realName
+      },
+      outfitType: ev.target.value
+    })
   },
   updateActiveOutfit: function () {
     this.props.updateActiveOutfit(this.props.index)
@@ -40,7 +87,7 @@ export const OutfitSection = React.createClass({
   renderOutfitDetails: function () {
     const outfitNames = this.state.outfitTypes.map(function (type, key) {
         return (
-          <option key={key} value={type.name}>{type.name}</option>
+          <option key={key} value={type.type}>{type.type}</option>
         )
       }, this)
     return (
@@ -49,6 +96,13 @@ export const OutfitSection = React.createClass({
           <option value={null}>Select one...</option>
           {outfitNames}
         </select>
+        <span>
+        {this.state.disabled ?
+          <button className="outfittype-select" onClick={this.editOutfit}>Edit Outfit</button>
+          : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
+        }
+          <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
+        </span>
         <br />
         {this.state.outfitType ?
           <CheckboxSection
@@ -58,20 +112,16 @@ export const OutfitSection = React.createClass({
             disabled={this.state.disabled}
           /> : null
         }
-        <span>
-        {this.state.disabled ?
-          <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
-          : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
-        }
-        </span>
       </div>
     )
   },
   render () {
     return (
       <div>
-        <h4 className="outfit" onClick={this.updateActiveOutfit}>
-          {this.props.activeOutfit === this.props.index ? 'v ' : '> '}Outfit {this.props.index+1}
+        <h4 className="outfit" onClick={this.updateActiveOutfit} onDoubleClick={this.renameOutfit}>
+          {this.props.activeOutfit === this.props.index ? 'v ' : '> '}
+          {this.state.renaming ? this.renderRenaming() : this.renderName()}
+          {this.state.outfitType ? ` (${this.state.outfitType})` : null}
         </h4>
         <ReactCSSTransitionGroup
           transitionName="example"
