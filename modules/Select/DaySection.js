@@ -1,12 +1,17 @@
 import React from 'react'
 import { OutfitSection } from './OutfitSection'
 import './../../public/skycons'
+import { Collapse } from "@blueprintjs/core"
 
 export const DaySection = React.createClass({
   getInitialState: function () {
     return {
-      outfits: this.props.day.outfits
+      outfits: this.props.day.outfits,
+      isOpen: this.props.index === 0
     }
+  },
+  toggleOpen () {
+    this.setState({isOpen: !this.state.isOpen})
   },
   componentDidMount () {
     var icons = new Skycons({"resizeClear": true})
@@ -19,9 +24,11 @@ export const DaySection = React.createClass({
       console.log(outfit)
       tempState[key]['items'] = outfit.items
       tempState[key]['name'] = outfit.name
+      tempState[key]['type'] = outfit.type
     } else if (inc === -1) {
       tempState[key]['items'] = {}
       tempState[key]['name'] = null
+      tempState[key]['type'] = null
     } else if (inc === 0) {
       tempState.splice(key, 1)
     }
@@ -35,7 +42,7 @@ export const DaySection = React.createClass({
     this.props.updateOutfitName(this.props.index, key, name)
   },
   addOutfit: function () {
-    const num = this.state.outfits.length || 0
+    const num = this.state.outfits.length + 1 || 1
     const newOutfit = {
       id: num,
       realName: "Outfit " + num
@@ -56,18 +63,25 @@ export const DaySection = React.createClass({
           outfit={outfit}
           updateDay={this.updateDay}
           updateName={this.updateName}
-          activeOutfit={this.state.activeOutfit}
+          activeOutfit={this.state.activeOutfit || 1}
           updateActiveOutfit={this.updateActiveOutfit}
         />
       )
     })
+    const carotClass = this.state.isOpen ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
       <div>
-        <h4>{this.props.day.date.format('ddd, MMM Do YYYY')}<canvas id={this.props.image} width="42" height="42"></canvas></h4>
-        <p>{this.props.day.summary}</p>
-        <p>High: {this.props.day.high} Low: {this.props.day.low}</p>
-          {outfits}
-        <button onClick={this.addOutfit}>Add Outfit</button>
+        <h4 onClick={this.toggleOpen}>
+          <span className={carotClass} />
+          {this.props.day.date.format('ddd, MMM Do YYYY')}
+          <canvas id={this.props.image} width="42" height="42"></canvas>
+        </h4>
+        <Collapse isOpen={this.state.isOpen}>
+          <p>{this.props.day.summary}</p>
+          <p>High: {this.props.day.high} Low: {this.props.day.low}</p>
+            {outfits}
+          <button onClick={this.addOutfit}>Add Outfit</button>
+        </Collapse>
       </div>
     )
   }

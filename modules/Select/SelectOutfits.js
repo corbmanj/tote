@@ -2,7 +2,6 @@ import React from 'react'
 import { DaySection } from './DaySection'
 import { AdditionalItems } from './AdditionalItems'
 import { AdditionalItemSection } from './AdditionalItemSection'
-import { Tree, ITreeNode } from "@blueprintjs/core"
 
 export default React.createClass({
   getInitialState: function () {
@@ -90,33 +89,8 @@ export default React.createClass({
         />
       )
     }) : null
-
-    const nodes = [
-      {
-        hasCaret: true,
-        iconName: "folder-close",
-        label: "Folder 0",
-      },
-      {
-        iconName: "folder-open",
-        isExpanded: true,
-        label: "Folder 1",
-        childNodes: [
-          {iconName: "document", label: "Item 0"},
-          {iconName: "pt-icon-tag", label: "Tag 1"},
-          {
-            hasCaret: true,
-            iconName: "pt-icon-folder-close",
-            label: "Folder 2"
-          }
-        ]
-      }
-    ]
     return (
       <div className="flex-container">
-        <Tree
-          contents={nodes}
-        />
         <div className="flex-outfits">
           <h3>Select Outfits</h3>
             {days}

@@ -1,7 +1,7 @@
 import React from 'react'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import outfitTypes from './outfitTypes'
 import { CheckboxSection } from './CheckboxSection'
+import { Collapse } from "@blueprintjs/core"
 
 export const OutfitSection = React.createClass({
   getInitialState: function () {
@@ -36,7 +36,6 @@ export const OutfitSection = React.createClass({
   updateName: function (e) {
     let tempState = this.state.outfit
     tempState.realName = e.target.value
-    console.log(tempState)
     this.setState({tempState})
   },
   stopRenaming: function () {
@@ -74,7 +73,7 @@ export const OutfitSection = React.createClass({
     })
   },
   updateActiveOutfit: function () {
-    this.props.updateActiveOutfit(this.props.index)
+    this.props.updateActiveOutfit(this.props.outfit.id)
   },
   toggleItem: function (name, isChecked) {
     let tempOutfit = this.state.outfit
@@ -91,48 +90,42 @@ export const OutfitSection = React.createClass({
         )
       }, this)
     return (
-      <div>
-        <select className="outfittype-select" onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
-          <option value={null}>Select one...</option>
-          {outfitNames}
-        </select>
-        <span>
-        {this.state.disabled ?
-          <button className="outfittype-select" onClick={this.editOutfit}>Edit Outfit</button>
-          : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
-        }
-          <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
-        </span>
-        <br />
-        {this.state.outfitType ?
-          <CheckboxSection
-            outfit={this.state.outfit}
-            outfitType={this.state.outfitType}
-            toggle={this.toggleItem}
-            disabled={this.state.disabled}
-          /> : null
-        }
-      </div>
+      <Collapse isOpen={this.props.activeOutfit === this.props.outfit.id} transitionDuration={400}>
+        <div>
+          <select className="outfittype-select" onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
+            <option value={null}>Select one...</option>
+            {outfitNames}
+          </select>
+          <span>
+          {this.state.disabled ?
+            <button className="outfittype-select" onClick={this.editOutfit}>Edit Outfit</button>
+            : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
+          }
+            <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
+          </span>
+          <br />
+          {this.state.outfitType ?
+            <CheckboxSection
+              outfit={this.state.outfit}
+              outfitType={this.state.outfitType}
+              toggle={this.toggleItem}
+              disabled={this.state.disabled}
+            /> : null
+          }
+        </div>
+      </Collapse>
     )
   },
   render () {
+    const carotClass = this.props.activeOutfit === this.props.outfit.id ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
       <div>
         <h4 className="outfit" onClick={this.updateActiveOutfit} onDoubleClick={this.renameOutfit}>
-          {this.props.activeOutfit === this.props.index ? 'v ' : '> '}
+          <span className={carotClass} />
           {this.state.renaming ? this.renderRenaming() : this.renderName()}
           {this.state.outfitType ? ` (${this.state.outfitType})` : null}
         </h4>
-        <ReactCSSTransitionGroup
-          transitionName="example"
-          transitionAppear={true}
-          transitionAppearTimeout={500}
-          transitionEnterTimeout={500}
-          transitionLeaveTimeout={0}
-          transitionLeave={false}
-        >
-          {this.props.activeOutfit === this.props.index ? this.renderOutfitDetails() : null}
-        </ReactCSSTransitionGroup>
+          {this.renderOutfitDetails()}
       </div>
     )
   }

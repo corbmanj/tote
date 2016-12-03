@@ -1,10 +1,11 @@
 import React from 'react'
 import { AssignOutfit } from './AssignOutfit'
 import '../../public/skycons'
+import { Collapse } from "@blueprintjs/core"
 
 export const AssignDay = React.createClass({
   getInitialState() {
-    return {activeOutfit: 0}
+    return {activeOutfit: 1, isOpen: this.props.index === 0}
   },
 
   updateOutfit: function (itemName, parentType, outfitIndex) {
@@ -14,6 +15,9 @@ export const AssignDay = React.createClass({
   updateActiveOutfit: function (index) {
     this.setState({activeOutfit: index})
   },
+  toggleOpen: function () {
+    this.setState({isOpen: !this.state.isOpen})
+  },
 
   render() {
     const outfits = this.props.day.outfits.map((outfit, index) => {
@@ -21,7 +25,7 @@ export const AssignDay = React.createClass({
         <AssignOutfit
           key={index}
           index={index}
-          active={this.state.activeOutfit === index}
+          active={this.state.activeOutfit === outfit.id}
           outfit={outfit}
           namedItems={this.props.namedItems}
           updateNamedItems={this.props.updateNamedItems}
@@ -30,10 +34,16 @@ export const AssignDay = React.createClass({
         />
       )
     })
+    const carotClass = this.state.isOpen ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
       <div>
-        <h3>{this.props.day.date.format('ddd, MMM Do YYYY')}</h3>
-        {outfits}
+        <h3 onClick={this.toggleOpen}>
+          <span className={carotClass} />
+          {this.props.day.date.format('ddd, MMM Do YYYY')}
+        </h3>
+        <Collapse isOpen={this.state.isOpen}>
+          {outfits}
+        </Collapse>
       </div>
     )
   }
