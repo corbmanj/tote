@@ -1,4 +1,5 @@
 import React from 'react'
+import { Collapse } from "@blueprintjs/core"
 
 export const AssignItem = React.createClass({
   getInitialState () {
@@ -41,7 +42,9 @@ export const AssignItem = React.createClass({
           onFocus={e => e.target.select()}
           onBlur={this.saveOption}
         />
-        {this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}
+        <button onClick={this.saveOption} disabled={this.state.disableInput}>Save</button>
+        <button onClick={this.removeOption} disabled={!this.state.disableInput}>Remove</button>
+        {/*{this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}*/}
       </span>
     )
   },

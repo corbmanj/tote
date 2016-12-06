@@ -4,14 +4,6 @@ export const AdditionalItemSection = React.createClass({
   addItem () {
     this.props.addItem(this.props.type)
   },
-  // resetType (ev) {
-  //   this.props.resetType(ev.target.value, 'type', '')
-  // },
-  // renderResetButton (item) {
-  //   return (
-  //     <button value={item.id} onClick={this.resetType}>&lt;-</button>
-  //   )
-  // },
   toggleEditing (item) {
     this.props.toggleEditing(item.id)
   },
