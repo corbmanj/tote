@@ -70,7 +70,7 @@ export const DaySection = React.createClass({
     })
     const carotClass = this.state.isOpen ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
-      <div>
+      <li>
         <h4 onClick={this.toggleOpen}>
           <span className={carotClass} />
           {this.props.day.date.format('ddd, MMM Do YYYY')}
@@ -79,10 +79,13 @@ export const DaySection = React.createClass({
         <Collapse isOpen={this.state.isOpen}>
           <p>{this.props.day.summary}</p>
           <p>High: {this.props.day.high} Low: {this.props.day.low}</p>
+          <ul className="sectionList">
             {outfits}
+          </ul>
           <button onClick={this.addOutfit}>Add Outfit</button>
+          <hr />
         </Collapse>
-      </div>
+      </li>
     )
   }
 })

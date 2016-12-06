@@ -39,6 +39,7 @@ export const AssignItem = React.createClass({
           disabled={this.state.disableInput}
           autoFocus
           onFocus={e => e.target.select()}
+          onBlur={this.saveOption}
         />
         {this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}
       </span>
@@ -78,9 +79,9 @@ export const AssignItem = React.createClass({
   },
   render() {
     return (
-      <div> {this.props.item.type}: &nbsp;
+      <li> {this.props.item.type}: &nbsp;
         {this.state.addNew ? this.renderInput() : this.renderSelect()}
-      </div>
+      </li>
     )
   }
 })

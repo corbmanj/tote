@@ -1,7 +1,6 @@
 import React from 'react'
 import { AssignItem } from './AssignItem'
 import { Collapse } from "@blueprintjs/core"
-// import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 export const AssignOutfit = React.createClass({
   updateOutfit: function (itemName, parentType) {
@@ -30,16 +29,18 @@ export const AssignOutfit = React.createClass({
   render() {
     const carotClass = this.props.active ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
-      <div>
+      <li>
         <h4 className="outfit" onClick={this.updateActiveOutfit}>
           <span className={carotClass} />
           {this.props.outfit.realName}: {this.props.outfit.type}
         </h4>
           <Collapse isOpen={this.props.active}>
-            {this.renderItems()}
+            <ul className="sectionList">
+              {this.renderItems()}
+            </ul>
           </Collapse>
         <hr />
-      </div>
+      </li>
     )
   }
 })

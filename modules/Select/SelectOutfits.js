@@ -2,6 +2,7 @@ import React from 'react'
 import { DaySection } from './DaySection'
 import { AdditionalItems } from './AdditionalItems'
 import { AdditionalItemSection } from './AdditionalItemSection'
+import { Collapse } from "@blueprintjs/core"
 
 export default React.createClass({
   getInitialState: function () {
@@ -9,10 +10,27 @@ export default React.createClass({
       tote: this.props.tote
     }
   },
+  validateOutfits: function () {
+    // check if all outfits have items
+    let isError = false
+    let badOutfits = []
+      this.props.days.map((day, dayIndex) => {
+      let filteredOutfits = day.outfits.filter((outfit) => {
+        return !outfit.items
+      })
+      if (filteredOutfits.length > 0) {isError = true}
+      badOutfits.push(filteredOutfits)
+    })
+    this.setState({isError: isError, badOutfits: badOutfits})
+    return isError
+  },
   updateOutfits: function () {
-    let stateObj = {}
-    stateObj.currentStage = 'assign'
-    this.props.updateState(stateObj)
+    const isError = this.validateOutfits()
+    if (!isError) {
+      let stateObj = {}
+      stateObj.currentStage = 'assign'
+      this.props.updateState(stateObj)
+    }
   },
   updateTote: function (dayKey, outfitKey, outfit, inc) {
     let stateObj = {}
@@ -28,23 +46,27 @@ export default React.createClass({
   updateOutfitName: function (dayKey, outfitKey, name) {
     let stateObj = {}
     stateObj.days = this.props.days
-    console.log(stateObj.days)
     stateObj.days[dayKey].outfits[outfitKey].realName = name
     this.props.updateState(stateObj)
   },
-  addItem: function () {
+  addItem (type) {
     let stateObj = {}
     stateObj.tote = this.state.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
     let newItem = {}
     newItem.id = stateObj.tote.additionalItems.length
-    newItem.name = 'unnamed'
-    newItem.type = null
+    newItem.name = 'Item Name'
+    newItem.type = type
+    newItem.editing = true
     stateObj.tote.additionalItems.push(newItem)
     this.props.updateState(stateObj)
   },
+  toggleEditing (index) {
+    let stateObj = this.state.tote
+    stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
+    this.props.updateState(stateObj)
+  },
   updateItem: function (index, property, value) {
-    console.log(index, property, value)
     let stateObj = this.state.tote
     stateObj.additionalItems[index][property] = value
     this.props.updateState(stateObj)
@@ -72,38 +94,43 @@ export default React.createClass({
           key={index}
           type={type}
           items={items}
-          resetType={this.updateItem}
+          addItem={this.addItem}
+          updateItem={this.updateItem}
+          toggleEditing={this.toggleEditing}
         />
       )
     })
-    const additionalItems = this.props.tote.additionalItems ? this.props.tote.additionalItems.filter(item => {
-      return item.type === null || item.type === ''
-    }).map((item, index) => {
-      return(
-        <AdditionalItems
-          key={index}
-          index={index}
-          item={item}
-          updateItem={this.updateItem}
-          types={this.props.tote.additionalItemTypes}
-        />
-      )
+    const badOutfits = []
+    this.state.badOutfits ? this.state.badOutfits.forEach((day, index) => {
+      day.map(outfit => {
+        badOutfits.push(<li key={`${index}-${outfit.id}`}>Day {index+1}, {outfit.realName}</li>)
+      })
     }) : null
     return (
       <div className="flex-container">
         <div className="flex-outfits">
-          <h3>Select Outfits</h3>
+          <h2 className="header">Select Outfits</h2>
+          <ul className="sectionList">
             {days}
+          </ul>
           <button
             style={{float: 'right'}}
             onClick={this.updateOutfits}
           >Assign Items</button>
+          <br />
+          <Collapse isOpen={this.state.isError}>
+            <div className="error">There are errors with the following outfits:
+              <ul>
+                {badOutfits}
+              </ul>
+            </div>
+          </Collapse>
         </div>
         <div className="flex-additional">
-          <h3>Other Items to Pack</h3>
+          <h2 className="header">Other Items to Pack</h2>
           {additionalItemTypes}
-          {additionalItems}
-          <button onClick={this.addItem}>Add additional item</button>
+          {/*{additionalItems}*/}
+          {/*<button onClick={this.addItem}>Add additional item</button>*/}
         </div>
       </div>
     )

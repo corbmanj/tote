@@ -36,15 +36,17 @@ export const AssignDay = React.createClass({
     })
     const carotClass = this.state.isOpen ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
-      <div>
+      <li>
         <h3 onClick={this.toggleOpen}>
           <span className={carotClass} />
           {this.props.day.date.format('ddd, MMM Do YYYY')}
         </h3>
         <Collapse isOpen={this.state.isOpen}>
-          {outfits}
+          <ul className="sectionList">
+            {outfits}
+          </ul>
         </Collapse>
-      </div>
+      </li>
     )
   }
 })

@@ -1,26 +1,59 @@
 import React from 'react'
 
 export const AdditionalItemSection = React.createClass({
-  resetType: function (ev) {
-    this.props.resetType(ev.target.value, 'type', '')
+  addItem () {
+    this.props.addItem(this.props.type)
   },
-  renderResetButton: function (item) {
+  // resetType (ev) {
+  //   this.props.resetType(ev.target.value, 'type', '')
+  // },
+  // renderResetButton (item) {
+  //   return (
+  //     <button value={item.id} onClick={this.resetType}>&lt;-</button>
+  //   )
+  // },
+  toggleEditing (item) {
+    this.props.toggleEditing(item.id)
+  },
+  updateItemName (ev, item) {
+    this.props.updateItem(item.id, 'name', ev.target.value || item.name)
+  },
+  renderName (item) {
+    return <div>
+      <span onDoubleClick={() => this.toggleEditing(item)}>{item.name}</span>
+    </div>
+  },
+  renderEdit (item) {
     return (
-      <button value={item.id} onClick={this.resetType}>&lt;-</button>
+      <div>
+        <input
+          type="text"
+          placeholder={item.name}
+          autoFocus
+          onFocus={ev => ev.target.select()}
+          onChange={(ev) => this.updateItemName(ev, item)}
+          onBlur={() => this.toggleEditing(item)}
+          onKeyPress={(ev) => this.logEvent(ev, item)}
+        />
+        <span className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
+      </div>
+
     )
   },
-  render() {
+  logEvent (ev, item) {
+    ev.charCode === 13 ? this.toggleEditing(item) : null
+  },
+  render () {
     const items = this.props.items ? this.props.items.map((item, index) => {
       return (
         <div key={index}>
-          <span>{item.name}</span>
-          { this.props.resetType ? this.renderResetButton(item) : null }
+          {item.editing ? this.renderEdit(item) : this.renderName(item)}
         </div>
       )
     }) : null
     return (
       <div>
-        <h3>{this.props.type}</h3>
+        <h4>{this.props.type}<span onClick={this.addItem} className="pt-icon-standard pt-icon-add" /></h4>
         {items}
       </div>)
   }

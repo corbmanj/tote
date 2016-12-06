@@ -90,8 +90,8 @@ export const OutfitSection = React.createClass({
         )
       }, this)
     return (
-      <Collapse isOpen={this.props.activeOutfit === this.props.outfit.id} transitionDuration={400}>
-        <div>
+      <li>
+        <Collapse isOpen={this.props.activeOutfit === this.props.outfit.id} transitionDuration={400}>
           <select className="outfittype-select" onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
             <option value={null}>Select one...</option>
             {outfitNames}
@@ -112,21 +112,23 @@ export const OutfitSection = React.createClass({
               disabled={this.state.disabled}
             /> : null
           }
-        </div>
-      </Collapse>
+        </Collapse>
+      </li>
     )
   },
   render () {
     const carotClass = this.props.activeOutfit === this.props.outfit.id ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
     return (
-      <div>
-        <h4 className="outfit" onClick={this.updateActiveOutfit} onDoubleClick={this.renameOutfit}>
+      <li>
+        <h4 onClick={this.updateActiveOutfit} onDoubleClick={this.renameOutfit}>
           <span className={carotClass} />
           {this.state.renaming ? this.renderRenaming() : this.renderName()}
           {this.state.outfitType ? ` (${this.state.outfitType})` : null}
         </h4>
-          {this.renderOutfitDetails()}
-      </div>
+        <ul className="sectionList">
+            {this.renderOutfitDetails()}
+          </ul>
+      </li>
     )
   }
 })

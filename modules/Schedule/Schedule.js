@@ -90,7 +90,7 @@ export default React.createClass({
   render() {
     return (
       <div>
-        <h2>Schedule</h2>
+        <h2 className="header">Schedule</h2>
         <form>
           Start Date:
           <input
