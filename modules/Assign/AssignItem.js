@@ -30,6 +30,16 @@ export const AssignItem = React.createClass({
   renderRemoveButton () {
     return <button onClick={this.removeOption}>Remove</button>
   },
+  renderStatic () {
+    return (
+      <span>
+        <span>{this.state.itemName}</span>
+        <button onClick={this.saveOption} disabled={this.state.disableInput}>Save</button>
+        <button onClick={this.editOption} disabled={!this.state.disableInput}>Edit</button>
+        <button onClick={this.removeOption} disabled={!this.state.disableInput}>Remove</button>
+      </span>
+    )
+  },
   renderInput () {
     return (
       <span>
@@ -41,10 +51,11 @@ export const AssignItem = React.createClass({
           autoFocus
           onFocus={e => e.target.select()}
           onBlur={this.saveOption}
+          onKeyPress={(ev) => {ev.charCode === 13 ? this.saveOption() : null}}
         />
         <button onClick={this.saveOption} disabled={this.state.disableInput}>Save</button>
+        <button onClick={this.editOption} disabled={!this.state.disableInput}>Edit</button>
         <button onClick={this.removeOption} disabled={!this.state.disableInput}>Remove</button>
-        {/*{this.state.disableInput ? this.renderRemoveButton() : this.renderSaveButton()}*/}
       </span>
     )
   },
@@ -68,6 +79,9 @@ export const AssignItem = React.createClass({
     this.props.updateNamedItems(stateArray)
     this.props.updateOutfit(null, this.props.item.parentType)
   },
+  editOption () {
+    this.setState({ disableInput: false})
+  },
   handleSelectChange (ev) {
     switch (ev.target.value) {
       case 'select':
@@ -83,7 +97,7 @@ export const AssignItem = React.createClass({
   render() {
     return (
       <li> {this.props.item.type}: &nbsp;
-        {this.state.addNew ? this.renderInput() : this.renderSelect()}
+        {this.state.addNew ? (this.state.disableInput ? this.renderStatic() : this.renderInput()) : this.renderSelect()}
       </li>
     )
   }
