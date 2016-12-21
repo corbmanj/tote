@@ -34,7 +34,7 @@ export const AssignDay = React.createClass({
         />
       )
     })
-    const carotClass = this.state.isOpen ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
+    const carotClass = this.state.isOpen ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
     return (
       <li>
         <h3 onClick={this.toggleOpen}>

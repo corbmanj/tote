@@ -1,4 +1,5 @@
 export default [
+        'Sleep Socks',
         'shoes',
         'bottoms',
         'bras',

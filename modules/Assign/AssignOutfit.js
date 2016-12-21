@@ -27,7 +27,7 @@ export const AssignOutfit = React.createClass({
     return <div>{items}</div>
   },
   render() {
-    const carotClass = this.props.active ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
+    const carotClass = this.props.active ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
     return (
       <li>
         <h4 className="outfit" onClick={this.updateActiveOutfit}>

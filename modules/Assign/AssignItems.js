@@ -78,13 +78,13 @@ export default React.createClass({
     return (
       <div className="flex-container">
         <div className="flex-outfits">
-          <h2 className="header">Select Outfits</h2>
+          <h2 className="header">Assign Items</h2>
           <ul className="sectionList">
             {days}
           </ul>
           <button
             style={{float: 'right'}}
-            onClick={this.updateOutfits}
+            onClick={this.updateStage}
           >Assign Items</button>
           <br />
         </div>

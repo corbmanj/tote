@@ -117,7 +117,7 @@ export const OutfitSection = React.createClass({
     )
   },
   render () {
-    const carotClass = this.props.activeOutfit === this.props.outfit.id ? "pt-icon-chevron-down" : "pt-icon-chevron-right"
+    const carotClass = this.props.activeOutfit === this.props.outfit.id ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
     return (
       <li>
         <h4 onClick={this.updateActiveOutfit} onDoubleClick={this.renameOutfit}>
