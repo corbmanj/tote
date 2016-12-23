@@ -4,6 +4,7 @@ var compression = require('compression')
 require('isomorphic-fetch')
 var city = require('./lib/cityResponse.json')
 var weather = require('./lib/weatherResponse.json')
+var dbRoutes = require('./dbRoutes')
 
 var app = express()
 
@@ -77,6 +78,8 @@ app.get('/api/googleapis/maps/:cityState', function(req, res) {
     res.status(500).json({'message': 'Errors occurs requesting Dark Sky API', 'details' : err});
   }
 })
+
+app.use('/db', dbRoutes);
 
 var PORT = process.env.PORT || 8080
 app.listen(PORT, function() {

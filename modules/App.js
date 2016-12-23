@@ -1,4 +1,5 @@
 import React from 'react'
+import Login from './Login'
 import Schedule from './Schedule/Schedule'
 import SelectOutfits from './Select/SelectOutfits'
 import AssignItems from './Assign/AssignItems'
@@ -21,6 +22,7 @@ export default React.createClass({
     this.setState({ currentStage: newStage.target.value })
   },
   updateState: function (stateObj) {
+    console.log(stateObj)
     this.setState(stateObj)
   },
   renderStage: function(stage) {
@@ -44,7 +46,7 @@ export default React.createClass({
         return (
           <div>
             <h1>Welcome to Tote</h1>
-              <button value='schedule' onClick={this.updateStage}>Get Started</button>
+            {this.state.userId ? <button value='schedule' onClick={this.updateStage}>Get Started</button> : <Login updateState={this.updateState}/>}
           </div>
         )
     }
