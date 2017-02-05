@@ -77,7 +77,7 @@ export default React.createClass({
     })
     return (
       <div className="flex-container">
-        <div className="flex-outfits">
+        <div className="flex-5">
           <h2 className="header">Assign Items</h2>
           <ul className="sectionList">
             {days}
@@ -88,7 +88,7 @@ export default React.createClass({
           >Assign Items</button>
           <br />
         </div>
-        <div className="flex-additional">
+        <div className="flex-2">
           <h2 className="header">Other Items to Pack</h2>
           {additionalItemTypes}
         </div>

@@ -3,7 +3,11 @@ require('isomorphic-fetch')
 
 export default React.createClass({
   getInitialState () {
-    return {loggedIn: false}
+    return {
+      loggedIn: false,
+      email: 'corbmanj@gmail.com',
+      password: 'Password1'
+    }
   },
 
   submitLogin (e) {
@@ -23,10 +27,9 @@ export default React.createClass({
           that.setState({loginError: true})
         }
         else {
-          console.log(response)
           that.setState({first: response[0].first, last: response[0].last, userId: response[0].id, loggedIn: true, loginError: false})
           // fetch users list of outfits
-          fetch(`//localhost:8080/db/outfits/${that.state.userId}`)
+          fetch(`//localhost:8080/db/userItems/${that.state.userId}`)
             .then(function (response) {
               if (response.status >= 400) {
                 throw new Error("Bad response from server")
@@ -34,17 +37,18 @@ export default React.createClass({
               return response.json();
             })
             .then(function (response) {
-              if (!response.length) {
-                that.setState({newUser: true})
+              if (!response.outfits.length) { // user has not yet set up outfits
+                console.log('no outfit length')
+                that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
               }
               else {
-                console.log(response)
-                that.setState({outfitTypes: response})
-                that.props.updateState({userId: that.state.userId, outfitTypes: that.state.outfitTypes})
+                console.log('outfits=', response)
+                const tote = that.props.tote
+                tote.additionalItems = response.additionalItems
+                that.props.updateState(tote)
+                that.props.updateState({outfitTypes: response.outfits, userId: that.state.userId})
               }
             })
-            // if user has no list of outfits, send them through the setup process
-            // otherwise show the get started page
         }
       })
   },

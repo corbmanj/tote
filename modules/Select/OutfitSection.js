@@ -1,5 +1,4 @@
 import React from 'react'
-import outfitTypes from './outfitTypes'
 import { CheckboxSection } from './CheckboxSection'
 import { Collapse } from "@blueprintjs/core"
 
@@ -10,7 +9,7 @@ export const OutfitSection = React.createClass({
       //realName: this.props.outfit.realName,
       disabled: this.props.outfit && this.props.outfit.type,
       outfitType: this.props.outfit ? this.props.outfit.type : null,
-      outfitTypes: outfitTypes
+      outfitTypes: this.props.outfitTypes
     }
   },
   selectText (e) {
@@ -60,7 +59,7 @@ export const OutfitSection = React.createClass({
     return this.state.outfit.realName
   },
   changeOutfitType: function (ev) {
-    let tempOutfit = JSON.parse(JSON.stringify(outfitTypes.find((item) => {
+    let tempOutfit = JSON.parse(JSON.stringify(this.props.outfitTypes.find((item) => {
       return (item.type === ev.target.value)
     })))
     this.setState({

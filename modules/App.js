@@ -6,6 +6,8 @@ import AssignItems from './Assign/AssignItems'
 import PackingList from './Packing/PackingList'
 import OutfitsList from './Print/OutfitsList'
 import NavMenu from './NavBar/NavMenu'
+import GetStarted from './GetStarted'
+import Setup from './Setup/SetupMain'
 import '../node_modules/@blueprintjs/core/dist/blueprint.css'
 
 export default React.createClass({
@@ -13,28 +15,31 @@ export default React.createClass({
     return {
       numDays: 0,
       currentStage: 'home',
-      tote: {
-        additionalItemTypes: ['electronics', 'bags', 'toiletries', 'entertainment', 'snacks', 'misc']
-      }
+      tote: {}
     }
   },
+
   updateStage: function (newStage) {
     this.setState({ currentStage: newStage.target.value })
   },
+
   updateState: function (stateObj) {
-    console.log(stateObj)
     this.setState(stateObj)
   },
+
   renderStage: function(stage) {
     switch (stage) {
+      case 'setup':
+        return <Setup updateState={this.updateState} user={this.state.id} />
+        break
       case 'schedule':
-        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city}/>
+        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} />
         break
       case 'select':
-        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>
+        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} />
         break
       case 'assign':
-        return <AssignItems updateState={this.updateState} days={this.state.days} tote={this.state.tote}/>
+        return <AssignItems updateState={this.updateState} days={this.state.days} tote={this.state.tote} />
         break
       case 'packing':
         return <PackingList updateState={this.updateState} tote={this.state.tote} />
@@ -46,11 +51,12 @@ export default React.createClass({
         return (
           <div>
             <h1>Welcome to Tote</h1>
-            {this.state.userId ? <button value='schedule' onClick={this.updateStage}>Get Started</button> : <Login updateState={this.updateState}/>}
+            {this.state.userId ? <GetStarted updateStage={this.updateStage}/> : <Login updateState={this.updateState} tote={this.state.tote}/>}
           </div>
         )
     }
   },
+
   render() {
     return (
       <div>
