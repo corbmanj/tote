@@ -1,6 +1,8 @@
 import React from 'react'
 require('isomorphic-fetch')
 
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
+
 export default React.createClass({
   getInitialState () {
     return {
@@ -14,7 +16,7 @@ export default React.createClass({
     let that = this
     e.preventDefault()
     this.setState({loginError: false})
-    fetch(`//localhost:8080/db/user/${this.state.email}/${this.state.password}`)
+    fetch(`${baseUrl}/db/user/${this.state.email}/${this.state.password}`)
       .then(function (response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -29,7 +31,7 @@ export default React.createClass({
         else {
           that.setState({first: response[0].first, last: response[0].last, userId: response[0].id, loggedIn: true, loginError: false})
           // fetch users list of outfits
-          fetch(`//localhost:8080/db/userItems/${that.state.userId}`)
+          fetch(`${baseUrl}/db/userItems/${that.state.userId}`)
             .then(function (response) {
               if (response.status >= 400) {
                 throw new Error("Bad response from server")
