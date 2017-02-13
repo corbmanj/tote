@@ -124,8 +124,6 @@ export default React.createClass({
         <div className="flex-2">
           <h2 className="header">Other Items to Pack</h2>
           {additionalItemTypes}
-          {/*{additionalItems}*/}
-          {/*<button onClick={this.addItem}>Add additional item</button>*/}
         </div>
       </div>
     )

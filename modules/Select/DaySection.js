@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import { OutfitSection } from './OutfitSection'
 import './../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
@@ -74,7 +75,7 @@ export const DaySection = React.createClass({
       <li>
         <h4 onClick={this.toggleOpen}>
           <span className={carotClass} />
-          {this.props.day.date.format('ddd, MMM Do YYYY')}
+          {moment(this.props.day.date).format('ddd, MMM Do YYYY')}
           <canvas id={this.props.image} width="42" height="42"></canvas>
         </h4>
         <Collapse isOpen={this.state.isOpen}>

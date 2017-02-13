@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import { AssignOutfit } from './AssignOutfit'
 import '../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
@@ -39,7 +40,7 @@ export const AssignDay = React.createClass({
       <li>
         <h3 onClick={this.toggleOpen}>
           <span className={carotClass} />
-          {this.props.day.date.format('ddd, MMM Do YYYY')}
+          {moment(this.props.day.date).format('ddd, MMM Do YYYY')}
         </h3>
         <Collapse isOpen={this.state.isOpen}>
           <ul className="sectionList">

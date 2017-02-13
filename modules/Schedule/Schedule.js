@@ -24,6 +24,7 @@ export default React.createClass({
     } else { return dateStr }
   },
   updateSchedule () {
+    // TODO, if there is already a days array in state, then don't warn before overwriting days
     let that = this
     let stateObj = {}
     fetch(`${baseUrl}/api/googleapis/maps/${this.props.city}`)
@@ -87,6 +88,33 @@ export default React.createClass({
   updateCityState (ev) {
     this.props.updateState({city: ev.target.value})
   },
+  renderButtons () {
+    if (this.props.days) {
+      let stateObj = {}
+      stateObj.currentStage = 'select'
+      return (
+        <div>
+          <button
+            onClick={this.updateSchedule}
+            disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
+          >Reset Schedule</button>
+          <button
+            value='select'
+            onClick={() => this.props.updateState(stateObj)}
+            disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
+          >Move to Select Outfits</button>
+        </div>
+      )
+    } else {
+      return (
+        <button
+          value='select'
+          onClick={this.updateSchedule}
+          disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
+        >Select Outfits</button>
+      )
+    }
+  },
   render() {
     return (
       <div>
@@ -115,11 +143,7 @@ export default React.createClass({
             onFocus={e => e.target.select()}
           />
         </form>
-        <button
-          value='select'
-          onClick={this.updateSchedule}
-          disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
-        >Select Outfits</button>
+        {this.renderButtons()}
       </div>
       )
   }

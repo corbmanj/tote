@@ -30,7 +30,7 @@ export default React.createClass({
   loadTrip (trip) {
     let ev = {}
     ev.target = {}
-    ev.target.value = 'select'
+    ev.target.value = 'schedule'
     this.props.updateState(trip)
     this.props.updateStage(ev)
   },
@@ -38,7 +38,7 @@ export default React.createClass({
     const tripList = this.state.tripList.map((trip, index) => {
       if (trip) {
         return (
-          <li key={index} onClick={() => this.loadTrip(trip)}>
+          <li key={index} onClick={() => this.loadTrip(trip)} className="card">
             <p>City: {trip.city}</p>
             <p>Start: {moment(trip.startDate).format('dddd, MMMM Do')}</p>
             <p>End: {moment(trip.endDate).format('dddd, MMMM Do')}</p>

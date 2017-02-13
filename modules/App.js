@@ -67,7 +67,7 @@ export default React.createClass({
         return <Setup updateState={this.updateState} user={this.state.id} />
         break
       case 'schedule':
-        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} />
+        return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} days={this.state.days} />
         break
       case 'select':
         return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} />
