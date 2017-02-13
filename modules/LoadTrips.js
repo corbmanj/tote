@@ -30,7 +30,7 @@ export default React.createClass({
   loadTrip (trip) {
     let ev = {}
     ev.target = {}
-    ev.target.value = 'schedule'
+    ev.target.value = 'select'
     this.props.updateState(trip)
     this.props.updateStage(ev)
   },
