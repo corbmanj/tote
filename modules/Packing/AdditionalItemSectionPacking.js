@@ -5,7 +5,7 @@ export default React.createClass({
     const items = this.props.items ? this.props.items.map((item, index) => {
       return (
         <div key={index}>
-          <span>{item.name}</span>
+          <span>{item}</span>
         </div>
       )
     }) : null

@@ -5,7 +5,7 @@ export default React.createClass({
   getInitialState () {
     return {
       loggedIn: false,
-      email: 'corbmanj@gmail.com',
+      email: 'hannah.robus@gmail.com',
       password: 'Password1'
     }
   },
@@ -42,7 +42,6 @@ export default React.createClass({
                 that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
               }
               else {
-                console.log('outfits=', response)
                 const tote = that.props.tote
                 tote.additionalItems = response.additionalItems
                 that.props.updateState(tote)

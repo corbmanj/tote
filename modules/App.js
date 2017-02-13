@@ -8,7 +8,13 @@ import OutfitsList from './Print/OutfitsList'
 import NavMenu from './NavBar/NavMenu'
 import GetStarted from './GetStarted'
 import Setup from './Setup/SetupMain'
+import LoadTrips from './LoadTrips'
+
+require('es6-promise').polyfill()
+require('isomorphic-fetch')
 import '../node_modules/@blueprintjs/core/dist/blueprint.css'
+
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default React.createClass({
   getInitialState: function () {
@@ -23,12 +29,40 @@ export default React.createClass({
     this.setState({ currentStage: newStage.target.value })
   },
 
+  saveToDB: function () {
+    var myHeaders = new Headers();
+
+    myHeaders.append('Content-Type', 'application/json');
+
+    fetch(`${baseUrl}/db/tote/updateTrip/${this.state.tripId}`, {
+      method: 'POST',
+      body: JSON.stringify(this.state),
+      headers: myHeaders,
+      mode: 'cors',
+      cache: 'default'
+    })
+      .then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        console.log(response);
+      });
+  },
+
   updateState: function (stateObj) {
+    this.setState(stateObj)
+    this.saveToDB()
+  },
+
+  updateSateNoSave: function (stateObj) {
     this.setState(stateObj)
   },
 
   renderStage: function(stage) {
     switch (stage) {
+      case 'load':
+        return <LoadTrips updateState={this.updateSateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
+        break
       case 'setup':
         return <Setup updateState={this.updateState} user={this.state.id} />
         break
@@ -51,7 +85,7 @@ export default React.createClass({
         return (
           <div>
             <h1>Welcome to Tote</h1>
-            {this.state.userId ? <GetStarted updateStage={this.updateStage}/> : <Login updateState={this.updateState} tote={this.state.tote}/>}
+            {this.state.userId ? <GetStarted updateStage={this.updateStage} updateState={this.updateState} userId={this.state.userId}/> : <Login updateState={this.updateSateNoSave} tote={this.state.tote}/>}
           </div>
         )
     }

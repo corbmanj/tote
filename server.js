@@ -5,11 +5,18 @@ require('isomorphic-fetch')
 var city = require('./lib/cityResponse.json')
 var weather = require('./lib/weatherResponse.json')
 var dbRoutes = require('./dbRoutes')
+var bodyParser = require('body-parser')
+var cors = require('cors')
 
 var app = express()
 
 app.use(compression())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(cors())
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json())
 
 // send all requests to index.html so browserHistory in React Router works
 app.get('/', function(req, res) {
@@ -59,7 +66,7 @@ app.get('/api/googleapis/maps/:cityState', function(req, res) {
   try {
     var coordinates = req.params.cityState
     var url = google_prefix + coordinates
-    var key = 'AIzaSyDLZJJdBykLCYDJ_3iMzP-Jt08R4KKnpeM'
+    var key = 'AIzaSyDZt10DXNu-bVGAvZ2NLt75FK_ftYgEr1k'
     url = url + '&key=' + key
     console.log('Fetching '+url)
 
