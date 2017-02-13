@@ -2,7 +2,7 @@ var router = require('express').Router();
 
 //db connection
 var pg = require('pg')
-var client = new pg.Client(process.env.DB_URL || 'postgres://localhost:5432/tote_local');
+var client = new pg.Client(process.env.TOTE_DB_URL || 'postgres://localhost:5432/tote_local');
 client.connect(function (err, client) {
   if (err) throw err;
   console.log('connected to postgres! Getting schemas...');
