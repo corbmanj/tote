@@ -10,15 +10,12 @@ export default React.createClass({
     this.props.updateState(stateObj)
   },
   render() {
-    const additionalItemTypes = this.props.tote.additionalItemTypes.map((type, index) => {
-      const items = this.props.tote.additionalItems ? this.props.tote.additionalItems.filter(item => {
-        return item.type === type
-      }) : null
+    const additionalItemTypes = this.props.tote.additionalItems.map((type, index) => {
       return (
         <AdditionalItemSectionPacking
           key={index}
-          type={type}
-          items={items}
+          type={type.name}
+          items={type.items}
         />
       )
     })

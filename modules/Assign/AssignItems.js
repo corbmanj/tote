@@ -20,16 +20,11 @@ export default React.createClass({
     })
     this.props.updateState(stateObj)
   },
-  addItem (type) {
+  addItem (index) {
     let stateObj = {}
     stateObj.tote = this.props.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
-    let newItem = {}
-    newItem.id = stateObj.tote.additionalItems.length
-    newItem.name = 'Item Name'
-    newItem.type = type
-    newItem.editing = true
-    stateObj.tote.additionalItems.push(newItem)
+    stateObj.tote.additionalItems[index].items.push('new item')
     this.props.updateState(stateObj)
   },
   toggleEditing (index) {
@@ -37,9 +32,9 @@ export default React.createClass({
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
     this.props.updateState(stateObj)
   },
-  updateItem: function (index, property, value) {
+  updateItem: function (typeIndex, itemIndex, itemName) {
     let stateObj = this.props.tote
-    stateObj.additionalItems[index][property] = value
+    stateObj.additionalItems[typeIndex].items[itemIndex] = itemName
     this.props.updateState(stateObj)
   },
   updateStage: function () {
@@ -60,15 +55,13 @@ export default React.createClass({
         />
       )
     })
-    const additionalItemTypes = this.props.tote.additionalItemTypes.map((type, index) => {
-      const items = this.props.tote.additionalItems ? this.props.tote.additionalItems.filter(item => {
-        return item.type === type
-      }) : null
+    const additionalItemTypes = this.props.tote.additionalItems.map((type, index) => {
       return (
         <AdditionalItemSection
           key={index}
-          type={type}
-          items={items}
+          index={index}
+          type={type.name}
+          items={type.items}
           addItem={this.addItem}
           updateItem={this.updateItem}
           toggleEditing={this.toggleEditing}
@@ -77,7 +70,7 @@ export default React.createClass({
     })
     return (
       <div className="flex-container">
-        <div className="flex-outfits">
+        <div className="flex-5">
           <h2 className="header">Assign Items</h2>
           <ul className="sectionList">
             {days}
@@ -88,7 +81,7 @@ export default React.createClass({
           >Assign Items</button>
           <br />
         </div>
-        <div className="flex-additional">
+        <div className="flex-2">
           <h2 className="header">Other Items to Pack</h2>
           {additionalItemTypes}
         </div>

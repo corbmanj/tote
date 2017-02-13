@@ -61,6 +61,7 @@ export const DaySection = React.createClass({
           key={index}
           index={index}
           outfit={outfit}
+          outfitTypes={this.props.outfitTypes}
           updateDay={this.updateDay}
           updateName={this.updateName}
           activeOutfit={this.state.activeOutfit || 1}
