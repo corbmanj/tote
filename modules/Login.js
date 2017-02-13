@@ -6,9 +6,7 @@ const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8
 export default React.createClass({
   getInitialState () {
     return {
-      loggedIn: false,
-      email: 'hannah.robus@gmail.com',
-      password: 'Password1'
+      loggedIn: false
     }
   },
 
