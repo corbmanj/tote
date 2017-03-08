@@ -1,6 +1,5 @@
 import React from 'react'
 import { DaySection } from './DaySection'
-// import { AdditionalItems } from './AdditionalItems'
 import { AdditionalItemSection } from './AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 

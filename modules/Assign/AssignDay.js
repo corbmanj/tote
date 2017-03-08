@@ -43,6 +43,8 @@ export const AssignDay = React.createClass({
           {moment(this.props.day.date).format('ddd, MMM Do YYYY')}
         </h3>
         <Collapse isOpen={this.state.isOpen}>
+          <p>{this.props.day.summary}</p>
+          <p>High: {this.props.day.high} &deg;F Low: {this.props.day.low}&deg; F</p>
           <ul className="sectionList">
             {outfits}
           </ul>

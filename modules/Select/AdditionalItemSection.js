@@ -21,7 +21,7 @@ export const AdditionalItemSection = React.createClass({
     }) : null
     return (
       <div>
-        <h4>{this.props.type}<span onClick={this.addItem} className="pt-icon-standard pt-icon-add" /></h4>
+        <h4 onClick={this.addItem}>{this.props.type}<span className="pt-icon-standard pt-icon-add" /></h4>
         {items}
       </div>)
   }
