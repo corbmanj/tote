@@ -3,11 +3,11 @@ import React from 'react'
 export default React.createClass({
   render () {
     const items = this.props.items.map((item, index) => {
-      return <span key={index}>{item.name}{index === this.props.items.length-1 ? null : ','} </span>
+      return <label key={index}><input type="checkbox" />{item.name}{index === this.props.items.length-1 ? null : ','} </label>
     })
     return (
       <div>
-        <input type="checkbox" />{this.props.parentType}: {items}
+        {this.props.parentType}: {items}
       </div>
     )
   }

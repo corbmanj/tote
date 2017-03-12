@@ -1,4 +1,5 @@
 import React from 'react'
+import moment from 'moment'
 import OutfitList from './OutfitList'
 import './../../public/skycons'
 
@@ -14,7 +15,7 @@ export default React.createClass({
       })
     return (
       <div>
-        <h2>{this.props.day.date.format('ddd, MMM Do')}<canvas id={this.props.image} width="42" height="42"></canvas></h2>
+        <h2>{moment(this.props.day.date).format('ddd, MMM Do')}<canvas id={this.props.image} width="42" height="42"></canvas></h2>
         <p>{this.props.day.summary}</p>
         <p>High: {this.props.day.high} Low: {this.props.day.low}</p>
         {outfits}

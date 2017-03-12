@@ -9,7 +9,7 @@ export default React.createClass({
     })
     return (
       <div>
-        <h3>Outfit {this.props.index+1} - {this.props.outfit.name}</h3>
+        <h3>{this.props.outfit.realName} ({this.props.outfit.type})</h3>
         {items}
       </div>
     )
