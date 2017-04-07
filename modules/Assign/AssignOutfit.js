@@ -20,6 +20,7 @@ export const AssignOutfit = React.createClass({
           item={item}
           namedItems={this.props.namedItems}
           updateNamedItems={this.props.updateNamedItems}
+          updateNamedItemInAllOutfits={this.props.updateNamedItemInAllOutfits}
           updateOutfit={this.updateOutfit}
         />
       )

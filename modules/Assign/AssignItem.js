@@ -71,15 +71,22 @@ export const AssignItem = React.createClass({
     this.props.updateOutfit(this.state.itemName, this.props.item.parentType)
   },
   removeOption () {
-    this.setState({ disableInput: false, addNew: false, itemName: null })
     let stateArray = this.props.namedItems
-    const removeIndex = stateArray.findIndex( el => {return el.name === this.state.itemName} )
-    console.log('removeIndex =', removeIndex)
-    stateArray.splice(removeIndex, 1)
-    this.props.updateNamedItems(stateArray)
+    const filteredArray = stateArray.filter((el, i) => {
+      return !(el.name === this.state.itemName && el.parentType === this.props.item.parentType)
+    })
+    this.props.updateNamedItems(filteredArray)
     this.props.updateOutfit(null, this.props.item.parentType)
+    this.props.updateNamedItemInAllOutfits(this.state.itemName, this.props.item.parentType, null)
+    this.setState({ disableInput: false, addNew: false, itemName: null })
   },
   editOption () {
+    let stateArray = this.props.namedItems
+    const filteredArray = stateArray.filter(el => {
+      return !(el.name === this.state.itemName && el.parentType === this.props.item.parentType)
+    })
+    this.props.updateNamedItems(filteredArray)
+    this.props.updateOutfit(null, this.props.item.parentType)
     this.setState({ disableInput: false})
   },
   handleSelectChange (ev) {

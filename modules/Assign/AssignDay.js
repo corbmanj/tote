@@ -30,6 +30,7 @@ export const AssignDay = React.createClass({
           outfit={outfit}
           namedItems={this.props.namedItems}
           updateNamedItems={this.props.updateNamedItems}
+          updateNamedItemInAllOutfits={this.props.updateNamedItemInAllOutfits}
           updateOutfit={this.updateOutfit}
           updateActiveOutfit={this.updateActiveOutfit}
         />
