@@ -10,6 +10,20 @@ export default React.createClass({
     stateObj.tote.namedItems = namedItems
     this.props.updateState(stateObj)
   },
+  updateNamedItemInAllOutfits: function (name, parentType, newName) {
+    let stateObj = {}
+    stateObj.days = this.props.days
+    stateObj.days.forEach(day => {
+      day.outfits.forEach(outfit => {
+        outfit.items.forEach(item => {
+          if (item.name === name && item.parentType === parentType) {
+            item.name = newName
+          }
+        })
+      })
+    })
+    this.props.updateState(stateObj)
+  },
   updateOutfit: function (itemName, parentType, outfitIndex, dayIndex) {
     let stateObj = {}
     stateObj.days = this.props.days
@@ -51,6 +65,7 @@ export default React.createClass({
           day={day}
           namedItems={this.props.tote.namedItems || []}
           updateNamedItems={this.updateNamedItems}
+          updateNamedItemInAllOutfits={this.updateNamedItemInAllOutfits}
           updateOutfit={this.updateOutfit}
         />
       )
