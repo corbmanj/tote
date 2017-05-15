@@ -9,7 +9,7 @@ export const AdditionalItem = React.createClass({
     if (this.state.editing) {
       this.props.updateItem(this.props.index, this.state.name)
     }
-    this.setState({editing: !this.state.editing})
+    this.setState({name: this.props.item, editing: !this.state.editing})
   },
   updateItemName (ev) {
     this.setState({name: ev.target.value})
