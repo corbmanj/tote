@@ -19,6 +19,10 @@ export const AdditionalItem = React.createClass({
       <span onDoubleClick={this.toggleEditing}>{this.props.item}</span>
     </div>
   },
+  deleteItem (ev) {
+    ev.stopPropogation()
+    this.props.deleteItem(this.props.index)
+  },
   renderEdit () {
     return (
       <div>
@@ -32,6 +36,7 @@ export const AdditionalItem = React.createClass({
           onKeyPress={this.logEvent}
         />
         <span className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
+        <span onClick={this.deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
       </div>
     )
   },
