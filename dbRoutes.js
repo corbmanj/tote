@@ -76,7 +76,7 @@ router.get('/tote/getTrips/:userid', function(req, res) {
   console.log('getting user trips')
   client.query(`SELECT trip from saved_trips_json WHERE user_id=${req.params.userid};`)
     .on('error', function (err) {
-      console.log('errrrror', err)
+      console.log('error', err)
       res.json(err)
     })
     .on('row', function (row) {

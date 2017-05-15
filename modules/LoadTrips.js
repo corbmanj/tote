@@ -35,7 +35,14 @@ export default React.createClass({
     this.props.updateStage(ev)
   },
   renderTripList () {
-    const tripList = this.state.tripList.map((trip, index) => {
+    const tripList = this.state.tripList.sort((a,b) => {
+      console.log(a.startDate, b.startDate, a.startDate > b.startDate)
+      if (a.startDate > b.startDate) {
+        return -1
+      } else if (a.startDate < b.startDate) {
+        return 1
+      } else { return 0 }
+    }).map((trip, index) => {
       if (trip) {
         return (
           <li key={index} onClick={() => this.loadTrip(trip)} className="card">
