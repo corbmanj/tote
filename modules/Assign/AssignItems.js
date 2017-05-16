@@ -56,6 +56,12 @@ export default React.createClass({
     stateObj.currentStage = 'packing'
     this.props.updateState(stateObj)
   },
+  deleteItem (typeIndex, itemIndex) {
+    let stateObj = this.props.tote
+    console.log('deleting item', typeIndex, ',', itemIndex)
+    stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
+    this.props.updateState(stateObj)
+  },
   render() {
     const days = this.props.days.map((day, index) => {
       return (
@@ -80,6 +86,7 @@ export default React.createClass({
           addItem={this.addItem}
           updateItem={this.updateItem}
           toggleEditing={this.toggleEditing}
+          deleteItem={this.deleteItem}
         />
       )
     })

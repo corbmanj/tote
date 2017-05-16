@@ -9,6 +9,9 @@ export const AdditionalItemSection = React.createClass({
     console.log('updating item', this.props.index, itemIndex, itemName)
     this.props.updateItem(this.props.index, itemIndex, itemName)
   },
+  deleteItem (itemIndex) {
+    this.props.deleteItem(this.props.index, itemIndex)
+  },
   render () {
     const items = this.props.items ? this.props.items.map((item, index) => {
       return (
@@ -17,6 +20,7 @@ export const AdditionalItemSection = React.createClass({
           index={index}
           item={item}
           updateItem={this.updateItem}
+          deleteItem={this.deleteItem}
         />)
     }) : null
     return (

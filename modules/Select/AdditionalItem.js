@@ -19,6 +19,11 @@ export const AdditionalItem = React.createClass({
       <span onDoubleClick={this.toggleEditing}>{this.props.item}</span>
     </div>
   },
+  deleteItem () {
+    console.log('deleting item', this.props.index)
+    this.props.deleteItem(this.props.index)
+    this.setState({editing: false})
+  },
   renderEdit () {
     return (
       <div>
@@ -28,10 +33,11 @@ export const AdditionalItem = React.createClass({
           autoFocus
           onFocus={ev => ev.target.select()}
           onChange={this.updateItemName}
-          onBlur={this.toggleEditing}
+          //onBlur={this.toggleEditing}
           onKeyPress={this.logEvent}
         />
-        <span className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
+        <span onClick={this.toggleEditing} className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
+        <span onClick={this.deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
       </div>
     )
   },

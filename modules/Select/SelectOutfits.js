@@ -61,9 +61,15 @@ export default React.createClass({
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
     this.props.updateState(stateObj)
   },
-  updateItem: function (typeIndex, itemIndex, itemName) {
+  updateItem (typeIndex, itemIndex, itemName) {
     let stateObj = this.state.tote
     stateObj.additionalItems[typeIndex].items[itemIndex] = itemName
+    this.props.updateState(stateObj)
+  },
+  deleteItem (typeIndex, itemIndex) {
+    let stateObj = this.state.tote
+    console.log('deleting item', typeIndex, ',', itemIndex)
+    stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
   },
   render() {
@@ -91,6 +97,7 @@ export default React.createClass({
           addItem={this.addItem}
           updateItem={this.updateItem}
           toggleEditing={this.toggleEditing}
+          deleteItem={this.deleteItem}
         />
       )
     })
