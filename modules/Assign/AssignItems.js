@@ -1,16 +1,23 @@
 import React from 'react'
+import Modal from '../Shared/Modal'
 import { AssignDay } from './AssignDay'
 import { AdditionalItemSection } from '../Select/AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 
 export default React.createClass({
-  updateNamedItems: function (namedItems) {
+  getInitialState () {
+    return {editingNamedItems: false}
+  },
+  toggleModal () {
+    this.setState({editingNamedItems: !this.state.editingNamedItems})
+  },
+  updateNamedItems (namedItems) {
     let stateObj = {}
     stateObj.tote = this.props.tote
     stateObj.tote.namedItems = namedItems
     this.props.updateState(stateObj)
   },
-  updateNamedItemInAllOutfits: function (name, parentType, newName) {
+  updateNamedItemInAllOutfits (name, parentType, newName) {
     let stateObj = {}
     stateObj.days = this.props.days
     stateObj.days.forEach(day => {
@@ -24,7 +31,7 @@ export default React.createClass({
     })
     this.props.updateState(stateObj)
   },
-  updateOutfit: function (itemName, parentType, outfitIndex, dayIndex) {
+  updateOutfit (itemName, parentType, outfitIndex, dayIndex) {
     let stateObj = {}
     stateObj.days = this.props.days
     stateObj.days[dayIndex].outfits[outfitIndex].items.filter((item) => {
@@ -85,7 +92,9 @@ export default React.createClass({
     })
     return (
       <div className="flex-container">
+        {this.state.editingNamedItems && <Modal closeModal={this.toggleModal} namedItems={this.props.tote.namedItems} />}
         <div className="flex-5">
+          <button style={{float: 'right'}} onClick={this.toggleModal}>Edit Named Items</button>
           <h2 className="header">Assign Items</h2>
           <ul className="sectionList">
             {days}

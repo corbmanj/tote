@@ -97,6 +97,7 @@ ul.sectionList {
   height: 100%;
   background: rgba(0,0,0,.5);
   position: fixed;
+  z-index: 1;
 }
 
 .modal-container {
@@ -161,94 +162,6 @@ ul.sectionList {
   padding: 15px 18px;
   box-sizing: border-box;
   float: right;
-}
-
-.cdl-label-input-text {
-  margin: 0;
-  display: block;
-  margin-bottom: 6px;
-  margin-top: 15px;
-  font-size: 14px;
-  font-weight: normal;
-  color: #686868;
-}
-
-input.cdl-input-text[type=text],
-input.cdl-input-text[type=password],
-input.cdl-input-text[type=search],
-input.cdl-input-number {
-  font-size: 16px;  /* 16px avoids iPhone form zoom */
-  font-family: 'Source Sans Pro', sans-serif;
-  font-weight: normal;
-  color: #080808;
-  padding: 5px 8px;
-  line-height: 33px;
-  height: 34px;
-  box-sizing: border-box;
-  border: 1px solid #c8c8c8;
-
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-input.cdl-input-text[type=text]:disabled,
-input.cdl-input-text[type=password]:disabled,
-input.cdl-input-text[type=search]:disabled {
-  background: #f3f3f3;
-  color: #c8c8c8;
-}
-
-.cdl-label-checkbox {
-  display: block;
-  padding: 0;
-  margin: 0;
-  margin-bottom: 4px;
-  font-size: 15px;
-  color: #080808;
-  font-weight: normal;
-}
-
-input.cdl-checkbox[type=checkbox] {
-  background: #ffffff;
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  box-sizing: border-box;
-  border: 1px solid #c8c8c8;
-  vertical-align: bottom;
-  position: relative;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin-top: 0;
-  margin-bottom: 3px;
-  margin-right: 10px;
-}
-
-input.cdl-checkbox[type=checkbox]:checked {
-  background: #00758e url('../images/checkmark-white.svg') center center;
-  border-color: transparent;
-}
-
-input.cdl-checkbox[type=checkbox]:disabled {
-  background: #f3f3f3;
-}
-
-input.cdl-checkbox[type=checkbox]:checked:disabled {
-  background: #f3f3f3 url('../images/checkmark-gray.svg') center center;
-  border: 1px solid #c8c8c8;
-}
-
-.cdl-scroll {
-  overflow: auto;
 }
 
 .modal-button, #ams a.modal-button {
