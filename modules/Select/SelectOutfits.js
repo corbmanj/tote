@@ -68,8 +68,8 @@ export default React.createClass({
   },
   deleteItem (typeIndex, itemIndex) {
     let stateObj = this.state.tote
-    // use pop or slice to get rid of this element of the array
-    stateObj.additionalItems[typeIndex].items[itemIndex] = itemName
+    console.log('deleting item', typeIndex, ',', itemIndex)
+    stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
   },
   render() {
@@ -97,6 +97,7 @@ export default React.createClass({
           addItem={this.addItem}
           updateItem={this.updateItem}
           toggleEditing={this.toggleEditing}
+          deleteItem={this.deleteItem}
         />
       )
     })
