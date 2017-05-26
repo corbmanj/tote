@@ -92,7 +92,6 @@ export const AssignItem = React.createClass({
   handleSelectChange (ev) {
     switch (ev.target.value) {
       case 'select':
-        console.log('chose select')
         break
       case 'add':
         this.setState({ addNew: true })

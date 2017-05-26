@@ -1,4 +1,5 @@
 import React from 'react'
+import Item from './Item'
 
 export default React.createClass({
   // propTypes: {
@@ -18,18 +19,26 @@ export default React.createClass({
     const itemList = parentTypes.map(type => {
       const items = this.props.namedItems.filter(item => {
         return item.parentType === type
-      }).map(el => {
-        return <li key={el.name}>{el.name}</li>
+      }).map((el, index) => {
+        return (
+          <Item
+            key={index}
+            index={index}
+            item={el}
+            updateItem={this.updateItem}
+            deleteItem={this.deleteItem}
+          />
+        )
       })
       return (
         <li key={type}><h3>{type}</h3>
-          <ul>
+          <ul className="sectionList">
             {items}
           </ul>
         </li>
       )
     })
-    console.log(parentTypes)
+
     return (
       <div className="modal-background">
         <div className="modal-container modal-alert">
@@ -42,7 +51,7 @@ export default React.createClass({
             <span>Double click an item to edit</span>
           </div>
           <div className="modal-body modal-body-with-header">
-            <ul>{itemList}</ul>
+            <ul className="sectionList">{itemList}</ul>
           </div>
           <div className="modal-actions">
             <a

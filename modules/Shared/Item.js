@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const AdditionalItem = React.createClass({
+export const Item = React.createClass({
   getInitialState () {
     const editing = this.props.item === 'new item'
     return {editing: editing}

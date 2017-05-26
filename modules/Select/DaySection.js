@@ -22,7 +22,6 @@ export const DaySection = React.createClass({
   updateDay: function (key, outfit, inc) {
     let tempState = this.state.outfits
     if (inc === 1) {
-      console.log(outfit)
       tempState[key]['items'] = outfit.items
       tempState[key]['name'] = outfit.name
       tempState[key]['type'] = outfit.type

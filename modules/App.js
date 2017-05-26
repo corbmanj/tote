@@ -45,7 +45,6 @@ export default React.createClass({
         if (response.status >= 400) {
           throw new Error("Bad response from server")
         }
-        console.log(response);
       });
   },
 
