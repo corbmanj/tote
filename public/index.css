@@ -141,7 +141,7 @@ ul.sectionList {
   max-height: 100%;
 }
 .modal-body-with-header {
-  max-height: calc(100% - 60px);
+  max-height: calc(80% - 60px);
 }
 
 .modal-close {
@@ -258,5 +258,9 @@ ul.sectionList {
 .dark.modal-button.txtbutton:disabled,  #ams a.dark.modal-button.txtbutton:disabled {
   color: rgba(255,255,255,0.2);;
   background: transparent;
+}
+
+.no-scroll {
+  overflow: hidden;
 }
 

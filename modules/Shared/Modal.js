@@ -2,21 +2,13 @@ import React from 'react'
 import Item from './Item'
 
 export default React.createClass({
-  // propTypes: {
-  //   title: React.PropTypes.string,
-  //   message: React.PropTypes.string,
-  //   confirmAction: React.PropTypes.func,
-  //   confirmText: React.PropTypes.string,
-  //   closeModal: React.PropTypes.func
-  // },
-
   render () {
-    let parentTypes = []
+    let parentTypes = new Set()
     this.props.namedItems.map(item => {
-      // use a set to create the set of parentTypes
-      parentTypes.push(item.parentType)
+      parentTypes.add(item.parentType)
     })
-    const itemList = parentTypes.map(type => {
+    const itemList = []
+    parentTypes.forEach(type => {
       const items = this.props.namedItems.filter(item => {
         return item.parentType === type
       }).map((el, index) => {
@@ -25,12 +17,12 @@ export default React.createClass({
             key={index}
             index={index}
             item={el}
-            updateItem={this.updateItem}
-            deleteItem={this.deleteItem}
+            updateNamedItemInAllOutfits={this.props.updateNamedItemInAllOutfits}
+            deleteNamedItem={this.props.deleteNamedItem}
           />
         )
       })
-      return (
+      itemList.push(
         <li key={type}><h3>{type}</h3>
           <ul className="sectionList">
             {items}
@@ -52,22 +44,6 @@ export default React.createClass({
           </div>
           <div className="modal-body modal-body-with-header">
             <ul className="sectionList">{itemList}</ul>
-          </div>
-          <div className="modal-actions">
-            <a
-              href="#"
-              onClick={this.props.closeModal}
-              data-test-id="reset-modal-cancel-button"
-              className="modal-button primary"
-            >Cancel
-            </a>
-            <a
-              href="#"
-              onClick={this.handleConfirmClick}
-              data-test-id="reset-modal-reset-button"
-              className="modal-button secondary"
-            >Confirm
-            </a>
           </div>
         </div>
       </div>

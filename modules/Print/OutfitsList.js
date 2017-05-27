@@ -5,7 +5,7 @@ export default React.createClass({
   render() {
     const days = this.props.days.map((day, index) => {
       const imageName = day.icon + index
-      return <DayList key={index} index={index} image={imageName} day={day} />
+      return <DayList key={index} index={index} image={imageName} day={day} namedItems={this.props.namedItems}/>
     })
     return (
       <div>  

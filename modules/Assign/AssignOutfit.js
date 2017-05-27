@@ -1,10 +1,10 @@
 import React from 'react'
-import { AssignItem } from './AssignItem'
+import AssignItem from './AssignItemNew'
 import { Collapse } from "@blueprintjs/core"
 
 export const AssignOutfit = React.createClass({
-  updateOutfit: function (itemName, parentType) {
-    this.props.updateOutfit(itemName, parentType, this.props.index)
+  updateOutfit: function (id) {
+    this.props.updateOutfit(id, this.props.index)
   },
   updateActiveOutfit: function () {
     this.props.updateActiveOutfit(this.props.index+1)

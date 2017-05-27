@@ -9,8 +9,8 @@ export const AssignDay = React.createClass({
     return {activeOutfit: 1, isOpen: this.props.index === 0}
   },
 
-  updateOutfit: function (itemName, parentType, outfitIndex) {
-    this.props.updateOutfit(itemName, parentType, outfitIndex, this.props.index)
+  updateOutfit: function (id, outfitIndex) {
+    this.props.updateOutfit(id, outfitIndex, this.props.index)
   },
 
   updateActiveOutfit: function (index) {
