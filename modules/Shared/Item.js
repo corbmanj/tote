@@ -1,49 +1,49 @@
 import React from 'react'
 
-export const AdditionalItem = React.createClass({
+export default React.createClass({
   getInitialState () {
-    const editing = this.props.item === 'new item'
-    return {editing: editing}
+    return {
+      editing: false,
+      name: this.props.item.name
+    }
   },
   toggleEditing () {
     if (this.state.editing) {
-      this.props.updateItem(this.props.index, this.state.name)
+      this.props.updateNamedItemInAllOutfits(this.props.item.id, this.state.name)
     }
-    this.setState({name: this.props.item, editing: !this.state.editing})
+    this.setState({name: this.props.item.name, editing: !this.state.editing})
   },
   updateItemName (ev) {
     this.setState({name: ev.target.value})
   },
   renderName () {
-    return <div>
-      <span onDoubleClick={this.toggleEditing}>{this.props.item}</span>
-    </div>
+    return <li onDoubleClick={this.toggleEditing}>{this.props.item.name}</li>
   },
   deleteItem () {
-    this.props.deleteItem(this.props.index)
+    this.props.deleteNamedItem(this.props.item.id)
     this.setState({editing: false})
   },
   renderEdit () {
     return (
-      <div>
+      <li>
         <input
           type="text"
-          value={this.state.name || this.props.item}
+          value={this.state.name}
           autoFocus
           onFocus={ev => ev.target.select()}
           onChange={this.updateItemName}
-          //onBlur={this.toggleEditing}
           onKeyPress={this.logEvent}
         />
         <span onClick={this.toggleEditing} className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
         <span onClick={this.deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
-      </div>
+      </li>
     )
   },
-  logEvent (ev) {
-    ev.charCode === 13 ? this.toggleEditing() : null
-  },
+  // logEvent (ev) {
+  //   ev.charCode === 13 ? this.toggleEditing() : null
+  // },
   render () {
     return this.state.editing ? this.renderEdit() : this.renderName()
+    // return <li>{this.props.item.name}</li>
   }
 })

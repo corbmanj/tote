@@ -25,7 +25,6 @@ export default React.createClass({
       })
       .then(function (response) {
         if (!response.length) {
-          console.log('no length')
           that.setState({loginError: true})
         }
         else {
@@ -40,7 +39,6 @@ export default React.createClass({
             })
             .then(function (response) {
               if (!response.outfits.length) { // user has not yet set up outfits
-                console.log('no outfit length')
                 that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
               }
               else {

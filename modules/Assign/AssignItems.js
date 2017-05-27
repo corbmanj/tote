@@ -1,36 +1,50 @@
 import React from 'react'
+import Modal from '../Shared/Modal'
 import { AssignDay } from './AssignDay'
 import { AdditionalItemSection } from '../Select/AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 
 export default React.createClass({
-  updateNamedItems: function (namedItems) {
+  getInitialState () {
+    return {editingNamedItems: false}
+  },
+  toggleModal () {
+    this.setState({editingNamedItems: !this.state.editingNamedItems})
+    const body = document.getElementsByTagName('body')[0]
+    console.log(body.classList)
+    body.classList.toggle('no-scroll')
+  },
+  updateNamedItems (namedItems) {
     let stateObj = {}
     stateObj.tote = this.props.tote
     stateObj.tote.namedItems = namedItems
     this.props.updateState(stateObj)
   },
-  updateNamedItemInAllOutfits: function (name, parentType, newName) {
+  updateNamedItemInAllOutfits (id, newName) {
     let stateObj = {}
-    stateObj.days = this.props.days
-    stateObj.days.forEach(day => {
-      day.outfits.forEach(outfit => {
-        outfit.items.forEach(item => {
-          if (item.name === name && item.parentType === parentType) {
-            item.name = newName
-          }
-        })
-      })
-    })
+    stateObj.tote = this.props.tote
+    const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
+    stateObj.tote.namedItems[oldItemIndex].name = newName
     this.props.updateState(stateObj)
   },
-  updateOutfit: function (itemName, parentType, outfitIndex, dayIndex) {
+  deleteNamedItem (id) {
+    console.log('deleting', id, typeof id)
     let stateObj = {}
+    stateObj.tote = this.props.tote
+    const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
+    console.log(oldItemIndex)
+    stateObj.tote.namedItems.splice(oldItemIndex, 1)
+    console.log(stateObj.tote.namedItems)
+    this.props.updateState(stateObj)
+  },
+  updateOutfit (id, outfitIndex, dayIndex) {
+    let stateObj = {}
+    const namedItem = this.props.tote.namedItems.find(item => {return item.id === Number(id)})
     stateObj.days = this.props.days
-    stateObj.days[dayIndex].outfits[outfitIndex].items.filter((item) => {
-      return item.parentType === parentType
-    }).map((item) => {
-      item.name = itemName
+    stateObj.days[dayIndex].outfits[outfitIndex].items.filter(item => {
+      return item.parentType === namedItem.parentType
+    }).map(item => {
+      item.id = namedItem.id
     })
     this.props.updateState(stateObj)
   },
@@ -58,7 +72,6 @@ export default React.createClass({
   },
   deleteItem (typeIndex, itemIndex) {
     let stateObj = this.props.tote
-    console.log('deleting item', typeIndex, ',', itemIndex)
     stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
   },
@@ -92,7 +105,16 @@ export default React.createClass({
     })
     return (
       <div className="flex-container">
+        {this.state.editingNamedItems &&
+          <Modal
+            closeModal={this.toggleModal}
+            namedItems={this.props.tote.namedItems}
+            updateNamedItemInAllOutfits={this.updateNamedItemInAllOutfits}
+            deleteNamedItem={this.deleteNamedItem}
+          />
+        }
         <div className="flex-5">
+          <button style={{float: 'right'}} onClick={this.toggleModal}>Edit Named Items</button>
           <h2 className="header">Assign Items</h2>
           <ul className="sectionList">
             {days}

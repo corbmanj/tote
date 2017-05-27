@@ -52,7 +52,6 @@ export default React.createClass({
     let stateObj = {}
     stateObj.tote = this.state.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
-    console.log(stateObj.tote.additionalItems[index].items, index)
     stateObj.tote.additionalItems[index].items.push('new item')
     this.props.updateState(stateObj)
   },
@@ -68,7 +67,6 @@ export default React.createClass({
   },
   deleteItem (typeIndex, itemIndex) {
     let stateObj = this.state.tote
-    console.log('deleting item', typeIndex, ',', itemIndex)
     stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
   },

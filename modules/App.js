@@ -45,7 +45,6 @@ export default React.createClass({
         if (response.status >= 400) {
           throw new Error("Bad response from server")
         }
-        console.log(response);
       });
   },
 
@@ -79,7 +78,7 @@ export default React.createClass({
         return <PackingList updateState={this.updateState} tote={this.state.tote} />
         break
       case 'print':
-        return <OutfitsList updateState={this.updateState} days={this.state.days} />
+        return <OutfitsList updateState={this.updateState} days={this.state.days} namedItems={this.state.tote.namedItems}/>
         break
       default:
         return (

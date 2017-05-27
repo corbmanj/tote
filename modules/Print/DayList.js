@@ -11,7 +11,7 @@ export default React.createClass({
   },
   render() {
     const outfits = this.props.day.outfits.map((outfit, index) => {
-      return <OutfitList key={index} index={index} outfit={outfit}/>
+      return <OutfitList key={index} index={index} outfit={outfit} namedItems={this.props.namedItems} />
       })
     return (
       <div>

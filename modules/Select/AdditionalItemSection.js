@@ -6,7 +6,6 @@ export const AdditionalItemSection = React.createClass({
     this.props.addItem(this.props.index)
   },
   updateItem (itemIndex, itemName) {
-    console.log('updating item', this.props.index, itemIndex, itemName)
     this.props.updateItem(this.props.index, itemIndex, itemName)
   },
   deleteItem (itemIndex) {

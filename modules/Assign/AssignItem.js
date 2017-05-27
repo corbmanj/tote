@@ -15,13 +15,13 @@ export const AssignItem = React.createClass({
     }).map((item, index) => {
       return <option key={index} value={item.name}>{item.name}</option>
     })
+    const selectValue = this.props.item.name || "select"
     return (
-
-        <select onChange={this.handleSelectChange}>
-          <option value="select">Select one...</option>
-          {options}
-          <option value="add">add new...</option>
-        </select>
+      <select onChange={this.handleSelectChange} value={selectValue}>
+        <option value="select">Select one...</option>
+        {options}
+        <option value="add">add new...</option>
+      </select>
     )
   },
   renderSaveButton () {
@@ -72,7 +72,7 @@ export const AssignItem = React.createClass({
   },
   removeOption () {
     let stateArray = this.props.namedItems
-    const filteredArray = stateArray.filter((el, i) => {
+    const filteredArray = stateArray.filter(el => {
       return !(el.name === this.state.itemName && el.parentType === this.props.item.parentType)
     })
     this.props.updateNamedItems(filteredArray)
@@ -92,7 +92,6 @@ export const AssignItem = React.createClass({
   handleSelectChange (ev) {
     switch (ev.target.value) {
       case 'select':
-        console.log('chose select')
         break
       case 'add':
         this.setState({ addNew: true })
@@ -103,8 +102,11 @@ export const AssignItem = React.createClass({
   },
   render() {
     return (
+      // <li> {this.props.item.type}: &nbsp;
+      //   {this.state.addNew ? (this.state.disableInput ? this.renderStatic() : this.renderInput()) : this.renderSelect()}
+      // </li>
       <li> {this.props.item.type}: &nbsp;
-        {this.state.addNew ? (this.state.disableInput ? this.renderStatic() : this.renderInput()) : this.renderSelect()}
+        {this.state.addNew ? this.renderInput() : this.renderSelect()}
       </li>
     )
   }

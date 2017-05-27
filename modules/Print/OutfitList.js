@@ -3,8 +3,11 @@ import React from 'react'
 export default React.createClass({
   render() {
     const items = this.props.outfit.items.map((item, key) => {
-      if (item.name) {
-        return <span key={key}>{item.parentType}: {item.name},</span>
+      if (item.id) {
+        const itemName = this.props.namedItems.find(namedItem => namedItem.id === item.id).name
+        console.log(itemName)
+        console.log(key)
+        return <span key={key}><b>{item.parentType}:</b> {itemName}</span>
       } else { return null }
     })
     return (

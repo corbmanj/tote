@@ -36,7 +36,6 @@ export default React.createClass({
   },
   renderTripList () {
     const tripList = this.state.tripList.sort((a,b) => {
-      console.log(a.startDate, b.startDate, a.startDate > b.startDate)
       if (a.startDate > b.startDate) {
         return -1
       } else if (a.startDate < b.startDate) {
