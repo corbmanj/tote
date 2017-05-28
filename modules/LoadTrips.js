@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import Modal from './Shared/ConfirmModal'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
@@ -10,7 +11,9 @@ export default React.createClass({
     this.getTripList()
   },
   getInitialState() {
-    return {}
+    return {
+      showModal: true
+    }
   },
   getTripList () {
     let that = this
@@ -34,6 +37,28 @@ export default React.createClass({
     this.props.updateState(trip)
     this.props.updateStage(ev)
   },
+  handleDeleteClick (ev, trip) {
+    ev.stopPropagation()
+    this.setState({showModal: true, modalTrip: trip})
+  },
+  deleteTrip (id) {
+    let that = this
+    const newList = this.state.tripList
+    const deleteIndex = newList.findIndex(trip => {return trip.tripId === id})
+    fetch(`${baseUrl}/db/tote/deleteTrip/${id}`, {
+      method: "DELETE",
+    })
+      .then(function (response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        return response.json()
+      })
+      .then(function (data) {
+        newList.splice(deleteIndex, 1)
+        that.setState({showModal: false, tripList: newList})
+      });
+  },
   renderTripList () {
     const tripList = this.state.tripList.sort((a,b) => {
       if (a.startDate > b.startDate) {
@@ -45,7 +70,9 @@ export default React.createClass({
       if (trip) {
         return (
           <li key={index} onClick={() => this.loadTrip(trip)} className="card">
-            <p>City: {trip.city}</p>
+            <p>City: {trip.city}
+              <span onClick={(ev) => this.handleDeleteClick(ev, trip)} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
+            </p>
             <p>Start: {moment(trip.startDate).format('dddd, MMMM Do')}</p>
             <p>End: {moment(trip.endDate).format('dddd, MMMM Do')}</p>
           </li>
@@ -54,11 +81,20 @@ export default React.createClass({
     })
     return tripList
   },
+  closeModal () {
+    this.setState({showModal: false})
+  },
+  renderModal () {
+    return <Modal closeModal={this.closeModal} trip={this.state.modalTrip} confirmAction={this.deleteTrip} />
+  },
   render () {
     return (
-      <ol>
-        {this.state.tripList && this.renderTripList()}
-      </ol>
+      <div>
+        {this.state.showModal && this.state.modalTrip ? this.renderModal() : null}
+        <ol>
+          {this.state.tripList && this.renderTripList()}
+        </ol>
+      </div>
     )
   }
 })
