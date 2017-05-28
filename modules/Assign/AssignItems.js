@@ -6,12 +6,15 @@ import { Collapse } from "@blueprintjs/core"
 
 export default React.createClass({
   getInitialState () {
-    return {editingNamedItems: false}
+    return {
+      editingNamedItems: false,
+      error: false,
+      errorMsg: null
+    }
   },
   toggleModal () {
     this.setState({editingNamedItems: !this.state.editingNamedItems})
     const body = document.getElementsByTagName('body')[0]
-    console.log(body.classList)
     body.classList.toggle('no-scroll')
   },
   updateNamedItems (namedItems) {
@@ -28,13 +31,10 @@ export default React.createClass({
     this.props.updateState(stateObj)
   },
   deleteNamedItem (id) {
-    console.log('deleting', id, typeof id)
     let stateObj = {}
     stateObj.tote = this.props.tote
     const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
-    console.log(oldItemIndex)
     stateObj.tote.namedItems.splice(oldItemIndex, 1)
-    console.log(stateObj.tote.namedItems)
     this.props.updateState(stateObj)
   },
   updateOutfit (id, outfitIndex, dayIndex) {
@@ -66,6 +66,10 @@ export default React.createClass({
     this.props.updateState(stateObj)
   },
   updateStage: function () {
+    if (!(this.props.tote.namedItems && this.props.tote.namedItems.length)) {
+      this.setState({error: true, errorMsg: 'Please assign at least one item'})
+      return
+    }
     let stateObj = {}
     stateObj.currentStage = 'packing'
     this.props.updateState(stateObj)
@@ -119,6 +123,7 @@ export default React.createClass({
           <ul className="sectionList">
             {days}
           </ul>
+          { this.state.error ? <span style={{float: 'right'}} className="error">{this.state.errorMsg}</span> : null }
           <button
             style={{float: 'right'}}
             onClick={this.updateStage}
