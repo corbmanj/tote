@@ -9,7 +9,7 @@ client.connect(function (err, client) {
 });
 
 router.get('/users', function(req, res) {
-  result = []
+  var result = []
   client.query('SELECT * from users;')
     .on('row', function (row) {
       result.push(row)
@@ -20,7 +20,7 @@ router.get('/users', function(req, res) {
 });
 
 router.get('/user/:email/:password', function(req, res) {
-  result = []
+  var result = []
   client.query("SELECT * from users WHERE email = '" + req.params.email + "' AND password = '" + req.params.password + "';")
     .on('error', function (err) {
       res.json(err)
@@ -57,7 +57,7 @@ router.get('/userItems/:userid', function(req, res) {
 });
 
 router.get('/additionalItems/:userid', function(req, res) {
-  result = []
+  var result = []
   client.query("SELECT list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
     .on('error', function (err) {
       res.json(err)
@@ -72,8 +72,7 @@ router.get('/additionalItems/:userid', function(req, res) {
 
 // get all saved totes for a user
 router.get('/tote/getTrips/:userid', function(req, res) {
-  result = []
-  console.log('getting user trips')
+  var result = []
   client.query(`SELECT trip from saved_trips_json WHERE user_id=${req.params.userid};`)
     .on('error', function (err) {
       console.log('error', err)
@@ -89,7 +88,6 @@ router.get('/tote/getTrips/:userid', function(req, res) {
 
 // initialize a new trip (saved tote)
 router.post('/tote/newTrip/:userid', function(req, res) {
-  result = []
   var query = "INSERT into saved_trips_json (user_id) VALUES (" + req.params.userid + ") returning id;"
   client.query(query)
     .on('error', function (err) {
@@ -102,8 +100,18 @@ router.post('/tote/newTrip/:userid', function(req, res) {
 
 // update a saved tote
 router.post('/tote/updateTrip/:id', function(req, res) {
-  result = []
   var query =  `UPDATE saved_trips_json SET trip='${JSON.stringify(req.body)}' WHERE id=${req.params.id} returning id;`
+  client.query(query)
+    .on('error', function (err) {
+      res.json(err)
+    })
+    .on('row', function (row) {
+      res.send(row)
+    });
+});
+
+router.delete('/tote/deleteTrip/:id', function(req, res) {
+  var query =  `DELETE FROM saved_trips_json WHERE id=${req.params.id} returning id;`
   client.query(query)
     .on('error', function (err) {
       res.json(err)

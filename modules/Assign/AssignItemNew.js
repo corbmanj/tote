@@ -4,7 +4,9 @@ import { Collapse } from "@blueprintjs/core"
 export default React.createClass({
   getInitialState () {
     return {
-      editing: false
+      editing: false,
+      error: false,
+      errorMsg: null
     }
   },
   renderSelect () {
@@ -34,6 +36,7 @@ export default React.createClass({
           onBlur={this.saveOption}
           onKeyPress={(ev) => {ev.charCode === 13 ? this.saveOption() : null}}
         />
+        {this.state.error ? <span className="error">{this.state.errorMsg}</span> : null}
         <button onClick={this.saveOption}>Save</button>
       </span>
     )
@@ -42,6 +45,10 @@ export default React.createClass({
     this.setState({itemName: ev.target.value})
   },
   saveOption () {
+    if (this.state.itemName === '') {
+      this.setState({error: true, errorMsg: 'Item name cannot be blank'})
+      return
+    }
     let stateArray = this.props.namedItems
     stateArray.sort((a,b) => b.id - a.id)
     const newId = stateArray.length > 0 ? stateArray[0].id + 1 : 1
