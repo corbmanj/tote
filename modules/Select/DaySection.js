@@ -3,6 +3,7 @@ import moment from 'moment'
 import { OutfitSection } from './OutfitSection'
 import './../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
+import Modal from '../Shared/Modal'
 
 export const DaySection = React.createClass({
   getInitialState: function () {
@@ -66,6 +67,7 @@ export const DaySection = React.createClass({
           updateName={this.updateName}
           activeOutfit={this.state.activeOutfit || 1}
           updateActiveOutfit={this.updateActiveOutfit}
+          renderCopyModal={this.props.renderCopyModal}
         />
       )
     })

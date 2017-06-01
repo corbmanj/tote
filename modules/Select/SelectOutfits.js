@@ -2,11 +2,14 @@ import React from 'react'
 import { DaySection } from './DaySection'
 import { AdditionalItemSection } from './AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
+import Modal from '../Shared/Modal'
 
 export default React.createClass({
   getInitialState: function () {
     return {
-      tote: this.props.tote
+      tote: this.props.tote,
+      modalOpen: false,
+      modalProps: false
     }
   },
   validateOutfits: function () {
@@ -70,6 +73,28 @@ export default React.createClass({
     stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
   },
+  renderCopyModal (modalProps) {
+    modalProps.days = this.props.days
+    this.setState({modalOpen: true, modalProps: modalProps})
+  },
+  closeModal () {
+    this.setState({modalOpen: false})
+  },
+  copyOutfits (copyArray, outfit) {
+    console.log(copyArray)
+    let stateObj = {}
+    stateObj.days = this.props.days
+    copyArray.forEach((day, index) => {
+      if (day) {
+        const newOutfit = Object.assign({}, outfit)
+        newOutfit.id = stateObj.days[index].outfits.length + 1
+        console.log(day, index, newOutfit.id)
+        stateObj.days[index].outfits.push(newOutfit)
+      }
+    })
+    this.props.updateState(stateObj)
+    this.setState({modalOpen: false})
+  },
   render() {
     const days = this.props.days.map((day, index) => {
       const imageName = day.icon + index
@@ -82,6 +107,7 @@ export default React.createClass({
           outfitTypes={this.props.outfitTypes}
           updateTote={this.updateTote}
           updateOutfitName={this.updateOutfitName}
+          renderCopyModal={this.renderCopyModal}
         />
       )
     })
@@ -107,6 +133,14 @@ export default React.createClass({
     }) : null
     return (
       <div className="flex-container">
+        {this.state.modalOpen && this.state.modalProps ?
+          <Modal
+            contentType="CopyOutfit"
+            closeModal={this.closeModal}
+            modalProps={this.state.modalProps}
+            confirmAction={this.copyOutfits}
+          />
+          : null}
         <div className="flex-5">
           <h2 className="header">Select Outfits</h2>
           <ul className="sectionList">

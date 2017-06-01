@@ -71,10 +71,10 @@ export const OutfitSection = React.createClass({
       outfitType: ev.target.value
     })
   },
-  updateActiveOutfit: function () {
+  updateActiveOutfit () {
     this.props.updateActiveOutfit(this.props.outfit.id)
   },
-  toggleItem: function (name, isChecked) {
+  toggleItem (name, isChecked) {
     let tempOutfit = this.state.outfit
 
     tempOutfit.items.forEach((item) => {
@@ -82,7 +82,11 @@ export const OutfitSection = React.createClass({
     })
     this.setState({ outfit: tempOutfit })
   },
-  renderOutfitDetails: function () {
+  renderCopyModal () {
+    const modalProps = {outfit: this.state.outfit, confirmText: 'Copy Outfit'}
+    this.props.renderCopyModal(modalProps)
+  },
+  renderOutfitDetails () {
     const outfitNames = this.state.outfitTypes.map(function (type, key) {
         return (
           <option key={key} value={type.type}>{type.type}</option>
@@ -101,6 +105,7 @@ export const OutfitSection = React.createClass({
             : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
           }
             <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
+            <button className="outfittype-select" onClick={this.renderCopyModal}>Copy Outfit</button>
           </span>
           <br />
           {this.state.outfitType ?

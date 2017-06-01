@@ -1,36 +1,64 @@
 import React from 'react'
-import Item from './Item'
+import NamedItems from './NamedItems'
+import CopyOutfit from './CopyOutfit'
 
 export default React.createClass({
-  render () {
-    let parentTypes = new Set()
-    this.props.namedItems.map(item => {
-      parentTypes.add(item.parentType)
-    })
-    const itemList = []
-    parentTypes.forEach(type => {
-      const items = this.props.namedItems.filter(item => {
-        return item.parentType === type
-      }).map((el, index) => {
-        return (
-          <Item
-            key={index}
-            index={index}
-            item={el}
+  getInitialState () {
+    switch (this.props.contentType) {
+      case 'NamedItems':
+        return {
+          body:
+            (<NamedItems
+            namedItems={this.props.namedItems}
             updateNamedItemInAllOutfits={this.props.updateNamedItemInAllOutfits}
             deleteNamedItem={this.props.deleteNamedItem}
-          />
-        )
-      })
-      itemList.push(
-        <li key={type}><h3>{type}</h3>
-          <ul className="sectionList">
-            {items}
-          </ul>
-        </li>
-      )
-    })
-
+          />),
+          headerText: 'Double click an item to edit',
+          renderActions: false
+      }
+      case 'CopyOutfit':
+        const copyArray = this.props.modalProps.days.map(() => false)
+        const updateCopyArray = (index, value) => {
+          copyArray[index] = value
+          this.setState({copyArray: copyArray})
+        }
+        const confirmAction = () => {
+          this.props.confirmAction(this.state.copyArray, this.props.modalProps.outfit)
+        }
+        return {
+          body:
+            <CopyOutfit
+              days={this.props.modalProps.days}
+              updateCopyArray={updateCopyArray}
+            />,
+          headerText: 'Choose the days you would like to copy to',
+          copyArray: copyArray,
+          renderActions: true,
+          confirmAction
+        }
+      default:
+        break
+    }
+  },
+  renderModalActions () {
+    return (
+      <div className="modal-actions">
+        <button
+          onClick={this.props.closeModal}
+          data-test-id="reset-modal-cancel-button"
+          className="button red cancel-modal"
+        >Cancel
+        </button>
+        <button
+          onClick={this.state.confirmAction}
+          data-test-id="reset-modal-confirm-button"
+          className="button"
+        >{this.props.modalProps.confirmText}
+        </button>
+      </div>
+    )
+  },
+  render () {
     return (
       <div className="modal-background">
         <div className="modal-container modal-alert">
@@ -40,11 +68,12 @@ export default React.createClass({
             </svg>
           </div>
           <div className="modal-header">
-            <span>Double click an item to edit</span>
+            <span>{this.state.headerText}</span>
           </div>
           <div className="modal-body modal-body-with-header">
-            <ul className="sectionList">{itemList}</ul>
+            {this.state.body}
           </div>
+          {this.state.renderActions ? this.renderModalActions() : null}
         </div>
       </div>
     )
