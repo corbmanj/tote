@@ -111,6 +111,7 @@ export default React.createClass({
       <div className="flex-container">
         {this.state.editingNamedItems &&
           <Modal
+            contentType="NamedItems"
             closeModal={this.toggleModal}
             namedItems={this.props.tote.namedItems}
             updateNamedItemInAllOutfits={this.updateNamedItemInAllOutfits}
