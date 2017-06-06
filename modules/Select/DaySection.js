@@ -4,6 +4,7 @@ import { OutfitSection } from './OutfitSection'
 import './../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
 import Modal from '../Shared/Modal'
+import _ from 'lodash'
 
 export const DaySection = React.createClass({
   getInitialState: function () {
@@ -22,19 +23,20 @@ export const DaySection = React.createClass({
   },
   updateDay: function (key, outfit, inc) {
     let tempState = this.state.outfits
+    const outfitCopy = _.cloneDeep(outfit)
     if (inc === 1) {
-      tempState[key]['items'] = outfit.items
-      tempState[key]['name'] = outfit.name
-      tempState[key]['type'] = outfit.type
+      tempState[key]['items'] = outfitCopy.items
+      tempState[key]['name'] = outfitCopy.name
+      tempState[key]['type'] = outfitCopy.type
     } else if (inc === -1) {
-      tempState[key]['items'] = {}
-      tempState[key]['name'] = null
-      tempState[key]['type'] = null
+      tempState[key]['items'] = []
+      tempState[key]['name'] = outfitCopy.name
+      tempState[key]['type'] = outfitCopy.type
     } else if (inc === 0) {
       tempState.splice(key, 1)
     }
     this.setState({outfits: tempState})
-    this.props.updateTote(this.props.index, key, outfit, inc)
+    this.props.updateTote(this.props.index, key, outfitCopy, inc)
   },
   updateName: function (key, name) {
     let tempState = this.state.outfits

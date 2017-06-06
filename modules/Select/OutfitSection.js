@@ -1,12 +1,12 @@
 import React from 'react'
 import { CheckboxSection } from './CheckboxSection'
 import { Collapse } from "@blueprintjs/core"
+import _ from 'lodash'
 
 export const OutfitSection = React.createClass({
   getInitialState: function () {
     return {
       outfit: this.props.outfit,
-      //realName: this.props.outfit.realName,
       disabled: this.props.outfit && this.props.outfit.type,
       outfitType: this.props.outfit ? this.props.outfit.type : null,
       outfitTypes: this.props.outfitTypes
@@ -20,15 +20,15 @@ export const OutfitSection = React.createClass({
     this.props.updateDay(this.props.index, this.state.outfit, 1)
   },
   editOutfit: function () {
-    this.setState({ disabled: false })
+    const outfitCopy = _.cloneDeep(this.state.outfit)
     this.props.updateDay(this.props.index, this.state.outfit, -1)
+    this.setState({ disabled: false, outfit: outfitCopy})
   },
   removeOutfit: function () {
     this.props.updateDay(this.props.index, this.state.outfit, 0)
   },
   renameOutfit: function () {
     let tempState = this.state
-    //tempState.outfit.realName = ''
     tempState.renaming = true
     this.setState({tempState})
   },

@@ -3,6 +3,7 @@ import { DaySection } from './DaySection'
 import { AdditionalItemSection } from './AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 import Modal from '../Shared/Modal'
+import _ from 'lodash'
 
 export default React.createClass({
   getInitialState: function () {
@@ -81,15 +82,15 @@ export default React.createClass({
     this.setState({modalOpen: false})
   },
   copyOutfits (copyArray, outfit) {
-    console.log(copyArray)
     let stateObj = {}
+    // copy outfit to each day that was selected
     stateObj.days = this.props.days
     copyArray.forEach((day, index) => {
       if (day) {
-        const newOutfit = Object.assign({}, outfit)
+        const newOutfit = _.cloneDeep(outfit)
         newOutfit.id = stateObj.days[index].outfits.length + 1
-        console.log(day, index, newOutfit.id)
         stateObj.days[index].outfits.push(newOutfit)
+        this.updateTote(index, null, newOutfit, 1)
       }
     })
     this.props.updateState(stateObj)
