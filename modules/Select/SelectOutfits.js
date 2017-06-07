@@ -3,6 +3,7 @@ import { DaySection } from './DaySection'
 import { AdditionalItemSection } from './AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 import Modal from '../Shared/Modal'
+import moment from 'moment'
 import _ from 'lodash'
 
 export default React.createClass({
@@ -15,17 +16,25 @@ export default React.createClass({
   },
   validateOutfits: function () {
     // check if all outfits have items
-    let isError = false
+    let isOutfitError = false
+    let isDayError = false
     let badOutfits = []
-      this.props.days.map((day, dayIndex) => {
-      let filteredOutfits = day.outfits.filter((outfit) => {
+    this.props.days.map(day => {
+      let filteredOutfits = day.outfits.filter(outfit => {
         return !outfit.items
       })
-      if (filteredOutfits.length > 0) {isError = true}
+      if (filteredOutfits.length > 0) {isOutfitError = true}
       badOutfits.push(filteredOutfits)
     })
-    this.setState({isError: isError, badOutfits: badOutfits})
-    return isError
+    let badDays = []
+    this.props.days.forEach(day => {
+      if (day.outfits.length === 0) {
+        badDays.push(day)
+        isDayError = true
+      }
+    })
+    this.setState({isOutfitError: isOutfitError, isDayError: isDayError, badOutfits: badOutfits, badDays: badDays})
+    return (isOutfitError || isDayError)
   },
   updateOutfits: function () {
     const isError = this.validateOutfits()
@@ -129,9 +138,12 @@ export default React.createClass({
     const badOutfits = []
     this.state.badOutfits ? this.state.badOutfits.forEach((day, index) => {
       day.map(outfit => {
-        badOutfits.push(<li key={`${index}-${outfit.id}`}>Day {index+1}, {outfit.realName}</li>)
+        badOutfits.push(<li key={`${index}-${outfit.id}`}>{moment(this.props.days[index].date).format('ddd, MMM Do')} - {outfit.realName}</li>)
       })
     }) : null
+    const badDays = this.state.badDays ? this.state.badDays.map(day => {
+        return <li key={day.date}>{moment(day.date).format('ddd, MMM Do')}</li>
+    }) : []
     return (
       <div className="flex-container">
         {this.state.modalOpen && this.state.modalProps ?
@@ -152,10 +164,17 @@ export default React.createClass({
             onClick={this.updateOutfits}
           >Assign Items</button>
           <br />
-          <Collapse isOpen={this.state.isError}>
+          <Collapse isOpen={this.state.isOutfitError}>
             <div className="error">There are errors with the following outfits:
               <ul>
                 {badOutfits}
+              </ul>
+            </div>
+          </Collapse>
+          <Collapse isOpen={this.state.isDayError}>
+            <div className="error">Please add at least one outfit to each of the following days:
+              <ul>
+                {badDays}
               </ul>
             </div>
           </Collapse>
