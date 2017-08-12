@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Login from './Login'
 import Schedule from './Schedule/Schedule'
 import SelectOutfits from './Select/SelectOutfits'
@@ -16,20 +16,16 @@ import '../node_modules/@blueprintjs/core/dist/blueprint.css'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      numDays: 0,
-      currentStage: 'home',
-      tote: {}
-    }
-  },
-
-  updateStage: function (newStage) {
+export default class App extends Component {
+  state = {
+    numDays: 0,
+    currentStage: 'home',
+    tote: {}
+  }
+  updateStage = (newStage) => {
     this.setState({ currentStage: newStage.target.value })
-  },
-
-  saveToDB: function () {
+  }
+  saveToDB = () => {
     var myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
@@ -46,18 +42,15 @@ export default React.createClass({
           throw new Error("Bad response from server")
         }
       });
-  },
-
-  updateState: function (stateObj) {
+  }
+  updateState = (stateObj) => {
     this.setState(stateObj)
     this.saveToDB()
-  },
-
-  updateSateNoSave: function (stateObj) {
+  }
+  updateSateNoSave = (stateObj) => {
     this.setState(stateObj)
-  },
-
-  renderStage: function(stage) {
+  }
+  renderStage = (stage) => {
     switch (stage) {
       case 'load':
         return <LoadTrips updateState={this.updateSateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
@@ -88,7 +81,7 @@ export default React.createClass({
           </div>
         )
     }
-  },
+  }
 
   render() {
     return (
@@ -108,4 +101,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

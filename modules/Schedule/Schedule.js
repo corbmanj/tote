@@ -1,29 +1,27 @@
-import React from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default React.createClass({
-  getInitialState () {
-    return {
+export default class Schedule extends Component {
+  state = {
       numDays: 0,
       startDate: this.props.startDate ?  moment(this.props.startDate).format('YYYY-MM-DD') : null,
       endDate: this.props.endDate ? moment(this.props.endDate).format('YYYY-MM-DD') : null
     }
-  },
-  dateToString (dateObj) {
-    if (dateObj) {
-      return `${dateObj.getFullYear()}-${dateObj.getMonth() < 9 ? '0' : ''}${dateObj.getMonth()+1}-${dateObj.getDate() < 10 ? '0' : ''}${dateObj.getDate()}`
-    } else { return null }
-  },
-  stringToDate (dateStr) {
-    if (typeof dateStr === 'string') {
-      return new Date(dateStr)
-    } else { return dateStr }
-  },
-  updateSchedule () {
+  // dateToString = (dateObj) => {
+  //   if (dateObj) {
+  //     return `${dateObj.getFullYear()}-${dateObj.getMonth() < 9 ? '0' : ''}${dateObj.getMonth()+1}-${dateObj.getDate() < 10 ? '0' : ''}${dateObj.getDate()}`
+  //   } else { return null }
+  // }
+  // stringToDate = (dateStr) => {
+  //   if (typeof dateStr === 'string') {
+  //     return new Date(dateStr)
+  //   } else { return dateStr }
+  // }
+  updateSchedule = () => {
     // TODO, if there is already a days array in state, then don't warn before overwriting days
     let that = this
     let stateObj = {}
@@ -79,16 +77,16 @@ export default React.createClass({
           i++
         }
       })
-  },
-  updateDate (ev) {
+  }
+  updateDate = (ev) => {
     let obj = {}
     obj[ev.target.name] = moment(ev.target.value)
     this.setState(obj)
-  },
-  updateCityState (ev) {
+  }
+  updateCityState = (ev) => {
     this.props.updateState({city: ev.target.value})
-  },
-  renderButtons () {
+  }
+  renderButtons = () => {
     if (this.props.days) {
       let stateObj = {}
       stateObj.currentStage = 'select'
@@ -114,7 +112,7 @@ export default React.createClass({
         >Select Outfits</button>
       )
     }
-  },
+  }
   render() {
     return (
       <div>
@@ -147,4 +145,4 @@ export default React.createClass({
       </div>
       )
   }
-})
+}

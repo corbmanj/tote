@@ -1,12 +1,12 @@
-import React from 'react'
+import React, {Component} from 'react'
 import NamedItems from './NamedItems'
 import CopyOutfit from './CopyOutfit'
 
-export default React.createClass({
-  getInitialState () {
+export default class Modal extends Component {
+  componentWillMount () {
     switch (this.props.contentType) {
       case 'NamedItems':
-        return {
+        this.setState({
           body:
             (<NamedItems
             namedItems={this.props.namedItems}
@@ -15,7 +15,8 @@ export default React.createClass({
           />),
           headerText: 'Double click an item to edit',
           renderActions: false
-      }
+      })
+        break
       case 'CopyOutfit':
         const copyArray = this.props.modalProps.days.map(() => false)
         const updateCopyArray = (index, value) => {
@@ -25,7 +26,7 @@ export default React.createClass({
         const confirmAction = () => {
           this.props.confirmAction(this.state.copyArray, this.props.modalProps.outfit)
         }
-        return {
+        this.setState({
           body:
             <CopyOutfit
               days={this.props.modalProps.days}
@@ -35,12 +36,13 @@ export default React.createClass({
           copyArray: copyArray,
           renderActions: true,
           confirmAction
-        }
+        })
+        break
       default:
         break
     }
-  },
-  renderModalActions () {
+  }
+  renderModalActions = () => {
     return (
       <div className="modal-actions">
         <button
@@ -57,7 +59,7 @@ export default React.createClass({
         </button>
       </div>
     )
-  },
+  }
   render () {
     return (
       <div className="modal-background">
@@ -78,4 +80,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

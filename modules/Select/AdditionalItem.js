@@ -1,29 +1,28 @@
-import React from 'react'
+import React, {Component} from 'react'
 
-export const AdditionalItem = React.createClass({
-  getInitialState () {
-    const editing = this.props.item === 'new item'
-    return {editing: editing}
-  },
-  toggleEditing () {
+export default class AdditionalItem extends Component {
+  state = {
+    editing: this.props.item === 'new item'
+  }
+  toggleEditing = () => {
     if (this.state.editing) {
       this.props.updateItem(this.props.index, this.state.name)
     }
     this.setState({name: this.props.item, editing: !this.state.editing})
-  },
-  updateItemName (ev) {
+  }
+  updateItemName = (ev) => {
     this.setState({name: ev.target.value})
-  },
-  renderName () {
+  }
+  renderName = () => {
     return <div>
       <span onDoubleClick={this.toggleEditing}>{this.props.item}</span>
     </div>
-  },
-  deleteItem () {
+  }
+  deleteItem = () => {
     this.props.deleteItem(this.props.index)
     this.setState({editing: false})
-  },
-  renderEdit () {
+  }
+  renderEdit = () => {
     return (
       <div>
         <input
@@ -39,11 +38,11 @@ export const AdditionalItem = React.createClass({
         <span onClick={this.deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
       </div>
     )
-  },
-  logEvent (ev) {
+  }
+  logEvent = (ev) => {
     ev.charCode === 13 ? this.toggleEditing() : null
-  },
+  }
   render () {
     return this.state.editing ? this.renderEdit() : this.renderName()
   }
-})
+}
