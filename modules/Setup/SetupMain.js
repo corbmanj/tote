@@ -92,6 +92,7 @@ export default class SetupMain extends Component {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
         }
+        return response.json()
       })
       .then(function(response) {
         console.log(response)
