@@ -69,15 +69,17 @@ router.get('/userItems/:userid', function(req, res) {
 
 // save or update an outfit type for the logged in user
 router.put('/userItems/:userid/:outfitid', function(req, res) {
-  var result = {}
+  var result
   client.query("INSERT INTO outfit_types_json (id, outfit, user_id) VALUES($1, $2, $3) \
-  ON CONFLICT (id) DO UPDATE \
-  SET outfit = $2, user_id = $3;", [req.params.outfitid, JSON.stringify(req.body), req.params.userid])
+    ON CONFLICT (id) DO UPDATE \
+    SET outfit = $2, user_id = $3 \
+    returning id;",
+    [req.params.outfitid, JSON.stringify(req.body), req.params.userid])
     .on('error', function (err) {
       res.json(err)
     })
     .on('row', function (row) {
-      res.send(row)
+      res.json(row)
     });
 });
 
