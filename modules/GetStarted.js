@@ -27,6 +27,7 @@ export default function GetStarted (props) {
     <div>
       <button value='schedule' onClick={initializeTrip}>Plan a New Trip</button>
       <button value='load' onClick={props.updateStage}>Load a Saved Trip</button>
+      <button value='setup' onClick={props.updateStage}>Edit User Settings</button>
     </div>
   )
 }

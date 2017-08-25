@@ -11,6 +11,7 @@ export default function SetupOutfits (props) {
         addItem={props.addItem}
         items={props.items}
         updateOutfitItem={props.updateOutfitItem}
+        removeOutfitItem={props.removeOutfitItem}
       />
     )
   })

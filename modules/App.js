@@ -9,6 +9,8 @@ import NavMenu from './NavBar/NavMenu'
 import GetStarted from './GetStarted'
 import Setup from './Setup/SetupMain'
 import LoadTrips from './LoadTrips'
+import Toast from './Shared/Toast'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -20,7 +22,8 @@ export default class App extends Component {
   state = {
     numDays: 0,
     currentStage: 'home',
-    tote: {}
+    tote: {},
+    showToast: false
   }
   updateStage = (newStage) => {
     this.setState({ currentStage: newStage.target.value })
@@ -50,19 +53,31 @@ export default class App extends Component {
   updateSateNoSave = (stateObj) => {
     this.setState(stateObj)
   }
+  showToast = (toastProps) => {
+    this.setState({showToast: true, toastProps})
+    setTimeout(() => { this.setState({showToast: false}) }, 1500)
+  }
+  renderToast = () => {
+    return (
+      <Toast
+        message={this.state.toastProps.message || "no message"}
+        type={this.state.toastProps.type || "success"}
+      />
+    )
+  }
   renderStage = (stage) => {
     switch (stage) {
       case 'load':
         return <LoadTrips updateState={this.updateSateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
         break
       case 'setup':
-        return <Setup updateState={this.updateState} user={this.state.id} />
+        return <Setup updateState={this.updateState} user={this.state.userId} />
         break
       case 'schedule':
         return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} days={this.state.days} />
         break
       case 'select':
-        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} />
+        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} showToast={this.showToast}/>
         break
       case 'assign':
         return <AssignItems updateState={this.updateState} days={this.state.days} tote={this.state.tote} />
@@ -98,6 +113,16 @@ export default class App extends Component {
           print={!this.state.tote.namedItems}
         />
         {this.renderStage(this.state.currentStage)}
+        <ReactCSSTransitionGroup
+          transitionName="toast"
+          transitionEnter
+          transitionEnterTimeout={300}
+          transitionAppear={false}
+          transitionLeave
+          transitionLeaveTimeout={300}
+        >
+          {this.state.showToast && this.renderToast()}
+        </ReactCSSTransitionGroup>
       </div>
     )
   }

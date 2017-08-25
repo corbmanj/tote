@@ -102,6 +102,7 @@ export default class SelectOutfits extends Component {
     })
     this.props.updateState(stateObj)
     this.setState({modalOpen: false})
+    this.props.showToast({message: "Outfit copied successfully", type: "success"})
   }
   render() {
     const days = this.props.days.map((day, index) => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import Item from './Item'
 
-export default function CopyOutfit (props) {
+export default function NamedItems (props) {
   let parentTypes = new Set()
   props.namedItems.map(item => {
     parentTypes.add(item.parentType)

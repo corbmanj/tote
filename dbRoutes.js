@@ -2,15 +2,18 @@ var router = require('express').Router();
 
 //db connection
 var pg = require('pg')
-const client = new pg.Client({
-  user: process.env.RDS_USERNAME,
-  host: process.env.RDS_HOSTNAME,
-  database: process.env.RDS_DB_NAME,
-  password: process.env.RDS_PASSWORD,
-  port: process.env.RDS_PORT,
-})
+// let client = new pg.Client({
+//   user: process.env.RDS_USERNAME,
+//   host: process.env.RDS_HOSTNAME,
+//   database: process.env.RDS_DB_NAME,
+//   password: process.env.RDS_PASSWORD,
+//   port: process.env.RDS_PORT,
+// })
+// if (process.env.NODE_ENV !== 'production') {
+  client = new pg.Client('postgres://localhost:5432/tote_local');
+// }
 // var client = new pg.Client(process.env.TOTE_DB_URL || 'postgres://localhost:5432/tote_local');
-client.connect(function (err, client) {
+client.connect(function (err) {
   if (err) throw err;
   console.log('connected to postgres! Getting schemas...');
 });
@@ -42,11 +45,12 @@ router.get('/user/:email/:password', function(req, res) {
 
 router.get('/userItems/:userid', function(req, res) {
   var result = {outfits: [], additionalItems: []}
-  client.query("SELECT outfit from outfit_types_json WHERE user_id = '" + req.params.userid + "';")
+  client.query("SELECT id, outfit from outfit_types_json WHERE user_id = '" + req.params.userid + "';")
     .on('error', function (err) {
       res.json(err)
     })
     .on('row', function (row) {
+      row.outfit.id = row.id
       result.outfits.push(row.outfit)
     })
     .on('end', function (){
@@ -63,6 +67,20 @@ router.get('/userItems/:userid', function(req, res) {
     });
 });
 
+// save or update an outfit type for the logged in user
+router.put('/userItems/:userid/:outfitid', function(req, res) {
+  var result = {}
+  client.query("INSERT INTO outfit_types_json (id, outfit, user_id) VALUES($1, $2, $3) \
+  ON CONFLICT (id) DO UPDATE \
+  SET outfit = $2, user_id = $3;", [req.params.outfitid, JSON.stringify(req.body), req.params.userid])
+    .on('error', function (err) {
+      res.json(err)
+    })
+    .on('row', function (row) {
+      res.send(row)
+    });
+});
+
 router.get('/additionalItems/:userid', function(req, res) {
   var result = []
   client.query("SELECT list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
@@ -70,7 +88,7 @@ router.get('/additionalItems/:userid', function(req, res) {
       res.json(err)
     })
     .on('row', function (row) {
-      result.push(row.list)
+      result.push(row)
     })
     .on('end', function (){
       res.json(result)

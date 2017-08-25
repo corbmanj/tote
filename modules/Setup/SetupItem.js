@@ -7,15 +7,15 @@ export default function SetupItem (props) {
     props.updateItem(props.index, tempItem)
   }
   const toggleDropdown = () => {
-    let tempItem = this.props.item
+    let tempItem = props.item
     tempItem.dropdown = !tempItem.dropdown
-    this.props.updateItem(tempItem)
+    props.updateItem(tempItem)
   }
 
   return (
     <tr>
       <td><input type="text" value={props.item.type} onChange={(e)=>{updateItem(e,'type')}} /></td>
-      <td><input type="text" value={props.item.parentType} onChange={(e)=>{updateItem(e, 'parentType')}} /></td>
+      <td><input type="text" value={props.item.parentType || ''} onChange={(e)=>{updateItem(e, 'parentType')}} disabled={!props.item.dropdown}/></td>
       <td><input type="checkbox" checked={props.item.dropdown} onChange={toggleDropdown}/></td>
       <td>{props.outfitCount}</td>
     </tr>

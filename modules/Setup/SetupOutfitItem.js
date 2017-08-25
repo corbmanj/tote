@@ -8,5 +8,13 @@ export default function SetupOutfitItem (props) {
     return <option key={index} value={item.type}>{item.type}</option>
   })
 
-  return <select onChange={updateOutfitItem}><option value="0">select one...</option>{options}</select>
+  return (
+    <div>
+      <select value={props.value} onChange={updateOutfitItem}>
+        <option value="0">select one...</option>
+        {options}
+      </select>
+      <span className="pt-icon-standard pt-icon-delete" onClick={() => props.removeOutfitItem(props.index)} />
+    </div>
+  )
 }

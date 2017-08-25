@@ -8,10 +8,13 @@ export default function SetupOutfit (props) {
   const updateOutfitItem = (itemIndex, itemType) => {
     props.updateOutfitItem(props.index, itemIndex, itemType)
   }
+  const removeOutfitItem = (itemIndex) => {
+    props.removeOutfitItem(props.index, itemIndex)
+  }
   const items = props.outfit.items ? props.outfit.items.map((item, index) => {
     return (
       <li key={index}>
-        <SetupOutfitItem index={index} value={item.type} items={props.items} updateOutfitItem={updateOutfitItem} />
+        <SetupOutfitItem index={index} value={item.type} items={props.items} updateOutfitItem={updateOutfitItem} removeOutfitItem={removeOutfitItem}/>
       </li>
     )
   }) : null
