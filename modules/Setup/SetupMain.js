@@ -26,7 +26,6 @@ export default class SetupMain extends Component {
           outfit.items.forEach(item => {
             let alreadyExists = false
             items.forEach(existingItem => {
-              console.log(item.type, existingItem.type, item.type === existingItem.type)
               if (item.type === existingItem.type) {
                 alreadyExists = true
               }
@@ -78,7 +77,6 @@ export default class SetupMain extends Component {
     })
   }
   updateDB = (outfit) => {
-    console.log(outfit)
     const dbOutfit = {type: outfit.type, items: outfit.items}
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');

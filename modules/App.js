@@ -65,6 +65,23 @@ export default class App extends Component {
       />
     )
   }
+  conditionallyRenderNavMenu () {
+    if (this.state.currentStage !== 'setup') {
+      return (
+        <NavMenu
+          updateState={this.updateState}
+          active={this.state.currentStage}
+          tote={this.state.tote}
+          home={!this.state.tote}
+          schedule={!this.state.tote}
+          select={!this.state.days}
+          assign={!this.state.tote.unnamed}
+          packing={!this.state.tote.namedItems}
+          print={!this.state.tote.namedItems}
+        />
+      )
+    }
+  }
   renderStage = (stage) => {
     switch (stage) {
       case 'load':
@@ -101,17 +118,7 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <NavMenu
-          updateState={this.updateState}
-          active={this.state.currentStage}
-          tote={this.state.tote}
-          home={!this.state.tote}
-          schedule={!this.state.tote}
-          select={!this.state.days}
-          assign={!this.state.tote.unnamed}
-          packing={!this.state.tote.namedItems}
-          print={!this.state.tote.namedItems}
-        />
+        {this.conditionallyRenderNavMenu()}
         {this.renderStage(this.state.currentStage)}
         <ReactCSSTransitionGroup
           transitionName="toast"
