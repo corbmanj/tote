@@ -1,14 +1,14 @@
-import React from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
 import OutfitList from './OutfitList'
 import './../../public/skycons'
 
-export default React.createClass({
-  componentDidMount () {
+export default class DayList extends Component {
+  componentDidMount = () => {
     var icons = new Skycons({"resizeClear": true})
     icons.add(this.props.image, this.props.day.icon)
     icons.play()
-  },
+  }
   render() {
     const outfits = this.props.day.outfits.map((outfit, index) => {
       return <OutfitList key={index} index={index} outfit={outfit} namedItems={this.props.namedItems} />
@@ -22,4 +22,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

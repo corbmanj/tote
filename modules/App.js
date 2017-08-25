@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Login from './Login'
 import Schedule from './Schedule/Schedule'
 import SelectOutfits from './Select/SelectOutfits'
@@ -9,6 +9,8 @@ import NavMenu from './NavBar/NavMenu'
 import GetStarted from './GetStarted'
 import Setup from './Setup/SetupMain'
 import LoadTrips from './LoadTrips'
+import Toast from './Shared/Toast'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -16,20 +18,17 @@ import '../node_modules/@blueprintjs/core/dist/blueprint.css'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      numDays: 0,
-      currentStage: 'home',
-      tote: {}
-    }
-  },
-
-  updateStage: function (newStage) {
+export default class App extends Component {
+  state = {
+    numDays: 0,
+    currentStage: 'home',
+    tote: {},
+    showToast: false
+  }
+  updateStage = (newStage) => {
     this.setState({ currentStage: newStage.target.value })
-  },
-
-  saveToDB: function () {
+  }
+  saveToDB = () => {
     var myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
@@ -46,30 +45,56 @@ export default React.createClass({
           throw new Error("Bad response from server")
         }
       });
-  },
-
-  updateState: function (stateObj) {
+  }
+  updateState = (stateObj) => {
     this.setState(stateObj)
     this.saveToDB()
-  },
-
-  updateSateNoSave: function (stateObj) {
+  }
+  updateSateNoSave = (stateObj) => {
     this.setState(stateObj)
-  },
-
-  renderStage: function(stage) {
+  }
+  showToast = (toastProps) => {
+    this.setState({showToast: true, toastProps})
+    setTimeout(() => { this.setState({showToast: false}) }, 1500)
+  }
+  renderToast = () => {
+    return (
+      <Toast
+        message={this.state.toastProps.message || "no message"}
+        type={this.state.toastProps.type || "success"}
+      />
+    )
+  }
+  conditionallyRenderNavMenu () {
+    if (this.state.currentStage !== 'setup') {
+      return (
+        <NavMenu
+          updateState={this.updateState}
+          active={this.state.currentStage}
+          tote={this.state.tote}
+          home={!this.state.tote}
+          schedule={!this.state.tote}
+          select={!this.state.days}
+          assign={!this.state.tote.unnamed}
+          packing={!this.state.tote.namedItems}
+          print={!this.state.tote.namedItems}
+        />
+      )
+    }
+  }
+  renderStage = (stage) => {
     switch (stage) {
       case 'load':
         return <LoadTrips updateState={this.updateSateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
         break
       case 'setup':
-        return <Setup updateState={this.updateState} user={this.state.id} />
+        return <Setup updateState={this.updateState} user={this.state.userId} />
         break
       case 'schedule':
         return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} days={this.state.days} />
         break
       case 'select':
-        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} />
+        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} showToast={this.showToast}/>
         break
       case 'assign':
         return <AssignItems updateState={this.updateState} days={this.state.days} tote={this.state.tote} />
@@ -88,24 +113,24 @@ export default React.createClass({
           </div>
         )
     }
-  },
+  }
 
   render() {
     return (
       <div>
-        <NavMenu
-          updateState={this.updateState}
-          active={this.state.currentStage}
-          tote={this.state.tote}
-          home={!this.state.tote}
-          schedule={!this.state.tote}
-          select={!this.state.days}
-          assign={!this.state.tote.unnamed}
-          packing={!this.state.tote.namedItems}
-          print={!this.state.tote.namedItems}
-        />
+        {this.conditionallyRenderNavMenu()}
         {this.renderStage(this.state.currentStage)}
+        <ReactCSSTransitionGroup
+          transitionName="toast"
+          transitionEnter
+          transitionEnterTimeout={300}
+          transitionAppear={false}
+          transitionLeave
+          transitionLeaveTimeout={300}
+        >
+          {this.state.showToast && this.renderToast()}
+        </ReactCSSTransitionGroup>
       </div>
     )
   }
-})
+}

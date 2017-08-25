@@ -1,29 +1,27 @@
-import React from 'react'
+import React, {Component} from 'react'
 
-export default React.createClass({
-  getInitialState () {
-    return {
-      editing: false,
-      name: this.props.item.name
-    }
-  },
-  toggleEditing () {
+export default class Item extends Component {
+  state = {
+    editing: false,
+    name: this.props.item.name
+  }
+  toggleEditing = () => {
     if (this.state.editing) {
       this.props.updateNamedItemInAllOutfits(this.props.item.id, this.state.name)
     }
     this.setState({name: this.props.item.name, editing: !this.state.editing})
-  },
-  updateItemName (ev) {
+  }
+  updateItemName = (ev) => {
     this.setState({name: ev.target.value})
-  },
-  renderName () {
+  }
+  renderName = () => {
     return <li onDoubleClick={this.toggleEditing}>{this.props.item.name}</li>
-  },
-  deleteItem () {
+  }
+  deleteItem = () => {
     this.props.deleteNamedItem(this.props.item.id)
     this.setState({editing: false})
-  },
-  renderEdit () {
+  }
+  renderEdit = () => {
     return (
       <li>
         <input
@@ -38,12 +36,8 @@ export default React.createClass({
         <span onClick={this.deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
       </li>
     )
-  },
-  // logEvent (ev) {
-  //   ev.charCode === 13 ? this.toggleEditing() : null
-  // },
+  }
   render () {
     return this.state.editing ? this.renderEdit() : this.renderName()
-    // return <li>{this.props.item.name}</li>
   }
-})
+}

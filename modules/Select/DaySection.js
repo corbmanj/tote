@@ -1,27 +1,25 @@
-import React from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
-import { OutfitSection } from './OutfitSection'
+import OutfitSection from './OutfitSection'
 import './../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
 import Modal from '../Shared/Modal'
 import _ from 'lodash'
 
-export const DaySection = React.createClass({
-  getInitialState: function () {
-    return {
-      outfits: this.props.day.outfits,
-      isOpen: this.props.index === 0
-    }
-  },
-  toggleOpen () {
+export default class DaySection extends Component {
+  state = {
+    outfits: this.props.day.outfits,
+    isOpen: this.props.index === 0
+  }
+  toggleOpen = () => {
     this.setState({isOpen: !this.state.isOpen})
-  },
-  componentDidMount () {
+  }
+  componentDidMount = () => {
     var icons = new Skycons({"resizeClear": true})
     icons.add(this.props.image, this.props.day.icon)
     icons.play()
-  },
-  updateDay: function (key, outfit, inc) {
+  }
+  updateDay = (key, outfit, inc) => {
     let tempState = this.state.outfits
     const outfitCopy = _.cloneDeep(outfit)
     if (inc === 1) {
@@ -37,14 +35,14 @@ export const DaySection = React.createClass({
     }
     this.setState({outfits: tempState})
     this.props.updateTote(this.props.index, key, outfitCopy, inc)
-  },
-  updateName: function (key, name) {
+  }
+  updateName = (key, name) => {
     let tempState = this.state.outfits
     tempState[key]['realName'] = name
     this.setState({outfits: tempState})
     this.props.updateOutfitName(this.props.index, key, name)
-  },
-  addOutfit: function () {
+  }
+  addOutfit = () => {
     const num = this.state.outfits.length + 1 || 1
     const newOutfit = {
       id: num,
@@ -53,10 +51,10 @@ export const DaySection = React.createClass({
     let tempOutfits = this.state.outfits
     tempOutfits.push(newOutfit)
     this.setState({ outfits: tempOutfits, activeOutfit: newOutfit.id })
-  },
-  updateActiveOutfit: function (index) {
+  }
+  updateActiveOutfit = (index) => {
     this.setState({activeOutfit: index})
-  },
+  }
   render() {
     const outfits = this.state.outfits.map((outfit, index) => {
       return (
@@ -93,4 +91,4 @@ export const DaySection = React.createClass({
       </li>
     )
   }
-})
+}

@@ -1,47 +1,45 @@
-import React from 'react'
-import { CheckboxSection } from './CheckboxSection'
+import React, {Component} from 'react'
+import CheckboxSection from './CheckboxSection'
 import { Collapse } from "@blueprintjs/core"
 import _ from 'lodash'
 
-export const OutfitSection = React.createClass({
-  getInitialState: function () {
-    return {
-      outfit: this.props.outfit,
-      disabled: this.props.outfit && this.props.outfit.type,
-      outfitType: this.props.outfit ? this.props.outfit.type : null,
-      outfitTypes: this.props.outfitTypes
-    }
-  },
-  selectText (e) {
+export default class OutfitSection extends Component {
+  state = {
+    outfit: this.props.outfit,
+    disabled: this.props.outfit && this.props.outfit.type,
+    outfitType: this.props.outfit ? this.props.outfit.type : null,
+    outfitTypes: this.props.outfitTypes
+  }
+  selectText = (e) => {
     e.target.select()
-  },
-  saveOutfit: function () {
+  }
+  saveOutfit = () => {
     this.setState({ disabled: true })
     this.props.updateDay(this.props.index, this.state.outfit, 1)
-  },
-  editOutfit: function () {
+  }
+  editOutfit = () => {
     const outfitCopy = _.cloneDeep(this.state.outfit)
     this.props.updateDay(this.props.index, this.state.outfit, -1)
     this.setState({ disabled: false, outfit: outfitCopy})
-  },
-  removeOutfit: function () {
+  }
+  removeOutfit = () => {
     this.props.updateDay(this.props.index, this.state.outfit, 0)
-  },
-  renameOutfit: function () {
+  }
+  renameOutfit = () => {
     let tempState = this.state
     tempState.renaming = true
     this.setState({tempState})
-  },
-  updateName: function (e) {
+  }
+  updateName = (e) => {
     let tempState = this.state.outfit
     tempState.realName = e.target.value
     this.setState({tempState})
-  },
-  stopRenaming: function () {
+  }
+  stopRenaming = () => {
     this.setState({renaming: false})
     this.props.updateName(this.props.index, this.state.outfit.realName)
-  },
-  renderRenaming: function () {
+  }
+  renderRenaming = () => {
     return (
       <span>
         <input
@@ -54,11 +52,11 @@ export const OutfitSection = React.createClass({
         />
       </span>
     )
-  },
-  renderName: function () {
+  }
+  renderName = () => {
     return this.state.outfit.realName
-  },
-  changeOutfitType: function (ev) {
+  }
+  changeOutfitType = (ev) => {
     let tempOutfit = JSON.parse(JSON.stringify(this.props.outfitTypes.find((item) => {
       return (item.type === ev.target.value)
     })))
@@ -70,23 +68,23 @@ export const OutfitSection = React.createClass({
       },
       outfitType: ev.target.value
     })
-  },
-  updateActiveOutfit () {
+  }
+  updateActiveOutfit = () => {
     this.props.updateActiveOutfit(this.props.outfit.id)
-  },
-  toggleItem (name, isChecked) {
+  }
+  toggleItem = (name, isChecked) => {
     let tempOutfit = this.state.outfit
 
     tempOutfit.items.forEach((item) => {
       if (item.type === name) { item.isNotIncluded = !isChecked }
     })
     this.setState({ outfit: tempOutfit })
-  },
-  renderCopyModal () {
+  }
+  renderCopyModal = () => {
     const modalProps = {outfit: this.state.outfit, confirmText: 'Copy Outfit'}
     this.props.renderCopyModal(modalProps)
-  },
-  renderOutfitDetails () {
+  }
+  renderOutfitDetails = () => {
     const outfitNames = this.state.outfitTypes.map(function (type, key) {
         return (
           <option key={key} value={type.type}>{type.type}</option>
@@ -119,7 +117,7 @@ export const OutfitSection = React.createClass({
         </Collapse>
       </li>
     )
-  },
+  }
   render () {
     const carotClass = this.props.activeOutfit === this.props.outfit.id ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
     return (
@@ -135,4 +133,4 @@ export const OutfitSection = React.createClass({
       </li>
     )
   }
-})
+}

@@ -1,22 +1,24 @@
 var webpack = require('webpack')
+const path = require('path')
 
 module.exports = {
   entry: './index.js',
 
   output: {
-    path: 'public',
-    filename: 'bundle.js',
-    publicPath: '/'
+    path: path.join(__dirname, 'public'),
+    publicPath: '/',
+    filename: 'bundle.js'
   },
 
   module: {
-    loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader?presets[]=es2015&presets[]=react' },
+    rules: [
       { test: /\.css$/, loader: "style-loader!css-loader" },
       { test: /\.(woff|woff2)$/, loader: "url-loader" },
-      { test: /\.(ttf|eot|svg)$/, loader: "file-loader" }
+      { test: /\.(ttf|eot|svg)$/, loader: "file-loader" },
+      { test: /\.js$/, exclude: /node_modules/, use: ['babel-loader'], include: [path.resolve(__dirname, 'modules'), path.resolve(__dirname, 'index.js')] }
     ]
   },
+  devtool: "#source-map",
   plugins: process.env.NODE_ENV === 'production' ? [
     new webpack.DefinePlugin({
       'process.env': {

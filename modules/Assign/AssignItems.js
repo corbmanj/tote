@@ -1,43 +1,48 @@
-import React from 'react'
+import React, {Component} from 'react'
 import Modal from '../Shared/Modal'
-import { AssignDay } from './AssignDay'
-import { AdditionalItemSection } from '../Select/AdditionalItemSection'
+import AssignDay from './AssignDay'
+import AdditionalItemSection from '../Select/AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 
-export default React.createClass({
-  getInitialState () {
-    return {
-      editingNamedItems: false,
-      error: false,
-      errorMsg: null
-    }
-  },
-  toggleModal () {
+export default class AssignItems extends Component {
+  // getInitialState () {
+  //   return {
+  //     editingNamedItems: false,
+  //     error: false,
+  //     errorMsg: null
+  //   }
+  // }
+  state = {
+    editingNamedItems: false,
+    error: false,
+    errorMsg: null
+  }
+  toggleModal = () => {
     this.setState({editingNamedItems: !this.state.editingNamedItems})
     const body = document.getElementsByTagName('body')[0]
     body.classList.toggle('no-scroll')
-  },
-  updateNamedItems (namedItems) {
+  }
+  updateNamedItems = (namedItems) => {
     let stateObj = {}
     stateObj.tote = this.props.tote
     stateObj.tote.namedItems = namedItems
     this.props.updateState(stateObj)
-  },
-  updateNamedItemInAllOutfits (id, newName) {
+  }
+  updateNamedItemInAllOutfits = (id, newName) => {
     let stateObj = {}
     stateObj.tote = this.props.tote
     const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
     stateObj.tote.namedItems[oldItemIndex].name = newName
     this.props.updateState(stateObj)
-  },
-  deleteNamedItem (id) {
+  }
+  deleteNamedItem = (id) => {
     let stateObj = {}
     stateObj.tote = this.props.tote
     const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
     stateObj.tote.namedItems.splice(oldItemIndex, 1)
     this.props.updateState(stateObj)
-  },
-  updateOutfit (id, outfitIndex, dayIndex) {
+  }
+  updateOutfit = (id, outfitIndex, dayIndex) => {
     let stateObj = {}
     const namedItem = this.props.tote.namedItems.find(item => {return item.id === Number(id)})
     stateObj.days = this.props.days
@@ -47,25 +52,25 @@ export default React.createClass({
       item.id = namedItem.id
     })
     this.props.updateState(stateObj)
-  },
-  addItem (index) {
+  }
+  addItem = (index) => {
     let stateObj = {}
     stateObj.tote = this.props.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
     stateObj.tote.additionalItems[index].items.push('new item')
     this.props.updateState(stateObj)
-  },
-  toggleEditing (index) {
+  }
+  toggleEditing = (index) => {
     let stateObj = this.props.tote
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
     this.props.updateState(stateObj)
-  },
-  updateItem: function (typeIndex, itemIndex, itemName) {
+  }
+  updateItem = (typeIndex, itemIndex, itemName) => {
     let stateObj = this.props.tote
     stateObj.additionalItems[typeIndex].items[itemIndex] = itemName
     this.props.updateState(stateObj)
-  },
-  updateStage: function () {
+  }
+  updateStage = () => {
     if (!(this.props.tote.namedItems && this.props.tote.namedItems.length)) {
       this.setState({error: true, errorMsg: 'Please assign at least one item'})
       return
@@ -73,12 +78,12 @@ export default React.createClass({
     let stateObj = {}
     stateObj.currentStage = 'packing'
     this.props.updateState(stateObj)
-  },
-  deleteItem (typeIndex, itemIndex) {
+  }
+  deleteItem = (typeIndex, itemIndex) => {
     let stateObj = this.props.tote
     stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
-  },
+  }
   render() {
     const days = this.props.days.map((day, index) => {
       return (
@@ -138,4 +143,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

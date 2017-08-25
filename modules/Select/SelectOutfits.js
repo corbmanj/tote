@@ -1,20 +1,18 @@
-import React from 'react'
-import { DaySection } from './DaySection'
-import { AdditionalItemSection } from './AdditionalItemSection'
+import React, {Component} from 'react'
+import DaySection from './DaySection'
+import AdditionalItemSection from './AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 import Modal from '../Shared/Modal'
 import moment from 'moment'
 import _ from 'lodash'
 
-export default React.createClass({
-  getInitialState: function () {
-    return {
-      tote: this.props.tote,
-      modalOpen: false,
-      modalProps: false
-    }
-  },
-  validateOutfits: function () {
+export default class SelectOutfits extends Component {
+  state = {
+    tote: this.props.tote,
+    modalOpen: false,
+    modalProps: false
+  }
+  validateOutfits = () => {
     // check if all outfits have items
     let isOutfitError = false
     let isDayError = false
@@ -35,16 +33,16 @@ export default React.createClass({
     })
     this.setState({isOutfitError: isOutfitError, isDayError: isDayError, badOutfits: badOutfits, badDays: badDays})
     return (isOutfitError || isDayError)
-  },
-  updateOutfits: function () {
+  }
+  updateOutfits = () => {
     const isError = this.validateOutfits()
     if (!isError) {
       let stateObj = {}
       stateObj.currentStage = 'assign'
       this.props.updateState(stateObj)
     }
-  },
-  updateTote: function (dayKey, outfitKey, outfit, inc) {
+  }
+  updateTote = (dayKey, outfitKey, outfit, inc) => {
     let stateObj = {}
     stateObj.tote = this.state.tote
     stateObj.tote.unnamed = stateObj.tote.unnamed || {}
@@ -54,43 +52,43 @@ export default React.createClass({
       }
     })
     this.props.updateState(stateObj)
-  },
-  updateOutfitName: function (dayKey, outfitKey, name) {
+  }
+  updateOutfitName = (dayKey, outfitKey, name) => {
     let stateObj = {}
     stateObj.days = this.props.days
     stateObj.days[dayKey].outfits[outfitKey].realName = name
     this.props.updateState(stateObj)
-  },
-  addItem (index) {
+  }
+  addItem = (index) => {
     let stateObj = {}
     stateObj.tote = this.state.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
     stateObj.tote.additionalItems[index].items.push('new item')
     this.props.updateState(stateObj)
-  },
-  toggleEditing (index) {
+  }
+  toggleEditing = (index) => {
     let stateObj = this.state.tote
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
     this.props.updateState(stateObj)
-  },
-  updateItem (typeIndex, itemIndex, itemName) {
+  }
+  updateItem = (typeIndex, itemIndex, itemName) => {
     let stateObj = this.state.tote
     stateObj.additionalItems[typeIndex].items[itemIndex] = itemName
     this.props.updateState(stateObj)
-  },
-  deleteItem (typeIndex, itemIndex) {
+  }
+  deleteItem = (typeIndex, itemIndex) => {
     let stateObj = this.state.tote
     stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
     this.props.updateState(stateObj)
-  },
-  renderCopyModal (modalProps) {
+  }
+  renderCopyModal = (modalProps) => {
     modalProps.days = this.props.days
     this.setState({modalOpen: true, modalProps: modalProps})
-  },
-  closeModal () {
+  }
+  closeModal = () => {
     this.setState({modalOpen: false})
-  },
-  copyOutfits (copyArray, outfit) {
+  }
+  copyOutfits = (copyArray, outfit) => {
     let stateObj = {}
     // copy outfit to each day that was selected
     stateObj.days = this.props.days
@@ -104,7 +102,8 @@ export default React.createClass({
     })
     this.props.updateState(stateObj)
     this.setState({modalOpen: false})
-  },
+    this.props.showToast({message: "Outfit copied successfully", type: "success"})
+  }
   render() {
     const days = this.props.days.map((day, index) => {
       const imageName = day.icon + index
@@ -186,4 +185,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

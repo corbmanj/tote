@@ -1,18 +1,15 @@
-import React from 'react'
+import React, {Component} from 'react'
 require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default React.createClass({
-  getInitialState () {
-    return {
-      loggedIn: false,
-      email: 'hannah.robus@gmail.com',
-      password: 'Password1'
-    }
-  },
-
-  submitLogin (e) {
+export default class Login extends Component {
+  state = {
+    loggedIn: false,
+    email: 'hannah.robus@gmail.com',
+    password: 'Password1'
+  }
+  submitLogin = (e) => {
     let that = this
     e.preventDefault()
     this.setState({loginError: false})
@@ -50,20 +47,18 @@ export default React.createClass({
             })
         }
       })
-  },
-
-  renderGetStarted () {
+  }
+  renderGetStarted = () => {
     return (
       <div>
         <button>Plan A New Trip</button>
         <h2>Load A Saved Trip</h2>
       </div>
     )
-  },
-
-  renderError () {
+  }
+  renderError = () => {
     return <span className="error">Error: Invalid email or password</span>
-  },
+  }
 
   render () {
     return (
@@ -77,4 +72,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

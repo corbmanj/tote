@@ -4,11 +4,10 @@ require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default React.createClass({
-  initializeTrip (ev) {
-    let that = this
+export default function GetStarted (props) {
+  const initializeTrip = (ev) => {
     let stateObj = {}
-    fetch(`${baseUrl}/db/tote/newTrip/${this.props.userId}`, {
+    fetch(`${baseUrl}/db/tote/newTrip/${props.userId}`, {
       method: "POST",
     })
       .then(function(response) {
@@ -19,16 +18,16 @@ export default React.createClass({
       })
       .then(function (data) {
         stateObj.tripId = data.id
-        that.props.updateState(stateObj)
+        props.updateState(stateObj)
       });
-    this.props.updateStage(ev)
-  },
-  render () {
-    return (
-      <div>
-        <button value='schedule' onClick={this.initializeTrip}>Plan a New Trip</button>
-        <button value='load' onClick={this.props.updateStage}>Load a Saved Trip</button>
-      </div>
-    )
+    props.updateStage(ev)
   }
-})
+
+  return (
+    <div>
+      <button value='schedule' onClick={initializeTrip}>Plan a New Trip</button>
+      <button value='load' onClick={props.updateStage}>Load a Saved Trip</button>
+      <button value='setup' onClick={props.updateStage}>Edit User Settings</button>
+    </div>
+  )
+}

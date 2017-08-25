@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
 import Modal from './Shared/ConfirmModal'
 require('es6-promise').polyfill()
@@ -6,16 +6,14 @@ require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default React.createClass({
+export default class LoadTrips extends Component {
   componentWillMount () {
     this.getTripList()
-  },
-  getInitialState() {
-    return {
-      showModal: true
-    }
-  },
-  getTripList () {
+  }
+  state = {
+    showModal: true
+  }
+  getTripList = () => {
     let that = this
     fetch(`${baseUrl}/db/tote/getTrips/${this.props.userId}`, {
       method: "GET",
@@ -29,19 +27,19 @@ export default React.createClass({
       .then(function (data) {
         that.setState({tripList: data})
       });
-  },
-  loadTrip (trip) {
+  }
+  loadTrip = (trip) => {
     let ev = {}
     ev.target = {}
     ev.target.value = 'schedule'
     this.props.updateState(trip)
     this.props.updateStage(ev)
-  },
-  handleDeleteClick (ev, trip) {
+  }
+  handleDeleteClick = (ev, trip) => {
     ev.stopPropagation()
     this.setState({showModal: true, modalTrip: trip})
-  },
-  deleteTrip (id) {
+  }
+  deleteTrip = (id) => {
     let that = this
     const newList = this.state.tripList
     const deleteIndex = newList.findIndex(trip => {return trip.tripId === id})
@@ -58,8 +56,8 @@ export default React.createClass({
         newList.splice(deleteIndex, 1)
         that.setState({showModal: false, tripList: newList})
       });
-  },
-  renderTripList () {
+  }
+  renderTripList = () => {
     const tripList = this.state.tripList.sort((a,b) => {
       if (a.startDate > b.startDate) {
         return -1
@@ -80,13 +78,13 @@ export default React.createClass({
       }
     })
     return tripList
-  },
-  closeModal () {
+  }
+  closeModal = () => {
     this.setState({showModal: false})
-  },
-  renderModal () {
+  }
+  renderModal = () => {
     return <Modal closeModal={this.closeModal} trip={this.state.modalTrip} confirmAction={this.deleteTrip} />
-  },
+  }
   render () {
     return (
       <div>
@@ -97,4 +95,4 @@ export default React.createClass({
       </div>
     )
   }
-})
+}

@@ -1,24 +1,31 @@
-import React from 'react'
+import React, {Component} from 'react'
 import moment from 'moment'
-import { AssignOutfit } from './AssignOutfit'
+import AssignOutfit from './AssignOutfit'
 import '../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
 
-export const AssignDay = React.createClass({
-  getInitialState() {
-    return {activeOutfit: 1, isOpen: this.props.index === 0}
-  },
+export default class AssignDay extends Component {
+  // constructor (props) {
+  //   super(props)
+  //   this.state = {activeOutfit: 1, isOpen: this.props.index === 0}
+  // }
+  // getInitialState() {
+  //   return {activeOutfit: 1, isOpen: this.props.index === 0}
+  // },
 
-  updateOutfit: function (id, outfitIndex) {
+  state = {activeOutfit: 1, isOpen: this.props.index === 0}
+
+  updateOutfit = (id, outfitIndex) => {
     this.props.updateOutfit(id, outfitIndex, this.props.index)
-  },
+  }
 
-  updateActiveOutfit: function (index) {
+  updateActiveOutfit = (index) => {
     this.setState({activeOutfit: index})
-  },
-  toggleOpen: function () {
+  }
+
+  toggleOpen = () => {
     this.setState({isOpen: !this.state.isOpen})
-  },
+  }
 
   render() {
     const outfits = this.props.day.outfits.map((outfit, index) => {
@@ -53,4 +60,4 @@ export const AssignDay = React.createClass({
       </li>
     )
   }
-})
+}
