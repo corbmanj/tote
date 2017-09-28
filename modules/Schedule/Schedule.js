@@ -86,6 +86,12 @@ export default class Schedule extends Component {
   updateCityState = (ev) => {
     this.props.updateState({city: ev.target.value})
   }
+  handleKeyPress = (ev) => {
+    if (ev.charCode === 13 && this.state.endDate.isAfter(this.state.startDate) && this.props.city) {
+      this.updateSchedule()
+    }
+
+  }
   renderButtons = () => {
     if (this.props.days) {
       let stateObj = {}
@@ -117,7 +123,7 @@ export default class Schedule extends Component {
     return (
       <div>
         <h2 className="header">Schedule</h2>
-        <form>
+        <div onKeyPress={this.handleKeyPress}>
           Start Date:
           <input
             defaultValue={this.state.startDate ? moment(this.state.startDate).format('YYYY-MM-DD') : null}
@@ -140,7 +146,7 @@ export default class Schedule extends Component {
             value={this.props.city || "City, St"}
             onFocus={e => e.target.select()}
           />
-        </form>
+        </div>
         {this.renderButtons()}
       </div>
       )
