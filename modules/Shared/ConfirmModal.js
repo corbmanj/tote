@@ -15,7 +15,7 @@ export default function ConfirmModal (props) {
           </svg>
         </div>
         <div className="modal-header">
-          <span>Are you sure you want to delete this outfit?</span>
+          <span>Are you sure you want to delete this trip?</span>
         </div>
         <div className="modal-body modal-body-with-header">
           <p>City: {props.trip.city}</p>
