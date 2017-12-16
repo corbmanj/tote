@@ -125,7 +125,7 @@ export default class AssignItems extends Component {
         }
         <div className="flex-5">
           <button style={{float: 'right'}} onClick={this.toggleModal}>Edit Named Items</button>
-          <h2 className="header">Assign Items</h2>
+          <h2 className="header">Pack Items</h2>
           <ul className="sectionList">
             {days}
           </ul>

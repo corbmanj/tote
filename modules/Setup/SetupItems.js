@@ -21,7 +21,7 @@ export default function SetupItems (props) {
       <ul className="sectionList">
         <table>
           <thead>
-            <tr><th>Item Name</th><th>Item Type</th><th>Specify Item?</th><th>Outfit Count</th></tr>
+            <tr><th>Item Name</th><th>Item Type</th><th>Named Item?</th><th>Outfit Count</th></tr>
           </thead>
           <tbody>
             {items}
