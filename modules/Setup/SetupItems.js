@@ -11,7 +11,7 @@ export default function SetupItems (props) {
         }
       }
     }
-    return <SetupItem key={index} index={index} item={item} updateItem={props.updateItem} outfitCount={outfitCount}/>
+    return <SetupItem key={index} index={index} item={item} updateItem={props.updateItem} removeItem={props.removeItem} outfitCount={outfitCount}/>
   })
   return (
     <div className="flex-5">
@@ -21,7 +21,7 @@ export default function SetupItems (props) {
       <ul className="sectionList">
         <table>
           <thead>
-            <tr><th>Item Name</th><th>Item Type</th><th>Named Item?</th><th>Outfit Count</th></tr>
+          <tr><th></th><th>Item Name</th><th>Item Type</th><th>Named Item?</th><th>Outfit Count</th></tr>
           </thead>
           <tbody>
             {items}

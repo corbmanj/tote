@@ -67,6 +67,20 @@ router.get('/userItems/:userid', function(req, res) {
     });
 });
 
+// add an outfit type for the logged in user
+router.post('/addOutfit/:userid', function(req, res) {
+  var result
+  client.query("INSERT INTO outfit_types_json (outfit, user_id) VALUES($1, $2) \
+    returning id;",
+    [JSON.stringify(req.body), req.params.userid])
+    .on('error', function (err) {
+      res.json(err)
+    })
+    .on('row', function (row) {
+      res.json(row)
+    });
+});
+
 // save or update an outfit type for the logged in user
 router.put('/userItems/:userid/:outfitid', function(req, res) {
   var result

@@ -2,12 +2,13 @@ import React from 'react'
 import SetupOutfit from './SetupOutfit'
 
 export default function SetupOutfits (props) {
-  const types = props.types.map((type, index) => {
+  const types = props.types.sort((a,b) => a.id > b.id).map((type, index) => {
     return (
       <SetupOutfit
         key={index}
         index={index}
         outfit={type}
+        updateDB={props.updateDB}
         addItem={props.addItem}
         items={props.items}
         updateOutfitItem={props.updateOutfitItem}
