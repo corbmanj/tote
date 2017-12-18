@@ -39,10 +39,33 @@ export default class SetupMain extends Component {
       })
   }
   addOutfit = () => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
     let newType = {type: "new outfit type", items: []}
     let outfitTypes = this.state.outfitTypes
     outfitTypes.push(newType)
-    this.setState({outfitTypes: outfitTypes})
+    const that = this
+
+    fetch(`${this.baseUrl}/db/addOutfit/${this.props.user}`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(newType),
+      mode: 'cors',
+      cache: 'default'
+    })
+      .then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        return response.json()
+      })
+      .then(function(response) {
+        console.log(response)
+        outfitTypes[outfitTypes.length - 1].id = response.id
+        that.setState({outfitTypes})
+      })
+
   }
   addItemToOutfit = (outfitIndex) => {
     let newItem = {type: 'new item'}
@@ -52,6 +75,7 @@ export default class SetupMain extends Component {
     this.setState(outfitTypes)
   }
   updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
+    console.log(outfitIndex, itemIndex, itemType)
     let itemObj = this.state.items.find(item => item.type === itemType)
     let tempOutfits = this.state.outfitTypes
     tempOutfits[outfitIndex].items[itemIndex] = itemObj
@@ -68,6 +92,14 @@ export default class SetupMain extends Component {
     let items = this.state.items
     items[itemIndex] = item
     this.setState({items: items})
+  }
+  removeItem = (itemIndex) => {
+    this.setState(prevState => {
+      console.log('before', itemIndex, prevState.items)
+      prevState.items.splice(itemIndex, 1)
+      console.log('after', prevState.items)
+      return {items: prevState.items}
+    })
   }
   removeOutfitItem = (outfitIndex, itemIndex) => {
     this.setState(prevState => {
@@ -106,6 +138,7 @@ export default class SetupMain extends Component {
         <div className="flex-container">
 
           <SetupOutfits
+            updateDB={this.updateDB}
             addOutfit={this.addOutfit}
             types={this.state.outfitTypes}
             addItem={this.addItemToOutfit}
@@ -118,6 +151,7 @@ export default class SetupMain extends Component {
             items={this.state.items}
             addItem={this.addItem}
             updateItem={this.updateItem}
+            removeItem={this.removeItem}
             outfits={this.state.outfitTypes}
           />
 
