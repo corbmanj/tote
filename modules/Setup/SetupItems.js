@@ -15,7 +15,6 @@ export default function SetupItems (props) {
   })
   return (
     <div className="flex-5">
-      <span>Add some items so you can build out your outfits on the left.</span>
       <h2>Item Section</h2>
       <div><button className="button" onClick={props.addItem}>Add New Item</button></div>
       <ul className="sectionList">

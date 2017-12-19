@@ -28,7 +28,11 @@ export default class SetupOutfit extends Component {
   }
   conditionallyRenderEditor = () => {
     if (!this.state.editing) {
-      return <span onDoubleClick={this.toggleEditing}>{this.props.outfit.type}</span>
+      return (
+        <span onDoubleClick={this.toggleEditing}>
+          <span className="pt-icon-standard pt-icon-delete" onClick={() => this.props.removeOutfit(this.props.outfit.id)} />
+          {this.props.outfit.type}
+        </span>)
     } else {
       return (
         <div>

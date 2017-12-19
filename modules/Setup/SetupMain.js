@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
+import outfitTypes from "../Select/outfitTypes";
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
@@ -61,7 +62,6 @@ export default class SetupMain extends Component {
         return response.json()
       })
       .then(function(response) {
-        console.log(response)
         outfitTypes[outfitTypes.length - 1].id = response.id
         that.setState({outfitTypes})
       })
@@ -75,7 +75,6 @@ export default class SetupMain extends Component {
     this.setState(outfitTypes)
   }
   updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
-    console.log(outfitIndex, itemIndex, itemType)
     let itemObj = this.state.items.find(item => item.type === itemType)
     let tempOutfits = this.state.outfitTypes
     tempOutfits[outfitIndex].items[itemIndex] = itemObj
@@ -95,9 +94,7 @@ export default class SetupMain extends Component {
   }
   removeItem = (itemIndex) => {
     this.setState(prevState => {
-      console.log('before', itemIndex, prevState.items)
       prevState.items.splice(itemIndex, 1)
-      console.log('after', prevState.items)
       return {items: prevState.items}
     })
   }
@@ -130,13 +127,39 @@ export default class SetupMain extends Component {
         console.log(response)
       })
   }
+  removeOutfit = (outfitId) => {
+    var myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    const that = this
+    fetch(`${this.baseUrl}/db/deleteOutfit/${this.props.user}/${outfitId}`, {
+      method: 'DELETE',
+      headers: myHeaders,
+      mode: 'cors',
+      cache: 'default'
+    })
+      .then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        return response.json()
+      })
+      .then(function(response) {
+        console.log(response)
+        that.setState(prevState => {
+          const newOutfitList = prevState.outfitTypes.filter(outfit => outfit.id !== response.id)
+          console.log(newOutfitList)
+          return {outfitTypes: newOutfitList}
+        })
+      })
+  }
 
   render () {
     return (
-      <div>
+      <div id="setup">
         <div>{!!this.state.outfitTypes || 'You have not set up your outfits yet!'}</div>
+        <div><button value='home' onClick={(ev) => {this.props.updateStage(ev)}}>&lt;- Return To Home</button></div>
         <div className="flex-container">
-
           <SetupOutfits
             updateDB={this.updateDB}
             addOutfit={this.addOutfit}
@@ -144,6 +167,7 @@ export default class SetupMain extends Component {
             addItem={this.addItemToOutfit}
             updateOutfitItem={this.updateOutfitItem}
             removeOutfitItem={this.removeOutfitItem}
+            removeOutfit={this.removeOutfit}
             items={this.state.items}
           />
 

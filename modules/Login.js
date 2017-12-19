@@ -6,8 +6,8 @@ const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8
 export default class Login extends Component {
   state = {
     loggedIn: false,
-    email: 'corbmanj@gmail.com',
-    password: 'Password1'
+    email: '',
+    password: ''
   }
   submitLogin = (e) => {
     let that = this
@@ -47,14 +47,6 @@ export default class Login extends Component {
             })
         }
       })
-  }
-  renderGetStarted = () => {
-    return (
-      <div>
-        <button>Plan A New Trip</button>
-        <h2>Load A Saved Trip</h2>
-      </div>
-    )
   }
   renderError = () => {
     return <span className="error">Error: Invalid email or password</span>

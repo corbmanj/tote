@@ -81,6 +81,20 @@ router.post('/addOutfit/:userid', function(req, res) {
     });
 });
 
+// delete an outfit type for the logged in user
+router.delete('/deleteOutfit/:userid/:outfitid', function(req, res) {
+  var result
+  client.query("DELETE FROM outfit_types_json WHERE user_id = $1 and id = $2\
+    returning id;",
+    [req.params.userid, req.params.outfitid])
+    .on('error', function (err) {
+      res.json(err)
+    })
+    .on('row', function (row) {
+      res.json(row)
+    });
+});
+
 // save or update an outfit type for the logged in user
 router.put('/userItems/:userid/:outfitid', function(req, res) {
   var result
