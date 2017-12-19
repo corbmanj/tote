@@ -13,12 +13,12 @@ export default function SetupOutfits (props) {
         items={props.items}
         updateOutfitItem={props.updateOutfitItem}
         removeOutfitItem={props.removeOutfitItem}
+        removeOutfit={props.removeOutfit}
       />
     )
   })
   return (
     <div className="flex-2">
-      <span>Add some outfit types / activities that will be used to build your trip</span>
       <h2>Outfit Section</h2>
       <div><button className="button" onClick={props.addOutfit}>Add New Outfit Type</button></div>
       <ul className="sectionList">

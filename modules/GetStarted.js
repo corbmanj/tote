@@ -1,13 +1,33 @@
-import React from 'react'
+import React, {Component} from 'react'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default function GetStarted (props) {
-  const initializeTrip = (ev) => {
+export default class GetStarted extends Component {
+  componentWillMount () {
+  const that = this
+    fetch(`${baseUrl}/db/userItems/${that.props.userId}`)
+      .then(function (response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        return response.json();
+      })
+      .then(function (response) {
+        if (!response.outfits.length) { // user has not yet set up outfits
+          that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
+        }
+        else {
+          that.props.updateState({outfitTypes: response.outfits, additionalItems: response.additionalItems})
+        }
+      })
+  }
+
+  initializeTrip = (ev) => {
     let stateObj = {}
-    fetch(`${baseUrl}/db/tote/newTrip/${props.userId}`, {
+    const that = this
+    fetch(`${baseUrl}/db/tote/newTrip/${that.props.userId}`, {
       method: "POST",
     })
       .then(function(response) {
@@ -18,16 +38,17 @@ export default function GetStarted (props) {
       })
       .then(function (data) {
         stateObj.tripId = data.id
-        props.updateState(stateObj)
+        that.props.updateState(stateObj)
       });
-    props.updateStage(ev)
+    this.props.updateStage(ev)
   }
-
-  return (
-    <div>
-      <button value='schedule' onClick={initializeTrip}>Plan a New Trip</button>
-      <button value='load' onClick={props.updateStage}>Load a Saved Trip</button>
-      <button value='setup' onClick={props.updateStage}>Edit User Settings</button>
-    </div>
-  )
+  render () {
+    return (
+      <div>
+        <button value='schedule' onClick={this.initializeTrip}>Plan a New Trip</button>
+        <button value='load' onClick={this.props.updateStage}>Load a Saved Trip</button>
+        <button value='setup' onClick={this.props.updateStage}>Edit User Settings</button>
+      </div>
+    )
+  }
 }

@@ -88,7 +88,7 @@ export default class App extends Component {
         return <LoadTrips updateState={this.updateSateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
         break
       case 'setup':
-        return <Setup updateState={this.updateState} user={this.state.userId} />
+        return <Setup updateState={this.updateState} user={this.state.userId} updateStage={this.updateStage}/>
         break
       case 'schedule':
         return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} days={this.state.days} />

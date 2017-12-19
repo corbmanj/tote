@@ -63,6 +63,12 @@ ul.sectionList {
   flex: 2;
 }
 
+  /* SETUP PAGE */
+#setup h2 {
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
   /* VALIDATION */
 .error {
   color: red;
