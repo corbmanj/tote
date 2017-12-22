@@ -29,9 +29,9 @@ router.get('/users', function(req, res) {
     });
 });
 
-router.get('/user/:email/:password', function(req, res) {
+router.get('/user/:email', function(req, res) {
   var result = []
-  client.query("SELECT * from users WHERE email = '" + req.params.email + "' AND password = '" + req.params.password + "';")
+  client.query("SELECT * from users WHERE email = '" + req.params.email + "';")
     .on('error', function (err) {
       res.json(err)
     })
@@ -39,7 +39,7 @@ router.get('/user/:email/:password', function(req, res) {
       result.push(row)
     })
     .on('end', function (){
-      res.json(result)
+      res.json(result[0])
     });
 });
 
