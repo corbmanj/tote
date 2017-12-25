@@ -15,14 +15,15 @@ export default function PackingList (props) {
           key={index}
           type={type.name}
           items={type.items}
+          handleCheckboxChange={props.handleCheckboxChange}
         />
       )
   })
   return (
     <div>
       <h3>Packing List</h3>
-      <UnnamedItems items={props.tote.unnamed} />
-      <NamedItems items={props.tote.namedItems} />
+      <UnnamedItems items={props.tote.unnamed} handleCheckboxChange={props.handleCheckboxChange}/>
+      <NamedItems items={props.tote.namedItems} handleCheckboxChange={props.handleCheckboxChange}/>
       {additionalItemTypes}
       <button onClick={updateStage}>Print Your Tote</button>
     </div>

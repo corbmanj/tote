@@ -45,10 +45,17 @@ export default class SelectOutfits extends Component {
   updateTote = (dayKey, outfitKey, outfit, inc) => {
     let stateObj = {}
     stateObj.tote = this.state.tote
-    stateObj.tote.unnamed = stateObj.tote.unnamed || {}
+    stateObj.tote.unnamed = stateObj.tote.unnamed || []
     outfit.items.map((item) => {
       if (item.dropdown === false && !item.isNotIncluded) {
-        stateObj.tote.unnamed[item.type] = stateObj.tote.unnamed[item.type] ? stateObj.tote.unnamed[item.type] + inc : 1
+        let itemTypeIndex = stateObj.tote.unnamed.findIndex(foundItem => {
+          return foundItem.id === item.type})
+        if (itemTypeIndex === -1) {
+          stateObj.tote.unnamed.push({id: item.type, count: 1})
+        } else {
+          stateObj.tote.unnamed[itemTypeIndex].count = stateObj.tote.unnamed[itemTypeIndex].count + inc
+        }
+        // stateObj.tote.unnamed[item.type] = stateObj.tote.unnamed[item.type] ? stateObj.tote.unnamed[item.type] + inc : 1
       }
     })
     this.props.updateState(stateObj)
@@ -63,7 +70,7 @@ export default class SelectOutfits extends Component {
     let stateObj = {}
     stateObj.tote = this.state.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
-    stateObj.tote.additionalItems[index].items.push('new item')
+    stateObj.tote.additionalItems[index].items.push({id: 'new item'})
     this.props.updateState(stateObj)
   }
   toggleEditing = (index) => {
@@ -73,7 +80,7 @@ export default class SelectOutfits extends Component {
   }
   updateItem = (typeIndex, itemIndex, itemName) => {
     let stateObj = this.state.tote
-    stateObj.additionalItems[typeIndex].items[itemIndex] = itemName
+    stateObj.additionalItems[typeIndex].items[itemIndex].id = itemName
     this.props.updateState(stateObj)
   }
   deleteItem = (typeIndex, itemIndex) => {

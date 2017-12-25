@@ -7,7 +7,9 @@ export default class Item extends Component {
   }
   toggleEditing = () => {
     if (this.state.editing) {
-      this.props.updateNamedItemInAllOutfits(this.props.item.id, this.state.name)
+      if (!(this.state.name === '')) {
+        this.props.updateNamedItemInAllOutfits(this.props.item.id, this.state.name)
+      }
     }
     this.setState({name: this.props.item.name, editing: !this.state.editing})
   }
