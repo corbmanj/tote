@@ -5,13 +5,6 @@ import AdditionalItemSection from '../Select/AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 
 export default class AssignItems extends Component {
-  // getInitialState () {
-  //   return {
-  //     editingNamedItems: false,
-  //     error: false,
-  //     errorMsg: null
-  //   }
-  // }
   state = {
     editingNamedItems: false,
     error: false,
@@ -133,7 +126,7 @@ export default class AssignItems extends Component {
           <button
             style={{float: 'right'}}
             onClick={this.updateStage}
-          >Assign Items</button>
+          >Pack Items</button>
           <br />
         </div>
         <div className="flex-2">
