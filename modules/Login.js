@@ -7,8 +7,8 @@ const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8
 export default class Login extends Component {
   state = {
     loggedIn: false,
-    email: 'hannah.robus@gmail.com',
-    password: 'Password1'
+    email: '',
+    password: ''
   }
   submitLogin = (e) => {
     let that = this
