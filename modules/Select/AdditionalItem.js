@@ -2,20 +2,20 @@ import React, {Component} from 'react'
 
 export default class AdditionalItem extends Component {
   state = {
-    editing: this.props.item === 'new item'
+    editing: this.props.item.id === 'new item'
   }
   toggleEditing = () => {
     if (this.state.editing) {
       this.props.updateItem(this.props.index, this.state.name)
     }
-    this.setState({name: this.props.item, editing: !this.state.editing})
+    this.setState({name: this.props.item.id, editing: !this.state.editing})
   }
   updateItemName = (ev) => {
     this.setState({name: ev.target.value})
   }
   renderName = () => {
     return <div>
-      <span onDoubleClick={this.toggleEditing}>{this.props.item}</span>
+      <span onDoubleClick={this.toggleEditing}>{this.props.item.id}</span>
     </div>
   }
   deleteItem = () => {
@@ -27,11 +27,10 @@ export default class AdditionalItem extends Component {
       <div>
         <input
           type="text"
-          value={this.state.name || this.props.item}
+          value={this.state.name || this.props.item.id}
           autoFocus
           onFocus={ev => ev.target.select()}
           onChange={this.updateItemName}
-          //onBlur={this.toggleEditing}
           onKeyPress={this.logEvent}
         />
         <span onClick={this.toggleEditing} className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>

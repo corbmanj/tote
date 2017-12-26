@@ -28,14 +28,14 @@ export default class App extends Component {
   updateStage = (newStage) => {
     this.setState({ currentStage: newStage.target.value })
   }
-  saveToDB = () => {
+  saveToDB = (currentState = this.state) => {
     var myHeaders = new Headers();
 
     myHeaders.append('Content-Type', 'application/json');
 
     fetch(`${baseUrl}/db/tote/updateTrip/${this.state.tripId}`, {
       method: 'POST',
-      body: JSON.stringify(this.state),
+      body: JSON.stringify(currentState),
       headers: myHeaders,
       mode: 'cors',
       cache: 'default'
@@ -45,6 +45,31 @@ export default class App extends Component {
           throw new Error("Bad response from server")
         }
       });
+  }
+  handlePackingCheckboxChange = (section, id, type) => {
+    if (section === 'named') {
+      this.setState(prevState => {
+        let toggleItemIndex = prevState.tote.namedItems.findIndex(item => item.id === id)
+        prevState.tote.namedItems[toggleItemIndex].packed = !prevState.tote.namedItems[toggleItemIndex].packed
+        this.saveToDB(prevState)
+        return {tote: prevState.tote}
+      })
+    } else if (section === 'unnamed') {
+      this.setState(prevState => {
+        let toggleItemIndex = prevState.tote.unnamed.findIndex(item => item.id === id)
+        prevState.tote.unnamed[toggleItemIndex].packed = !prevState.tote.unnamed[toggleItemIndex].packed
+        this.saveToDB(prevState)
+        return {tote: prevState.tote}
+      })
+    } else if (section === 'additional') {
+      this.setState(prevState => {
+        let typeIndex = prevState.tote.additionalItems.findIndex(thisType => thisType.name === type)
+        let toggleItemIndex = prevState.tote.additionalItems[typeIndex].items.findIndex(item => item.id === id)
+        prevState.tote.additionalItems[typeIndex].items[toggleItemIndex].packed = !prevState.tote.additionalItems[typeIndex].items[toggleItemIndex].packed
+        this.saveToDB(prevState)
+        return {tote: prevState.tote}
+      })
+    }
   }
   updateState = (stateObj) => {
     this.setState(stateObj)
@@ -94,13 +119,13 @@ export default class App extends Component {
         return <Schedule updateState={this.updateState} startDate={this.state.startDate} endDate={this.state.endDate} city={this.state.city} days={this.state.days} />
         break
       case 'select':
-        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} showToast={this.showToast}/>
+        return <SelectOutfits updateState={this.updateState} days={this.state.days} tote={this.state.tote} outfitTypes={this.state.outfitTypes} showToast={this.showToast} />
         break
       case 'assign':
         return <AssignItems updateState={this.updateState} days={this.state.days} tote={this.state.tote} />
         break
       case 'packing':
-        return <PackingList updateState={this.updateState} tote={this.state.tote} />
+        return <PackingList updateState={this.updateState} tote={this.state.tote} handleCheckboxChange={this.handlePackingCheckboxChange} />
         break
       case 'print':
         return <OutfitsList updateState={this.updateState} days={this.state.days} namedItems={this.state.tote.namedItems}/>

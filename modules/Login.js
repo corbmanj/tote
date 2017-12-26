@@ -7,8 +7,8 @@ const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8
 export default class Login extends Component {
   state = {
     loggedIn: false,
-    email: 'corbmanj@gmail.com',
-    password: 'Password2'
+    email: 'hannah.robus@gmail.com',
+    password: 'Password1'
   }
   submitLogin = (e) => {
     let that = this
@@ -26,9 +26,7 @@ export default class Login extends Component {
           that.setState({loginError: true})
         }
         else {
-          console.log(response)
           bcrypt.compare(that.state.password, response.password, function(err, res) {
-            console.log('first', res)
             if (res) {
               that.setState({first: response.first, last: response.last, userId: response.id, loggedIn: true, loginError: false})
               // fetch users list of outfits

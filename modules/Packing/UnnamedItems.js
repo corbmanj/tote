@@ -1,12 +1,13 @@
 import React from 'react'
 
 export default function UnnamedItems (props) {
-  const items = Object.keys(props.items).map((item, index) => {
+  const items = props.items.map((item, index) => {
+    console.log(item)
     return (
       <div key={index}>
         <label>
-          <input type="checkbox" />
-          {item} - {props.items[item]}
+          <input type="checkbox" defaultChecked={item.packed} onChange={() => props.handleCheckboxChange('unnamed', item.id)}/>
+          {item.id} - {item.count}
         </label>
       </div>
     )

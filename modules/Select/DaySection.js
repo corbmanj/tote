@@ -3,7 +3,6 @@ import moment from 'moment'
 import OutfitSection from './OutfitSection'
 import './../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
-import Modal from '../Shared/Modal'
 import _ from 'lodash'
 
 export default class DaySection extends Component {
@@ -14,8 +13,8 @@ export default class DaySection extends Component {
   toggleOpen = () => {
     this.setState({isOpen: !this.state.isOpen})
   }
-  componentDidMount = () => {
-    var icons = new Skycons({"resizeClear": true})
+  componentDidMount () {
+    let icons = new Skycons({"resizeClear": true})
     icons.add(this.props.image, this.props.day.icon)
     icons.play()
   }

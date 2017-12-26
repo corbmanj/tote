@@ -12,7 +12,7 @@ export default function NamedItems (props) {
     const items = props.items.filter((item) => {
       return item.parentType === parentType
     })
-    return <ParentType key={index} parentType={parentType} items={items} />
+    return <ParentType key={index} parentType={parentType} items={items} handleCheckboxChange={props.handleCheckboxChange}/>
   })
 
   return (
