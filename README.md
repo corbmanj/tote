@@ -1,170 +1,21 @@
-# Production-ish Server
+# Tote App
 
-None of this has anything to do with React Router, but since we're
-talking about web servers, we might as well take it one step closer to
-the real-world. We'll also need it for server rendering in the next
-section.
+Use `NODE_ENV=development npm start` to run the development server - requires local PgSQL server running on :5432
+OR
+`NODE_ENV=production npm start` to run the production server - requires PgSQL server with appropriate connection parameters
 
-Webpack dev server is not a production server. Let's make a production
-server and a little environment-aware script to boot up the right server
-depending on the environment.
 
-Let's install a couple modules:
+## Instructions For Users
+This app came about as a way for my wife to turn her paper and pencil packing method into a more automated, online experience. Her method involves planning out the various activities you'll be doing each day and then assigning articles of clothing to each of those activities. The app then generates a packing list for you based on all the different things you added to your tote.
 
-```
-npm install express if-env compression --save
-```
+When logging in for the first time go ahead and click 'Edit User Settings'. On the setup page you'll create outfits. Each outfit consists of a bunch of articles of clothing. Some of those articles of clothing are what I refer to as "named items", as in, when you add that outfit to a trip, you'll want to specify exactly which shirt you're going to pack. Some of the articles of clothing are not named items; for instance, if I want to add socks to an outfit I probably won't specify which pair of socks I want to pack (although you could always make a second item type called dress socks). Take a look at the example outfit. The outfit name is 'Example outfit' and it contains a t-shirt, a sweatshirt, underpants, pants, socks, and shoes. Underpants and socks are the only two unnamed items. When adding an outfit to an actual trip you can choose to not include any of the standard items for that outfit, so err on the side of adding all of the items you may want associated with that outfit. For example, you could create a new item, jacket, and add it to this example outfit, but if you know it's going to be warm for one of the days of your trip, you could choose to remove the jacket from that instance of the outfit. When you add an item, you can give the item a name. If you want the item to be a "named item", click the checkbox and then also give it a "type". The type field lets you group items of the same type in case you want Jackets and Sweatshirts or Shoes and Dress Shoes to show up together, which can be helpful for your packing list.
 
-First, we'll use the handy `if-env` in `package.json`.  Update your
-scripts entry in package.json to look like this:
+Just to give you some ideas for other outfits, Hannah has "sleep", "workout", and "work" as some of her other outfits. When creating new outfits, it's best to create the items completely before you add them to the outfit. I found a weird bug where changing an item that is in an outfit may not change the instance of that item in the outfit that I need to fix. Also, you can double click the name of the outfit to edit it. Go ahead and create some more outfits and items now, I'll wait.
 
-```json
-// package.json
-"scripts": {
-  "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
-  "start:dev": "webpack-dev-server --inline --content-base . --history-api-fallback",
-  "start:prod": "webpack && node server.js"
-},
-```
+Ok, now that you have created a few outfits, lets set up your first trip. Click on the return to home page button, and then click on "Plan a new trip". Enter the start and end dates for your trip as well as the "city, st" name. Then click on "Select Outfits". You will be taken to a new screen with a section for each day of your trip on the left, and a section for miscellaneous items on the right.
 
-In the root directly, go open up `webpack.config.js` and add the publicPath '/' as per below:
-```
-// webpack.config.js
-  output: {
-    path: 'public',
-    filename: 'bundle.js',
-    publicPath: '/'
-  },
-```
+In each day section you can click on "Add outfit". Once you select the outfit type from the drop down, you could choose to deselect any of the individual items. Add at least one outfit to each day and click "Save" for each outfit. If you want to change the name of the outfit from "Outfit 1" for that day, just double click the name of the outfit and edit it. When you're ready, click "Assign Items" and you'll get to specify each of the named items in each of your outfits.
 
-When you run `npm start` it checks if the value of our `NODE_ENV` environment variable is
-`production`. If yes, it runs `npm run start:prod`, if not, it runs
-`npm run start:dev`.
+On the next screen, for each named item in each outfit you can specify exactly which shirt (or pants, or shoes, etc.) you want. Click on the drop down so you can add a named item. Give each named item a name. As you add named items, that named item will be available in the dropdown for every item of that type in the other outfits. This lets you easily use the same jacket for multiple outfits.
 
-Now we're ready to create a production server with Express and add a new file at root dir. Here's a
-first attempt:
-
-```js
-// server.js
-var express = require('express')
-var path = require('path')
-
-var app = express()
-
-// serve our static stuff like index.css
-app.use(express.static(__dirname))
-
-// send all requests to index.html so browserHistory in React Router works
-app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'index.html'))
-})
-
-var PORT = process.env.PORT || 8080
-app.listen(PORT, function() {
-  console.log('Production Express server running at localhost:' + PORT)
-})
-```
-
-Now run:
-
-```sh
-NODE_ENV=production npm start
-# For Windows users:
-# SET "NODE_ENV=production" && npm start
-```
-
-Congratulations! You now have a production server for this app. After
-clicking around, try navigating to [http://localhost:8080/package.json](http://localhost:8080/package.json).
-Whoops.  Let's fix that. We're going to shuffle around a couple files and
-update some paths scattered across the app.
-
-1. make a `public` directory.
-2. Move `index.html` and `index.css` into it.
-
-Now let's update `server.js` to point to the right directory for static
-assets:
-
-```js
-// server.js
-// ...
-// add path.join here
-app.use(express.static(path.join(__dirname, 'public')))
-
-// ...
-app.get('*', function (req, res) {
-  // and drop 'public' in the middle of here
-  res.sendFile(path.join(__dirname, 'public', 'index.html'))
-})
-```
-
-We also need to tell webpack to build to this new directory:
-
-```js
-// webpack.config.js
-// ...
-output: {
-  path: 'public',
-  // ...
-}
-```
-
-And finally (!) add it to the `--content-base` argument to `npm run start:dev` script:
-
-```json
-"start:dev": "webpack-dev-server --inline --content-base public --history-api-fallback",
-```
-
-If we had the time in this tutorial, we could use the `WebpackDevServer`
-API in a JavaScript file instead of the CLI in an npm script and then
-turn this path into config shared across all of these files. But, we're
-already on a tangent, so that will have to wait for another time.
-
-Okay, now that we aren't serving up the root of our project as public
-files, let's add some code minification to Webpack and gzipping to
-express.
-
-```js
-// webpack.config.js
-
-// make sure to import this
-var webpack = require('webpack')
-
-module.exports = {
-  // ...
-
-  // add this handful of plugins that optimize the build
-  // when we're in production
-  plugins: process.env.NODE_ENV === 'production' ? [
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
-  ] : [],
-
-  // ...
-}
-```
-
-And compression in express:
-
-```js
-// server.js
-// ...
-var compression = require('compression')
-
-var app = express()
-// must be first!
-app.use(compression())
-```
-
-Now go start your server in production mode:
-
-```
-NODE_ENV=production npm start
-```
-
-You'll see some UglifyJS logging and then in the browser, you can see
-the assets are being served with gzip compression.
-
----
-
-[Next: Navigating](../12-navigating/)
+When you've named all of your named items, click on "Pack Items" and you will be presented with your packing list. Unnamed items are grouped together at the top so you can just grab 4 pairs of socks. Next are each of your named items grouped by type, and finally your miscellaneous items grouped by type.
