@@ -70,7 +70,11 @@ export default class SelectOutfits extends Component {
     let stateObj = {}
     stateObj.tote = this.state.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
-    stateObj.tote.additionalItems[index].items.push({id: 'new item'})
+    const maxId = stateObj.tote.additionalItems[index].items.reduce((a, b) => {
+      return +a > +b.id ? +a : +b.id
+    }, -1)
+    const newId = maxId + 1
+    stateObj.tote.additionalItems[index].items.push({id: newId, name: 'new item'})
     this.props.updateState(stateObj)
   }
   toggleEditing = (index) => {
@@ -78,14 +82,16 @@ export default class SelectOutfits extends Component {
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
     this.props.updateState(stateObj)
   }
-  updateItem = (typeIndex, itemIndex, itemName) => {
+  updateItem = (typeIndex, itemId, itemName) => {
     let stateObj = this.state.tote
-    stateObj.additionalItems[typeIndex].items[itemIndex].id = itemName
+    let itemToUpdate = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
+    stateObj.additionalItems[typeIndex].items[itemToUpdate].name = itemName
     this.props.updateState(stateObj)
   }
-  deleteItem = (typeIndex, itemIndex) => {
+  deleteItem = (typeIndex, itemId) => {
     let stateObj = this.state.tote
-    stateObj.additionalItems[typeIndex].items.splice(itemIndex,1)
+    let itemToDelete = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
+    stateObj.additionalItems[typeIndex].items.splice(itemToDelete,1)
     this.props.updateState(stateObj)
   }
   renderCopyModal = (modalProps) => {

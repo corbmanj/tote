@@ -54,11 +54,12 @@ router.get('/userItems/:userid', function(req, res) {
       result.outfits.push(row.outfit)
     })
     .on('end', function (){
-      client.query("SELECT list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
+      client.query("SELECT id, list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
         .on('error', function (err) {
           res.json(err)
         })
         .on('row', function (row) {
+          row.list.id = row.id
           result.additionalItems.push(row.list)
         })
         .on('end', function (){
@@ -111,9 +112,10 @@ router.put('/userItems/:userid/:outfitid', function(req, res) {
     });
 });
 
+// get list of additional items for the logged in user
 router.get('/additionalItems/:userid', function(req, res) {
   var result = []
-  client.query("SELECT list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
+  client.query("SELECT id, list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
     .on('error', function (err) {
       res.json(err)
     })
@@ -122,6 +124,19 @@ router.get('/additionalItems/:userid', function(req, res) {
     })
     .on('end', function (){
       res.json(result)
+    });
+});
+
+// update an additional item section for the logged in user
+router.put('/updateAdditionalItems/:userid/:listid', function(req, res) {
+  client.query(`UPDATE additional_items_json SET list='${JSON.stringify(req.body)}'
+    WHERE id=${req.params.listid}
+    AND user_id=${req.params.userid} returning id;`)
+    .on('error', function (err) {
+      res.json(err)
+    })
+    .on('row', function (row) {
+      res.json(row)
     });
 });
 

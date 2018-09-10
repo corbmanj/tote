@@ -5,18 +5,18 @@ export default function AdditionalItemSection (props) {
   const addItem = () => {
     props.addItem(props.index)
   }
-  const updateItem = (itemIndex, itemName) => {
-    props.updateItem(props.index, itemIndex, itemName)
+  const updateItem = (itemId, itemName) => {
+    props.updateItem(props.index, itemId, itemName)
   }
-  const deleteItem = (itemIndex) => {
-    props.deleteItem(props.index, itemIndex)
+  const deleteItem = (itemId) => {
+    props.deleteItem(props.index, itemId)
   }
   const items = props.items ? props.items.map((item, index) => {
     return (
       <AdditionalItem
         key={index}
-        index={index}
-        item={item}
+        id={item.id}
+        item={item.name}
         updateItem={updateItem}
         deleteItem={deleteItem}
       />)
