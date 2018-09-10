@@ -145,10 +145,8 @@ export default class SetupMain extends Component {
         return response.json()
       })
       .then(function(response) {
-        console.log(response)
         that.setState(prevState => {
           const newOutfitList = prevState.outfitTypes.filter(outfit => outfit.id !== response.id)
-          console.log(newOutfitList)
           return {outfitTypes: newOutfitList}
         })
       })
