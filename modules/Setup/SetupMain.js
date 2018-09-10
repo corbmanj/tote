@@ -1,14 +1,15 @@
 import React, {Component} from 'react'
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
-import outfitTypes from "../Select/outfitTypes";
+import SetupAdditionalItems from "./SetupAdditionalItems"
+// import outfitTypes from "../Select/outfitTypes";
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 export default class SetupMain extends Component {
   state = {
-    outfitTypes: [], items: []
+    outfitTypes: [], items: [], outfitEditor: true
   }
   baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
@@ -153,12 +154,40 @@ export default class SetupMain extends Component {
         })
       })
   }
+  updateAdditionalItemCategory = (itemList, id) => {
+    var myHeaders = new Headers();
+    let sectionToUpdate = this.props.additionalItems.findIndex(section => section.id === id)
+    console.log(sectionToUpdate, id, itemList)
+    const itemSection = {
+      name: this.props.additionalItems[sectionToUpdate].name,
+      items: itemList
+    }
+    myHeaders.append('Content-Type', 'application/json');
 
-  render () {
+    fetch(`${this.baseUrl}/db/updateAdditionalItems/${this.props.user}/${id}`, {
+      method: 'PUT',
+      headers: myHeaders,
+      body: JSON.stringify(itemSection),
+      mode: 'cors',
+      cache: 'default'
+    })
+      .then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        return response.json()
+      })
+      .then(function(response) {
+        console.log(response)
+      })
+  }
+  toggleEditor = () => {
+    this.setState(prevState => {return {outfitEditor: !prevState.outfitEditor}})
+  }
+  renderOutfitEditor () {
     return (
-      <div id="setup">
+      <div>
         <div>{!!this.state.outfitTypes || 'You have not set up your outfits yet!'}</div>
-        <div><button value='home' onClick={(ev) => {this.props.updateStage(ev)}}>&lt;- Return To Home</button></div>
         <div className="flex-container">
           <SetupOutfits
             updateDB={this.updateDB}
@@ -169,7 +198,7 @@ export default class SetupMain extends Component {
             removeOutfitItem={this.removeOutfitItem}
             removeOutfit={this.removeOutfit}
             items={this.state.items}
-          />
+            />
 
           <SetupItems
             items={this.state.items}
@@ -178,8 +207,29 @@ export default class SetupMain extends Component {
             removeItem={this.removeItem}
             outfits={this.state.outfitTypes}
           />
-
         </div>
+      </div>
+    )
+  }
+
+  renderItemEditor () {
+    return (
+      <SetupAdditionalItems
+        sections={this.props.additionalItems}
+        addItem={this.addItem}
+        updateItem={this.updateItem}
+        removeItem={this.removeItem}
+        updateAdditionalItemCategory={this.updateAdditionalItemCategory}
+      />
+    )
+  }
+
+  render () {
+    return (
+      <div id="setup">
+        <div><button value='home' onClick={(ev) => {this.props.updateStage(ev)}}>&lt;- Return To Home</button></div>
+        <button onClick={this.toggleEditor}>{this.state.outfitEditor ? 'Edit Additional Items' : 'Edit Outfits'}</button>
+        {this.state.outfitEditor ? this.renderOutfitEditor() : this.renderItemEditor()}
       </div>
     )
   }

@@ -7,8 +7,8 @@ const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8
 export default class Login extends Component {
   state = {
     loggedIn: false,
-    email: '',
-    password: ''
+    email: 'hannah.robus@gmail.com',
+    password: 'Password1'
   }
   submitLogin = (e) => {
     let that = this
@@ -43,6 +43,7 @@ export default class Login extends Component {
                   }
                   else {
                     const tote = that.props.tote
+                    console.log(response.additionalItems)
                     tote.additionalItems = response.additionalItems
                     that.props.updateState(tote)
                     that.props.updateState({outfitTypes: response.outfits, userId: that.state.userId})
