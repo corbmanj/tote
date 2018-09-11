@@ -54,7 +54,7 @@
     "webpack-dev-server": "^2.6.1"
   },
   "devDependencies": {
-    "http-server": "^0.8.5",
+    "http-server": "^0.11.1",
     "react-hot-loader": "next"
   }
 }
