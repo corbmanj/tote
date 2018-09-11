@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import CheckboxSection from './CheckboxSection'
 import { Collapse } from "@blueprintjs/core"
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default class OutfitSection extends Component {
   state = {
@@ -18,7 +18,7 @@ export default class OutfitSection extends Component {
     this.props.updateDay(this.props.index, this.state.outfit, 1)
   }
   editOutfit = () => {
-    const outfitCopy = _.cloneDeep(this.state.outfit)
+    const outfitCopy = cloneDeep(this.state.outfit)
     this.props.updateDay(this.props.index, this.state.outfit, -1)
     this.setState({ disabled: false, outfit: outfitCopy})
   }
