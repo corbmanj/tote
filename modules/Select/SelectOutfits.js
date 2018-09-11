@@ -4,7 +4,7 @@ import AdditionalItemSection from './AdditionalItemSection'
 import { Collapse } from "@blueprintjs/core"
 import Modal from '../Shared/Modal'
 import moment from 'moment'
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default class SelectOutfits extends Component {
   state = {
@@ -107,7 +107,7 @@ export default class SelectOutfits extends Component {
     stateObj.days = this.props.days
     copyArray.forEach((day, index) => {
       if (day) {
-        const newOutfit = _.cloneDeep(outfit)
+        const newOutfit = cloneDeep(outfit)
         newOutfit.id = stateObj.days[index].outfits.length + 1
         stateObj.days[index].outfits.push(newOutfit)
         this.updateTote(index, null, newOutfit, 1)

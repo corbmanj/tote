@@ -3,7 +3,7 @@ import moment from 'moment'
 import OutfitSection from './OutfitSection'
 import './../../public/skycons'
 import { Collapse } from "@blueprintjs/core"
-import _ from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 export default class DaySection extends Component {
   state = {
@@ -20,7 +20,7 @@ export default class DaySection extends Component {
   }
   updateDay = (key, outfit, inc) => {
     let tempState = this.state.outfits
-    const outfitCopy = _.cloneDeep(outfit)
+    const outfitCopy = cloneDeep(outfit)
     if (inc === 1) {
       tempState[key]['items'] = outfitCopy.items
       tempState[key]['name'] = outfitCopy.name

@@ -19,7 +19,6 @@ export default class GetStarted extends Component {
           that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
         }
         else {
-          console.log('here')
           that.props.updateStateNoSave({outfitTypes: response.outfits, additionalItems: response.additionalItems})
         }
       })
