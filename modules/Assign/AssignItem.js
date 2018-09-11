@@ -50,7 +50,7 @@ export default class AssignItem extends Component {
     this.setState({itemName: ev.target.value})
   }
   saveOption = () => {
-    if (this.state.itemName === '') {
+    if (this.state.itemName.trim() === '') {
       this.setState({error: true, errorMsg: 'Item name cannot be blank'})
       return
     }

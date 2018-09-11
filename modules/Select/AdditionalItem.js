@@ -2,11 +2,14 @@ import React, {Component} from 'react'
 
 export default class AdditionalItem extends Component {
   state = {
-    editing: this.props.item === 'new item'
+    editing: this.props.item === 'new item',
+    name: this.props.item
   }
   toggleEditing = () => {
     if (this.state.editing) {
-      this.props.updateItem(this.props.id, this.state.name)
+      if (this.state.name.trim() !== '') {
+        this.props.updateItem(this.props.id, this.state.name)
+      }
     }
     this.setState({name: this.props.item, editing: !this.state.editing})
   }
@@ -27,7 +30,7 @@ export default class AdditionalItem extends Component {
       <div>
         <input
           type="text"
-          value={this.state.name || this.props.item}
+          value={this.state.name}
           autoFocus
           onFocus={ev => ev.target.select()}
           onChange={this.updateItemName}

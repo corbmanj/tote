@@ -75,7 +75,7 @@ export default class App extends Component {
     this.setState(stateObj)
     this.saveToDB()
   }
-  updateSateNoSave = (stateObj) => {
+  updateStateNoSave = (stateObj) => {
     this.setState(stateObj)
   }
   showToast = (toastProps) => {
@@ -110,7 +110,7 @@ export default class App extends Component {
   renderStage = (stage) => {
     switch (stage) {
       case 'load':
-        return <LoadTrips updateState={this.updateSateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
+        return <LoadTrips updateState={this.updateStateNoSave} updateStage={this.updateStage} userId={this.state.userId} />
         break
       case 'setup':
         return <Setup updateState={this.updateState} user={this.state.userId} updateStage={this.updateStage} additionalItems={this.state.tote.additionalItems}/>
@@ -134,7 +134,7 @@ export default class App extends Component {
         return (
           <div>
             <h1>Welcome to Tote</h1>
-            {this.state.userId ? <GetStarted updateStage={this.updateStage} updateState={this.updateState} userId={this.state.userId}/> : <Login updateState={this.updateSateNoSave} tote={this.state.tote}/>}
+            {this.state.userId ? <GetStarted updateStage={this.updateStage} updateState={this.updateState} updateStateNoSave={this.updateStateNoSave} userId={this.state.userId}/> : <Login updateState={this.updateStateNoSave} tote={this.state.tote}/>}
           </div>
         )
     }
