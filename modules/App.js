@@ -14,7 +14,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
-import '../node_modules/@blueprintjs/core/dist/blueprint.css'
+import '../node_modules/@blueprintjs/core/lib/css/blueprint.css'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
