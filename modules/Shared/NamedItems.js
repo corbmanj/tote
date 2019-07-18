@@ -6,7 +6,9 @@ export default function NamedItems (props) {
   props.namedItems.map(item => {
     parentTypes.add(item.parentType)
   })
+
   const itemList = []
+
   parentTypes.forEach(type => {
     const items = props.namedItems.filter(item => {
         return item.parentType === type
@@ -21,6 +23,7 @@ export default function NamedItems (props) {
           />
         )
       })
+
   itemList.push(
   <li key={type}><h3>{type}</h3>
     <ul className="sectionList">
@@ -29,6 +32,5 @@ export default function NamedItems (props) {
     </li>
   )
 })
-
   return <ul className="sectionList">{itemList}</ul>
 }

@@ -1,144 +1,144 @@
-import React, {Component} from 'react'
+import React, {useState} from 'react'
 import Modal from '../Shared/Modal'
 import AssignDay from './AssignDay'
 import AdditionalItemSection from '../Select/AdditionalItemSection'
 
-export default class AssignItems extends Component {
-  state = {
-    editingNamedItems: false,
-    error: false,
-    errorMsg: null
-  }
-  toggleModal = () => {
-    this.setState({editingNamedItems: !this.state.editingNamedItems})
+export default function AssignItems (props) {
+  const [editingNamedItems, setEditingNamedItems] = useState(false)
+  const [error, setError] = useState(false)
+  const [errorMsg, setErrorMsg] = useState()
+
+  function toggleModal () {
+    setEditingNamedItems(!editingNamedItems)
     const body = document.getElementsByTagName('body')[0]
     body.classList.toggle('no-scroll')
   }
-  updateNamedItems = (namedItems) => {
+  function updateNamedItems (namedItems) {
     let stateObj = {}
-    stateObj.tote = this.props.tote
+    stateObj.tote = props.tote
     stateObj.tote.namedItems = namedItems
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  updateNamedItemInAllOutfits = (id, newName) => {
+  function updateNamedItemInAllOutfits (id, newName) {
     let stateObj = {}
-    stateObj.tote = this.props.tote
+    stateObj.tote = props.tote
     const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
+    // todo: this doesn't seem to work
     stateObj.tote.namedItems[oldItemIndex].name = newName
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  deleteNamedItem = (id) => {
+  function deleteNamedItem (id) {
     let stateObj = {}
-    stateObj.tote = this.props.tote
+    stateObj.tote = props.tote
     const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
     stateObj.tote.namedItems.splice(oldItemIndex, 1)
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  updateOutfit = (id, outfitIndex, dayIndex) => {
+  function updateOutfit (id, outfitIndex, dayIndex) {
     let stateObj = {}
-    const namedItem = this.props.tote.namedItems.find(item => {return item.id === Number(id)})
-    stateObj.days = this.props.days
+    const namedItem = props.tote.namedItems.find(item => {return item.id === Number(id)})
+    stateObj.days = props.days
     stateObj.days[dayIndex].outfits[outfitIndex].items.filter(item => {
       return item.parentType === namedItem.parentType
     }).map(item => {
       item.id = namedItem.id
     })
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  addItem = (index) => {
+  function addItem (index) {
     let stateObj = {}
-    stateObj.tote = this.props.tote
+    stateObj.tote = props.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
     const maxId = stateObj.tote.additionalItems[index].items.reduce((a, b) => {
       return +a > +b.id ? +a : +b.id
     }, -1)
     const newId = maxId + 1
     stateObj.tote.additionalItems[index].items.push({id: newId, name: 'new item'})
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  toggleEditing = (index) => {
-    let stateObj = this.props.tote
+  function toggleEditing (index) {
+    let stateObj = props.tote
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  updateItem = (typeIndex, itemId, itemName) => {
-    let stateObj = this.props.tote
+  function updateItem (typeIndex, itemId, itemName) {
+    let stateObj = props.tote
     let itemToUpdate = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
     stateObj.additionalItems[typeIndex].items[itemToUpdate].name = itemName
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  deleteItem = (typeIndex, itemId) => {
-    let stateObj = this.props.tote
+  function deleteItem (typeIndex, itemId) {
+    let stateObj = props.tote
     let itemToDelete = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
     stateObj.additionalItems[typeIndex].items.splice(itemToDelete,1)
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  updateStage = () => {
-    if (!(this.props.tote.namedItems && this.props.tote.namedItems.length)) {
-      this.setState({error: true, errorMsg: 'Please assign at least one item'})
+  function updateStage () {
+    if (!(props.tote.namedItems && props.tote.namedItems.length)) {
+      setError(true)
+      setErrorMsg('Please assign at least one item')
       return
     }
     let stateObj = {}
     stateObj.currentStage = 'packing'
-    this.props.updateState(stateObj)
+    props.updateState(stateObj)
   }
-  render() {
-    const days = this.props.days.map((day, index) => {
-      return (
-        <AssignDay
-          key={index}
-          index={index}
-          day={day}
-          namedItems={this.props.tote.namedItems || []}
-          updateNamedItems={this.updateNamedItems}
-          updateNamedItemInAllOutfits={this.updateNamedItemInAllOutfits}
-          updateOutfit={this.updateOutfit}
-        />
-      )
-    })
-    const additionalItemTypes = this.props.tote.additionalItems.map((type, index) => {
-      return (
-        <AdditionalItemSection
-          key={index}
-          index={index}
-          type={type.name}
-          items={type.items}
-          addItem={this.addItem}
-          updateItem={this.updateItem}
-          toggleEditing={this.toggleEditing}
-          deleteItem={this.deleteItem}
-        />
-      )
-    })
+  
+  const days = props.days.map((day, index) => {
     return (
-      <div className="flex-container">
-        {this.state.editingNamedItems &&
-          <Modal
-            contentType="NamedItems"
-            closeModal={this.toggleModal}
-            namedItems={this.props.tote.namedItems}
-            updateNamedItemInAllOutfits={this.updateNamedItemInAllOutfits}
-            deleteNamedItem={this.deleteNamedItem}
-          />
-        }
-        <div className="flex-5">
-          <button style={{float: 'right'}} onClick={this.toggleModal} disabled={!this.props.tote.namedItems}>Edit Named Items</button>
-          <h2 className="header">Pack Items</h2>
-          <ul className="sectionList">
-            {days}
-          </ul>
-          { this.state.error ? <span style={{float: 'right'}} className="error">{this.state.errorMsg}</span> : null }
-          <button
-            style={{float: 'right'}}
-            onClick={this.updateStage}
-          >Pack Items</button>
-          <br />
-        </div>
-        <div className="flex-2">
-          <h2 className="header">Other Items to Pack</h2>
-          {additionalItemTypes}
-        </div>
-      </div>
+      <AssignDay
+        key={index}
+        index={index}
+        day={day}
+        namedItems={props.tote.namedItems || []}
+        updateNamedItems={updateNamedItems}
+        updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
+        updateOutfit={updateOutfit}
+      />
     )
-  }
+  })
+  const additionalItemTypes = props.tote.additionalItems.map((type, index) => {
+    return (
+      <AdditionalItemSection
+        key={index}
+        index={index}
+        type={type.name}
+        items={type.items}
+        addItem={addItem}
+        updateItem={updateItem}
+        toggleEditing={toggleEditing}
+        deleteItem={deleteItem}
+      />
+    )
+  })
+  return (
+    <div className="flex-container">
+      {editingNamedItems &&
+        <Modal
+          contentType="NamedItems"
+          closeModal={toggleModal}
+          namedItems={props.tote.namedItems}
+          updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
+          deleteNamedItem={deleteNamedItem}
+        />
+      }
+      <div className="flex-5">
+        <button style={{float: 'right'}} onClick={toggleModal} disabled={!props.tote.namedItems}>Edit Named Items</button>
+        <h2 className="header">Pack Items</h2>
+        <ul className="sectionList">
+          {days}
+        </ul>
+        { error ? <span style={{float: 'right'}} className="error">{errorMsg}</span> : null }
+        <button
+          style={{float: 'right'}}
+          onClick={updateStage}
+        >Pack Items</button>
+        <br />
+      </div>
+      <div className="flex-2">
+        <h2 className="header">Other Items to Pack</h2>
+        {additionalItemTypes}
+      </div>
+    </div>
+  )
 }

@@ -1,6 +1,6 @@
 import React from 'react'
 import AssignItem from './AssignItem'
-import { Collapse } from "@blueprintjs/core"
+import { Collapse } from '@blueprintjs/core'
 
 export default function Modal (props) {
   const updateOutfit = (id) => {
@@ -27,7 +27,7 @@ export default function Modal (props) {
     })
     return <div>{items}</div>
   }
-  const carotClass = props.active ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
+  const carotClass = props.active ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
 
   return (
     <li>

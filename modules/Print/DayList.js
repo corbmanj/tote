@@ -1,25 +1,23 @@
-import React, {Component} from 'react'
+import React from 'react'
 import moment from 'moment'
 import OutfitList from './OutfitList'
-import './../../public/skycons'
+import Skycons from './../../public/skycons'
 
-export default class DayList extends Component {
-  componentDidMount = () => {
-    var icons = new Skycons({"resizeClear": true})
-    icons.add(this.props.image, this.props.day.icon)
-    icons.play()
-  }
-  render() {
-    const outfits = this.props.day.outfits.map((outfit, index) => {
-      return <OutfitList key={index} index={index} outfit={outfit} namedItems={this.props.namedItems} />
-      })
-    return (
-      <div>
-        <h2>{moment(this.props.day.date).format('ddd, MMM Do')}<canvas id={this.props.image} width="42" height="42"></canvas></h2>
-        <p>{this.props.day.summary}</p>
-        <p>High: {this.props.day.high} Low: {this.props.day.low}</p>
-        {outfits}
-      </div>
-    )
-  }
+export default function DayList (props) {
+  const icons = new Skycons({'resizeClear': true})
+  icons.add(this.props.image, this.props.day.icon)
+  icons.play()
+
+  const outfits = this.props.day.outfits.map((outfit, index) => {
+    return <OutfitList key={index} index={index} outfit={outfit} namedItems={props.namedItems} />
+  })
+      
+  return (
+    <div>
+      <h2>{moment(props.day.date).format('ddd, MMM Do')}<canvas id={props.image} width="42" height="42"></canvas></h2>
+      <p>{props.day.summary}</p>
+      <p>High: {props.day.high} Low: {props.day.low}</p>
+      {outfits}
+    </div>
+  )
 }

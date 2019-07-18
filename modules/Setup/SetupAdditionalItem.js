@@ -1,50 +1,57 @@
-import React, {Component} from 'react'
+import React, { useState } from 'react'
 
-export default class SetupAdditionalItem extends Component {
-  state = {
-    editing: false,
-    name: this.props.item.name
-  }
-  toggleEditing = () => {
-    console.log('toggling editing')
-    this.setState({editing: !this.state.editing})
+export default function SetupAdditionalItem (props) {
+  const [editing, setEditing] = useState(false)
+  const [name, setName] = useState(props.item.name)
+
+  function toggleEditing () {
+    setEditing(!editing)
   }
 
-  updateName = (ev) => {
-    this.setState({name: ev.target.value})
+  function updateName (ev) {
+    // todo: use ref
+    setName(ev.target.value)
   }
 
-  saveItem = () => {
-    this.toggleEditing()
-    this.props.saveEditedItem(this.state.name, this.props.item.id)
+  function saveItem () {
+    toggleEditing()
+    props.saveEditedItem(name, this.props.item.id)
   }
 
-  renderInput = () => {
+  function handleKeyPress (ev) {
+    if (ev.charCode === 13) {
+      saveItem()
+    }
+  }
+
+  function autoSelect (ev) {
+    ev.target.select()
+  }
+
+  function renderInput () {
     return (
-      <span>
+      <>
         <input
-          value={this.state.name}
+          value={name}
           type="text"
-          onChange={this.updateName}
+          onChange={updateName}
           autoFocus
-          onFocus={ev => ev.target.select()}
-          onBlur={this.saveItem}
-          onKeyPress={(ev) => {ev.charCode === 13 ? this.saveItem() : null}}
+          onFocus={autoSelect}
+          onBlur={saveItem}
+          onKeyPress={handleKeyPress}
         />
         <button onClick={this.saveItem}>Save</button>
-      </span>
+      </>
     )
   }
 
-  renderName = () => {
-    return <li onDoubleClick={this.toggleEditing}>{this.state.name}</li>
+  function renderName () {
+    return <li onDoubleClick={toggleEditing}>{name}</li>
   }
 
-  render () {    
-    return (
-      <div>
-        {this.state.editing ? this.renderInput() : this.renderName()}
-      </div>
-    )
-  }
+  return (
+    <div>
+      {editing ? renderInput() : renderName()}
+    </div>
+  )
 }

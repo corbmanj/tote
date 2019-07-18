@@ -1,63 +1,86 @@
-import React, {Component} from 'react'
+import React, { useState, useRef } from 'react'
 import SetupOutfitItem from './SetupOutfitItem'
 
-export default class SetupOutfit extends Component {
-  state = {
-    editing: false,
-    outfitName: this.props.outfit.type
+export default function SetupOutfit (props) {
+  const [editing, setEditing] = useState(false)
+  const outfitName = useRef(props.outfit.type || null)
+
+  function addItem () {
+    props.addItem(props.index)
   }
-  addItem = () => {
-    this.props.addItem(this.props.index)
+
+  function updateOutfitItem (itemIndex, itemType) {
+    props.updateOutfitItem(props.index, itemIndex, itemType)
   }
-  updateOutfitItem = (itemIndex, itemType) => {
-    this.props.updateOutfitItem(this.props.index, itemIndex, itemType)
+
+  function removeOutfitItem (itemIndex) {
+    props.removeOutfitItem(props.index, itemIndex)
   }
-  removeOutfitItem = (itemIndex) => {
-    this.props.removeOutfitItem(this.props.index, itemIndex)
+
+  function toggleEditing () {
+    setEditing(!editing)
   }
-  toggleEditing = () => {
-    this.setState(prevState => {
-      return {editing: !prevState.editing}
-    })
+  
+  function updateOutfitName () {
+    let editedOutfit = props.outfit
+    editedOutfit.type = outfitName.current.value
+    props.updateDB(editedOutfit)
+    toggleEditing()
   }
-  updateOutfitName = () => {
-    let editedOutfit = this.props.outfit
-    editedOutfit.type = this.state.outfitName
-    this.props.updateDB(editedOutfit)
-    this.toggleEditing()
+
+  function handleRemoveOutfit () {
+    props.removeOutfit(this.props.outfit.id)
   }
-  conditionallyRenderEditor = () => {
-    if (!this.state.editing) {
+
+  function handleKeyPress (ev) {
+    if (ev.charCode === 13) {
+      updateOutfitName()
+    }
+  }
+
+  function autoSelect (ev) {
+    ev.target.select()
+  }
+
+  function conditionallyRenderEditor () {
+    if (!editing) {
       return (
-        <span onDoubleClick={this.toggleEditing}>
-          <span className="pt-icon-standard pt-icon-delete" onClick={() => this.props.removeOutfit(this.props.outfit.id)} />
-          {this.props.outfit.type}
+        <span onDoubleClick={toggleEditing}>
+          <span className="pt-icon-standard pt-icon-delete" onClick={handleRemoveOutfit} />
+          {props.outfit.type}
         </span>)
     } else {
       return (
         <div>
-          <input type="text" defaultValue={this.props.outfit.type} onChange={ev => {this.setState({outfitName: ev.target.value})}}/>
-          <button onClick={this.updateOutfitName}>Save</button>
+          <input
+            ref={outfitName}
+            type="text"
+            defaultValue={props.outfit.type}
+            onKeyPress={handleKeyPress}
+            autoFocus
+            onFocus={autoSelect}
+          />
+          <button onClick={updateOutfitName}>
+            Save
+          </button>
         </div>
       )
     }
   }
-  render () {
-    const items = this.props.outfit.items ? this.props.outfit.items.map((item, index) => {
-      return (
-        <li key={index}>
-          <SetupOutfitItem index={index} value={item.type} items={this.props.items} updateOutfitItem={this.updateOutfitItem} removeOutfitItem={this.removeOutfitItem}/>
-        </li>
-      )
-    }) : null
+  const items = props.outfit.items ? props.outfit.items.map((item, index) => {
     return (
-      <li>
-        {this.conditionallyRenderEditor()}
-        <button className="button" onClick={this.addItem}>Add Item to this outfit</button>
-        <ul className="sectionList">
-          {items}
-        </ul>
+      <li key={index}>
+        <SetupOutfitItem index={index} value={item.type} items={props.items} updateOutfitItem={updateOutfitItem} removeOutfitItem={removeOutfitItem}/>
       </li>
     )
-  }
+  }) : null
+  return (
+    <li>
+      {conditionallyRenderEditor()}
+      <button className="button" onClick={addItem}>Add Item to this outfit</button>
+      <ul className="sectionList">
+        {items}
+      </ul>
+    </li>
+  )
 }

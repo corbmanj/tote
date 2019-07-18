@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import moment from 'moment'
 import Modal from './Shared/ConfirmModal'
+import { AppContext } from './AppState';
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
@@ -88,6 +89,7 @@ export default class LoadTrips extends Component {
   render () {
     return (
       <div>
+        <button onClick={() => this.context.setTitle(`Title-${Math.floor(Math.random() * Math.floor(12))}`)}>{this.context.title}</button>
         {this.state.showModal && this.state.modalTrip ? this.renderModal() : null}
         <ol>
           {this.state.tripList && this.renderTripList()}
@@ -96,3 +98,5 @@ export default class LoadTrips extends Component {
     )
   }
 }
+
+LoadTrips.contextType = AppContext;

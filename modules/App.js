@@ -15,6 +15,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 import '../node_modules/@blueprintjs/core/lib/css/blueprint.css'
+import { AppProvider, AppConsumer, AppContext } from './AppState';
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
@@ -142,20 +143,28 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
-        {this.conditionallyRenderNavMenu()}
-        {this.renderStage(this.state.currentStage)}
-        <ReactCSSTransitionGroup
-          transitionName="toast"
-          transitionEnter
-          transitionEnterTimeout={300}
-          transitionAppear={false}
-          transitionLeave
-          transitionLeaveTimeout={300}
-        >
-          {this.state.showToast && this.renderToast()}
-        </ReactCSSTransitionGroup>
-      </div>
+      <AppProvider>
+        <AppConsumer>
+        {() => (
+          <div>
+            {this.conditionallyRenderNavMenu()}
+            {this.renderStage(this.state.currentStage)}
+            <ReactCSSTransitionGroup
+              transitionName="toast"
+              transitionEnter
+              transitionEnterTimeout={300}
+              transitionAppear={false}
+              transitionLeave
+              transitionLeaveTimeout={300}
+            >
+              {this.state.showToast && this.renderToast()}
+            </ReactCSSTransitionGroup>
+          </div>
+        )}
+        </AppConsumer>
+      </AppProvider>
     )
   }
 }
+
+App.contextType = AppContext;

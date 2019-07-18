@@ -1,5 +1,5 @@
 (function() {
-  "use strict";
+  'use strict';
 
   /* Set up a RequestAnimationFrame shim so we can animate efficiently FOR
    * GREAT JUSTICE. */
@@ -203,8 +203,8 @@
 
     ctx.strokeStyle = color;
     ctx.lineWidth = s;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     ctx.beginPath();
     ctx.arc(cx, cy, a, 0, TAU, false);
@@ -228,8 +228,8 @@
 
     ctx.strokeStyle = color;
     ctx.lineWidth = s;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     cx += c * b;
 
@@ -271,8 +271,8 @@
 
     ctx.strokeStyle = color;
     ctx.lineWidth = s * 0.5;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     for(i = 4; i--; ) {
       p = (t + i / 4) % 1;
@@ -300,8 +300,8 @@
 
     ctx.strokeStyle = color;
     ctx.lineWidth = s * 0.5;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     for(i = 4; i--; ) {
       p = (t + i / 4) % 1;
@@ -417,8 +417,8 @@
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.lineWidth = s;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     ctx.beginPath();
     ctx.arc(x        , y        , a, d          , d + Math.PI, false);
@@ -441,8 +441,8 @@
 
     ctx.strokeStyle = color;
     ctx.lineWidth = s;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     if(a < 1) {
       ctx.beginPath();
@@ -525,7 +525,7 @@
   var Skycons = function(opts) {
     this.list        = [];
     this.interval    = null;
-    this.color       = opts && opts.color ? opts.color : "black";
+    this.color       = opts && opts.color ? opts.color : 'black';
     this.resizeClear = !!(opts && opts.resizeClear);
   };
 
@@ -627,8 +627,8 @@
 
     ctx.strokeStyle = color;
     ctx.lineWidth = k;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
     line(ctx, a + w * 0.2 + k * 0.5, e, b + w * 0.8 - k * 0.5, e);
     line(ctx, c + w * 0.2 + k * 0.5, f, d + w * 0.8 - k * 0.5, f);
@@ -636,15 +636,15 @@
 
   Skycons.prototype = {
     _determineDrawingFunction: function(draw) {
-      if(typeof draw === "string")
-        draw = Skycons[draw.toUpperCase().replace(/-/g, "_")] || null;
+      if(typeof draw === 'string')
+        draw = Skycons[draw.toUpperCase().replace(/-/g, '_')] || null;
 
       return draw;
     },
     add: function(el, draw) {
       var obj;
 
-      if(typeof el === "string")
+      if(typeof el === 'string')
         el = document.getElementById(el);
 
       // Does nothing if canvas name doesn't exists
@@ -654,12 +654,12 @@
       draw = this._determineDrawingFunction(draw);
 
       // Does nothing if the draw function isn't actually a function
-      if(typeof draw !== "function")
+      if(typeof draw !== 'function')
         return;
 
       obj = {
         element: el,
-        context: el.getContext("2d"),
+        context: el.getContext('2d'),
         drawing: draw
       };
 
@@ -669,7 +669,7 @@
     set: function(el, draw) {
       var i;
 
-      if(typeof el === "string")
+      if(typeof el === 'string')
         el = document.getElementById(el);
 
       for(i = this.list.length; i--; )
@@ -684,7 +684,7 @@
     remove: function(el) {
       var i;
 
-      if(typeof el === "string")
+      if(typeof el === 'string')
         el = document.getElementById(el);
 
       for(i = this.list.length; i--; )

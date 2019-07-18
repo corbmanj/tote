@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function CheckboxSection (props) {
-  const toggleItem = (ev) => {
+  function toggleItem (ev) {
     props.toggle(ev.target.value, ev.target.checked)
   }
   const checkboxes = props.outfit.items.map((item, key) => {

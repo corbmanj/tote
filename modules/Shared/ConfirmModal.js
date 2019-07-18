@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 export default function ConfirmModal (props) {
-  const handleConfirmClick = () => {
+  function handleConfirmClick () {
     props.confirmAction(props.trip.tripId)
   }
 

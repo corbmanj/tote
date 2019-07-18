@@ -1,46 +1,40 @@
-import React, {Component} from 'react'
+import React, { useState } from 'react'
 import SetupAdditionalItem from './SetupAdditionalItem';
 
-export default class SetupAdditionalItemsSection extends Component {
-  state = {
-    items: this.props.items
-  }
-  saveEditedItem = (itemName, itemId) => {
-    this.setState(prevState => {
-      let itemToUpdate = prevState.items.findIndex(item => item.id === itemId)
-      prevState.items[itemToUpdate].name = itemName
-      console.log('itemList:', prevState.items)
-      this.props.updateAdditionalItemCategory(prevState.items, this.props.id)
-      return prevState
-    })
+export default function SetupAdditionalItemsSection (props) {
+  const [items, setItems] = useState(props.items)
+
+  function saveEditedItem (itemName, itemId) {
+      const tempItems = [...items]
+      let itemToUpdate = tempItems.findIndex(item => item.id === itemId)
+      tempItems[itemToUpdate].name = itemName
+      props.updateAdditionalItemCategory(tempItems, props.id)
+      setItems(tempItems)
   }
   
-  addItem = () => {
-    this.setState(prevState => {
-      // todo: find max item id
-      const newItemId = this.props.items.length + 1
-      prevState.items.push({id: newItemId, name: 'new item'})
-      return prevState
-    })
+  function addItem () {
+    // todo: find max item id
+    const tempItems = [...items]
+    const newItemId = props.items.length + 1
+    tempItems.push({id: newItemId, name: 'new item'})
+    setItems(tempItems)
   }
 
-  render () {    
-    const items = this.state.items.map((item, index) => {
-      return (
-        <SetupAdditionalItem
-          key={index}
-          item={item}
-          saveEditedItem={this.saveEditedItem}
-        />
-      )
-    })
+  const itemsArray = items.map((item, index) => {
     return (
-      <div>
-        <ul>
-          {items}
-          <button onClick={this.addItem}>Add Item</button>
-        </ul>
-      </div>
+      <SetupAdditionalItem
+        key={index}
+        item={item}
+        saveEditedItem={saveEditedItem}
+      />
     )
-  }
+  })
+  return (
+    <div>
+      <ul>
+        {itemsArray}
+        <button onClick={addItem}>Add Item</button>
+      </ul>
+    </div>
+  )
 }

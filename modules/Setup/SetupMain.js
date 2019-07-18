@@ -1,21 +1,26 @@
 import React, {Component} from 'react'
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
-import SetupAdditionalItems from "./SetupAdditionalItems"
+import SetupAdditionalItems from './SetupAdditionalItems'
 // import outfitTypes from "../Select/outfitTypes";
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class SetupMain extends Component {
-  state = {
-    outfitTypes: [], items: [], outfitEditor: true
+  constructor(props) {
+    super(props)
+    this.state = {
+     outfitTypes: [], items: [], outfitEditor: true
+    }
+    this.addOutfit = this.addOutfit.bind(this)
   }
-  baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
+  
 
   componentWillMount () {
     const that = this
-    fetch(`${this.baseUrl}/db/userItems/${this.props.user}`)
+    fetch(`${baseUrl}/db/userItems/${this.props.user}`)
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -40,7 +45,7 @@ export default class SetupMain extends Component {
         that.setState({outfitTypes: response.outfits, items})
       })
   }
-  addOutfit = () => {
+  addOutfit () {
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
@@ -49,7 +54,7 @@ export default class SetupMain extends Component {
     outfitTypes.push(newType)
     const that = this
 
-    fetch(`${this.baseUrl}/db/addOutfit/${this.props.user}`, {
+    fetch(`${baseUrl}/db/addOutfit/${this.props.user}`, {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify(newType),
@@ -111,7 +116,7 @@ export default class SetupMain extends Component {
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${this.baseUrl}/db/userItems/${this.props.user}/${outfit.id}`, {
+    fetch(`${baseUrl}/db/userItems/${this.props.user}/${outfit.id}`, {
       method: 'PUT',
       body: JSON.stringify(dbOutfit),
       headers: myHeaders,
@@ -133,7 +138,7 @@ export default class SetupMain extends Component {
     myHeaders.append('Content-Type', 'application/json');
 
     const that = this
-    fetch(`${this.baseUrl}/db/deleteOutfit/${this.props.user}/${outfitId}`, {
+    fetch(`${baseUrl}/db/deleteOutfit/${this.props.user}/${outfitId}`, {
       method: 'DELETE',
       headers: myHeaders,
       mode: 'cors',
@@ -162,7 +167,7 @@ export default class SetupMain extends Component {
     }
     myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${this.baseUrl}/db/updateAdditionalItems/${this.props.user}/${id}`, {
+    fetch(`${baseUrl}/db/updateAdditionalItems/${this.props.user}/${id}`, {
       method: 'PUT',
       headers: myHeaders,
       body: JSON.stringify(itemSection),

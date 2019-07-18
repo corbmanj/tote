@@ -10,7 +10,7 @@ export default function OutfitsList (props) {
     <div>
       <h2>Printable Tote</h2>
       {days}
-      <div>You're done!</div>
+      <div>You&apos;re done!</div>
     </div>
     )
 }

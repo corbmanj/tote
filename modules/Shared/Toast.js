@@ -1,12 +1,11 @@
-import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React from 'react'
 
-export default class Toast extends Component {
-  static propTypes = {
-    message: PropTypes.string.isRequired,
-    action: PropTypes.func,
-    type: PropTypes.oneOf(['warning', 'success'])
-  }
+export default function Toast (props) {
+  // static propTypes = {
+  //   message: PropTypes.string.isRequired,
+  //   action: PropTypes.func,
+  //   type: PropTypes.oneOf(['warning', 'success'])
+  // }
 
   // renderUndo = () => {
   //   return (
@@ -23,8 +22,8 @@ export default class Toast extends Component {
   //   )
   // }
 
-  renderIcon = () => {
-    switch (this.props.type) {
+  function renderIcon () {
+    switch (props.type) {
       case 'warning':
         return (
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -49,18 +48,16 @@ export default class Toast extends Component {
     }
   }
 
-  render () {
-    const className = [this.props.type] + ' toast-container'
-    return (
-      <span
-        className={className}
-      >
-        <div className="toast-status-icon">
-          {this.renderIcon()}
-        </div>
-        <span>{this.props.message}</span>
-        {this.props.action ? this.renderUndo() : null}
-      </span>
-    )
-  }
+  const className = [props.type] + ' toast-container'
+  return (
+    <span
+      className={className}
+    >
+      <div className="toast-status-icon">
+        {renderIcon()}
+      </div>
+      <span>{props.message}</span>
+      {/* {props.action ? renderUndo() : null} */}
+    </span>
+  )
 }

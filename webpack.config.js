@@ -12,13 +12,13 @@ module.exports = {
 
   module: {
     rules: [
-      { test: /\.css$/, loader: "style-loader!css-loader" },
-      { test: /\.(woff|woff2)$/, loader: "url-loader" },
-      { test: /\.(ttf|eot|svg)$/, loader: "file-loader" },
-      { test: /\.js$/, exclude: /node_modules/, use: "babel-loader"}
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
+      { test: /\.(woff|woff2)$/, loader: 'url-loader' },
+      { test: /\.(ttf|eot|svg)$/, loader: 'file-loader' },
+      { test: /\.js$/, exclude: /node_modules/, use: 'babel-loader'}
     ]
   },
-  devtool: "#source-map",
+  devtool: '#source-map',
   plugins: process.env.NODE_ENV === 'production' ? [
     new webpack.DefinePlugin({
       'process.env': {

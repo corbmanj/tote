@@ -29,7 +29,7 @@ export default [
         },
         {
           parentType: 'tops',
-          type: "Workout Top",
+          type: 'Workout Top',
           dropdown: true
         },
         {

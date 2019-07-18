@@ -1,93 +1,95 @@
-import React, {Component} from 'react'
+import React, { useState } from 'react'
 import moment from 'moment'
 import OutfitSection from './OutfitSection'
 import './../../public/skycons'
-import { Collapse } from "@blueprintjs/core"
+import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
 
-export default class DaySection extends Component {
-  state = {
-    outfits: this.props.day.outfits,
-    isOpen: this.props.index === 0
+export default function DaySection (props) {
+  // state = {
+  //   outfits: this.props.day.outfits,
+  //   isOpen: this.props.index === 0
+  // }
+  const [outfits, setOutfits] = useState(props.day.outfits)
+  const [isOpen, setIsOpen] = useState(props.index === 0)
+  const [activeOutfit, setActiveOutfit] = useState()
+  function toggleOpen () {
+    setIsOpen(!isOpen)
   }
-  toggleOpen = () => {
-    this.setState({isOpen: !this.state.isOpen})
-  }
-  componentDidMount () {
-    let icons = new Skycons({"resizeClear": true})
-    icons.add(this.props.image, this.props.day.icon)
-    icons.play()
-  }
-  updateDay = (key, outfit, inc) => {
-    let tempState = this.state.outfits
+
+  const icons = new Skycons({'resizeClear': true})
+  icons.add(props.image, props.day.icon)
+  icons.play()
+
+  function updateDay (key, outfit, inc) {
+    let tempState = outfits
     const outfitCopy = cloneDeep(outfit)
     if (inc === 1) {
-      tempState[key]['items'] = outfitCopy.items
-      tempState[key]['name'] = outfitCopy.name
-      tempState[key]['type'] = outfitCopy.type
+      tempState[key].items = outfitCopy.items
+      tempState[key].name = outfitCopy.name
+      tempState[key].type = outfitCopy.type
     } else if (inc === -1) {
-      tempState[key]['items'] = []
-      tempState[key]['name'] = outfitCopy.name
-      tempState[key]['type'] = outfitCopy.type
+      tempState[key].items = []
+      tempState[key].name = outfitCopy.name
+      tempState[key].type = outfitCopy.type
     } else if (inc === 0) {
       tempState.splice(key, 1)
     }
-    this.setState({outfits: tempState})
-    this.props.updateTote(this.props.index, key, outfitCopy, inc)
+    setOutfits(tempState)
+    props.updateTote(props.index, key, outfitCopy, inc)
   }
-  updateName = (key, name) => {
-    let tempState = this.state.outfits
-    tempState[key]['realName'] = name
-    this.setState({outfits: tempState})
-    this.props.updateOutfitName(this.props.index, key, name)
+  function updateName (key, name) {
+    let tempState = outfits
+    tempState[key].realName = name
+    setOutfits(tempState)
+    props.updateOutfitName(props.index, key, name)
   }
-  addOutfit = () => {
-    const num = this.state.outfits.length + 1 || 1
+  function addOutfit () {
+    const num = outfits.length + 1 || 1
     const newOutfit = {
       id: num,
-      realName: "Outfit " + num
+      realName: 'Outfit ' + num
     }
-    let tempOutfits = this.state.outfits
+    let tempOutfits = outfits
     tempOutfits.push(newOutfit)
-    this.setState({ outfits: tempOutfits, activeOutfit: newOutfit.id })
+    setOutfits(tempOutfits)
+    setActiveOutfit(newOutfit.id)
   }
-  updateActiveOutfit = (index) => {
-    this.setState({activeOutfit: index})
+  function updateActiveOutfit (index) {
+    setActiveOutfit(index)
   }
-  render() {
-    const outfits = this.state.outfits.map((outfit, index) => {
-      return (
-        <OutfitSection
-          key={index}
-          index={index}
-          outfit={outfit}
-          outfitTypes={this.props.outfitTypes}
-          updateDay={this.updateDay}
-          updateName={this.updateName}
-          activeOutfit={this.state.activeOutfit || 1}
-          updateActiveOutfit={this.updateActiveOutfit}
-          renderCopyModal={this.props.renderCopyModal}
-        />
-      )
-    })
-    const carotClass = this.state.isOpen ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
+  const outfitArray = outfits.map((outfit, index) => {
     return (
-      <li>
-        <h4 onClick={this.toggleOpen}>
-          <span className={carotClass} />
-          {moment(this.props.day.date).format('ddd, MMM Do YYYY')}
-          <canvas id={this.props.image} width="42" height="42"></canvas>
-        </h4>
-        <Collapse isOpen={this.state.isOpen}>
-          <p>{this.props.day.summary}</p>
-          <p>High: {this.props.day.high} &deg;F Low: {this.props.day.low}&deg; F</p>
-          <ul className="sectionList">
-            {outfits}
-          </ul>
-          <button onClick={this.addOutfit}>Add Outfit</button>
-          <hr />
-        </Collapse>
-      </li>
+      <OutfitSection
+        key={index}
+        index={index}
+        outfit={outfit}
+        outfitTypes={props.outfitTypes}
+        updateDay={updateDay}
+        updateName={updateName}
+        activeOutfit={activeOutfit || 1}
+        updateActiveOutfit={updateActiveOutfit}
+        renderCopyModal={props.renderCopyModal}
+      />
     )
-  }
+  })
+  const carotClass = isOpen ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
+  return (
+    <li>
+      <h4 onClick={toggleOpen}>
+        <span className={carotClass} />
+        {moment(props.day.date).format('ddd, MMM Do YYYY')}
+        <canvas id={props.image} width="42" height="42"></canvas>
+      </h4>
+      <Collapse isOpen={isOpen}>
+        <p>{props.day.summary}</p>
+        <p>High: {props.day.high} &deg;F Low: {props.day.low}&deg; F</p>
+        <ul className="sectionList">
+          {outfitArray}
+        </ul>
+        <button onClick={addOutfit}>Add Outfit</button>
+        <hr />
+      </Collapse>
+    </li>
+  )
 }

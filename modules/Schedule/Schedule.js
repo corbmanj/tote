@@ -1,34 +1,26 @@
-import React, {Component} from 'react'
+import React, { useState, useRef } from 'react'
 import moment from 'moment'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default class Schedule extends Component {
-  state = {
-      numDays: 0,
-      startDate: this.props.startDate ?  moment(this.props.startDate).format('YYYY-MM-DD') : null,
-      endDate: this.props.endDate ? moment(this.props.endDate).format('YYYY-MM-DD') : null
-    }
-  // dateToString = (dateObj) => {
-  //   if (dateObj) {
-  //     return `${dateObj.getFullYear()}-${dateObj.getMonth() < 9 ? '0' : ''}${dateObj.getMonth()+1}-${dateObj.getDate() < 10 ? '0' : ''}${dateObj.getDate()}`
-  //   } else { return null }
-  // }
-  // stringToDate = (dateStr) => {
-  //   if (typeof dateStr === 'string') {
-  //     return new Date(dateStr)
-  //   } else { return dateStr }
-  // }
-  updateSchedule = () => {
+export default function Schedule (props) {
+  const [dates, setDates] = useState({
+    startDate: props.startDate ?  moment(props.startDate).format('YYYY-MM-DD') : null,
+    endDate: props.endDate ?  moment(props.startDate).format('YYYY-MM-DD') : null
+  })
+  const cityState = useRef(props.city || 'City, St')
+  
+  function updateSchedule () {
     // TODO, if there is already a days array in state, then don't warn before overwriting days
-    let that = this
+    // let that = this
     let stateObj = {}
-    fetch(`${baseUrl}/api/googleapis/maps/${this.props.city}`)
+    stateObj.city = cityState.current.value
+    fetch(`${baseUrl}/api/googleapis/maps/${stateObj.city}`)
       .then(function(response) {
         if (response.status >= 400) {
-          throw new Error("Bad response from server")
+          throw new Error('Bad response from server')
         }
         return response.json();
       })
@@ -36,8 +28,8 @@ export default class Schedule extends Component {
         const lat = response.results[0].geometry.location.lat
         const lng = response.results[0].geometry.location.lng
 
-        stateObj.startDate = moment(that.state.startDate)
-        stateObj.endDate = moment(that.state.endDate)
+        stateObj.startDate = moment(dates.startDate)
+        stateObj.endDate = moment(dates.endDate)
         stateObj.days = []
         stateObj.numDays = stateObj.endDate.diff(stateObj.startDate, 'd')+1
         let i = 0
@@ -49,7 +41,7 @@ export default class Schedule extends Component {
           fetch(`${baseUrl}/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)
             .then(function(response) {
               if (response.status >= 400) {
-                throw new Error("Bad response from server")
+                throw new Error('Bad response from server')
               }
               return response.json()
             })
@@ -71,84 +63,88 @@ export default class Schedule extends Component {
                   return a.date.isBefore(b.date) ? -1 : 1
                 })
                 stateObj.currentStage = 'select'
-                that.props.updateState(stateObj)
+                props.updateState(stateObj)
               }
             })
           i++
         }
       })
   }
-  updateDate = (ev) => {
-    let obj = {}
-    obj[ev.target.name] = moment(ev.target.value)
-    this.setState(obj)
+  function updateDate (ev) {
+    setDates({...dates, [ev.target.name]: moment(ev.target.value)})
   }
-  updateCityState = (ev) => {
-    this.props.updateState({city: ev.target.value})
-  }
-  handleKeyPress = (ev) => {
-    if (ev.charCode === 13 && this.state.endDate.isAfter(this.state.startDate) && this.props.city) {
-      this.updateSchedule()
+
+  function handleKeyPress (ev) {
+    if (ev.charCode === 13 && dates.endDate.isAfter(dates.startDate) && props.city) {
+      updateSchedule()
     }
 
   }
-  renderButtons = () => {
-    if (this.props.days) {
+  function autofocus (e) {
+    e.target.select()
+  }
+  function renderButtons () {
+    if (props.days) {
       let stateObj = {}
       stateObj.currentStage = 'select'
       return (
         <div>
           <button
-            onClick={this.updateSchedule}
-            disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
-          >Reset Schedule</button>
+            onClick={updateSchedule}
+            disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
+          >
+            Reset Schedule
+          </button>
           <button
             value='select'
-            onClick={() => this.props.updateState(stateObj)}
-            disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
-          >Move to Select Outfits</button>
+            onClick={() => props.updateState(stateObj)}
+            disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
+          >
+            Move to Select Outfits
+          </button>
         </div>
       )
     } else {
       return (
         <button
           value='select'
-          onClick={this.updateSchedule}
-          disabled={this.state.startDate && this.state.endDate ? moment(this.state.startDate).isAfter(moment(this.state.endDate)) : true}
-        >Select Outfits</button>
+          onClick={updateSchedule}
+          disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
+        >
+          Select Outfits
+        </button>
       )
     }
   }
-  render() {
-    return (
-      <div>
-        <h2 className="header">Schedule</h2>
-        <div onKeyPress={this.handleKeyPress}>
-          Start Date:
-          <input
-            defaultValue={this.state.startDate ? moment(this.state.startDate).format('YYYY-MM-DD') : null}
-            type="date"
-            name="startDate"
-            onChange={this.updateDate}
-          />
-          <br />
-            End Date:
-          <input
-            defaultValue={this.state.endDate ? moment(this.state.endDate).format('YYYY-MM-DD') : null}
-            type="date" name="endDate"
-            onChange={this.updateDate}
-          />
-          <br />
-          Destination:
-          <input
-            onChange={this.updateCityState}
-            type="text"
-            value={this.props.city || "City, St"}
-            onFocus={e => e.target.select()}
-          />
-        </div>
-        {this.renderButtons()}
+  return (
+    <div>
+      <h2 className="header">Schedule</h2>
+      <div onKeyPress={handleKeyPress}>
+        Start Date:
+        <input
+          defaultValue={dates.startDate ? moment(dates.startDate).format('YYYY-MM-DD') : null}
+          type="date"
+          name="startDate"
+          onChange={updateDate}
+        />
+        <br />
+          End Date:
+        <input
+          defaultValue={dates.endDate ? moment(dates.endDate).format('YYYY-MM-DD') : null}
+          type="date" name="endDate"
+          onChange={updateDate}
+        />
+        <br />
+        Destination:
+        <input
+          ref={cityState}
+          placeholder="City, St"
+          type="text"
+          defaultValue={props.city}
+          onFocus={autofocus}
+        />
       </div>
-      )
-  }
+      {renderButtons()}
+    </div>
+  )
 }

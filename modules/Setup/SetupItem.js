@@ -1,12 +1,12 @@
 import React from 'react'
 
 export default function SetupItem (props) {
-  const updateItem = (e, key) => {
+  function updateItem (e, key) {
     let tempItem = props.item
     tempItem[key] = e.target.value
     props.updateItem(props.index, tempItem)
   }
-  const toggleDropdown = () => {
+  function toggleDropdown () {
     let tempItem = props.item
     tempItem.dropdown = !tempItem.dropdown
     props.updateItem(tempItem)
