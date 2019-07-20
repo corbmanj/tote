@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 // import { Collapse } from '@blueprintjs/core'
 
 export default function AssignItem (props) {
   const [editing, setEditing] = useState(false)
   const [error, setError] = useState(false)
-  const [itemName, setItemName] = useState()
+  const itemName = useRef(null)
+  // const [itemName, setItemName] = useState()
 
   function renderSelect () {
     const options = props.namedItems.filter((filteredItem) => {
@@ -36,9 +37,9 @@ export default function AssignItem (props) {
     return (
       <span>
         <input
-          defaultValue="add new"
+          ref={itemName}
+          placeholder="add new ..."
           type="text"
-          onChange={updateOptions}
           autoFocus
           onFocus={handleFocus}
           onBlur={saveOption}
@@ -49,18 +50,16 @@ export default function AssignItem (props) {
       </span>
     )
   }
-  function updateOptions (e) {
-    setItemName(e.target.value)
-  }
   
   function saveOption () {
-    if (itemName.trim() === '') {
+    const { value } = itemName.current
+    if (value.trim() === '') {
       setError('Item name cannot be blank')
     } else {
       let stateArray = props.namedItems
       stateArray.sort((a,b) => b.id - a.id)
       const newId = stateArray.length > 0 ? stateArray[0].id + 1 : 1
-      let newItem = {parentType: props.item.parentType, name: itemName, id: newId}
+      let newItem = {parentType: props.item.parentType, name: value, id: newId}
       stateArray.push(newItem)
       props.updateNamedItems(stateArray)
       props.updateOutfit(newId)

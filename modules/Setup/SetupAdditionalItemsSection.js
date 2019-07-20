@@ -13,9 +13,9 @@ export default function SetupAdditionalItemsSection (props) {
   }
   
   function addItem () {
-    // todo: find max item id
     const tempItems = [...items]
-    const newItemId = props.items.length + 1
+    const maxId = Math.max(...tempItems.map(item => item.id))
+    const newItemId = maxId + 1
     tempItems.push({id: newItemId, name: 'new item'})
     setItems(tempItems)
   }

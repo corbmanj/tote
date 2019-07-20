@@ -1,21 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 
 export default function SetupAdditionalItem (props) {
   const [editing, setEditing] = useState(false)
-  const [name, setName] = useState(props.item.name)
+  const name = useRef(props.item.name)
 
   function toggleEditing () {
     setEditing(!editing)
   }
 
-  function updateName (ev) {
-    // todo: use ref
-    setName(ev.target.value)
-  }
-
   function saveItem () {
     toggleEditing()
-    props.saveEditedItem(name, this.props.item.id)
+    props.saveEditedItem(name.current.value, props.item.id)
   }
 
   function handleKeyPress (ev) {
@@ -32,21 +27,21 @@ export default function SetupAdditionalItem (props) {
     return (
       <>
         <input
-          value={name}
+          ref={name}
+          defaultValue={props.item.name}
           type="text"
-          onChange={updateName}
           autoFocus
           onFocus={autoSelect}
           onBlur={saveItem}
           onKeyPress={handleKeyPress}
         />
-        <button onClick={this.saveItem}>Save</button>
+        <button onClick={saveItem}>Save</button>
       </>
     )
   }
 
   function renderName () {
-    return <li onDoubleClick={toggleEditing}>{name}</li>
+    return <li onDoubleClick={toggleEditing}>{props.item.name}</li>
   }
 
   return (

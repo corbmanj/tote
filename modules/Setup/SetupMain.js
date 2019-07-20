@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
 import SetupAdditionalItems from './SetupAdditionalItems'
@@ -18,7 +18,7 @@ export default class SetupMain extends Component {
   }
   
 
-  componentWillMount () {
+  componentDidlMount () {
     const that = this
     fetch(`${baseUrl}/db/userItems/${this.props.user}`)
       .then(function(response) {

@@ -23,7 +23,6 @@ export default function AssignItems (props) {
     let stateObj = {}
     stateObj.tote = props.tote
     const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
-    // todo: this doesn't seem to work
     stateObj.tote.namedItems[oldItemIndex].name = newName
     props.updateState(stateObj)
   }

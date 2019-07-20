@@ -54,7 +54,8 @@ router.get('/userItems/:userid', function(req, response) {
         console.log(additionalItems.rows)
         ret.additionalItems = additionalItems.rows.map(row => ({
           id: row.id,
-          list: row.list
+          name: row.list.name,
+          items: row.list.items
         }))
         response.json(ret)
       })

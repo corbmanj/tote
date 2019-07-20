@@ -2,17 +2,14 @@ import React, { useState, useRef } from 'react'
 
 export default function Item (props) {
   const [editing, setEditing] = useState(false)
-  const [name, setName] = useState(props.item.name)
   const nameInput = useRef(null)
 
   function toggleEditing () {
     if (editing) {
-      if (!(name.trim() === '')) {
-        props.updateNamedItemInAllOutfits(props.item.id, name)
+      if (nameInput.current.value && !(nameInput.current.value.trim() === '')) {
+        props.updateNamedItemInAllOutfits(props.item.id, nameInput.current.value)
       }
     }
-    console.log(nameInput.current)
-    setName(nameInput.current.value)
     setEditing(!editing)
   }
 
