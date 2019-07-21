@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import AssignOutfit from './AssignOutfit'
-import '../../public/skycons'
 import { Collapse } from '@blueprintjs/core'
 
 export default function AssignDay (props) {

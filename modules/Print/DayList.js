@@ -5,10 +5,10 @@ import Skycons from './../../public/skycons'
 
 export default function DayList (props) {
   const icons = new Skycons({'resizeClear': true})
-  icons.add(this.props.image, this.props.day.icon)
+  icons.add(props.image, props.day.icon)
   icons.play()
 
-  const outfits = this.props.day.outfits.map((outfit, index) => {
+  const outfits = props.day.outfits.map((outfit, index) => {
     return <OutfitList key={index} index={index} outfit={outfit} namedItems={props.namedItems} />
   })
       

@@ -1,3 +1,4 @@
+let localSkycons
 (function() {
   'use strict';
 
@@ -725,6 +726,7 @@
       }
     }
   };
-
-  window.Skycons = Skycons;
+  localSkycons = Skycons
 }(this));
+
+export default localSkycons;

@@ -1,15 +1,11 @@
 import React, { useState } from 'react'
 import moment from 'moment'
 import OutfitSection from './OutfitSection'
-import './../../public/skycons'
+import Skycons from './../../public/skycons'
 import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
 
 export default function DaySection (props) {
-  // state = {
-  //   outfits: this.props.day.outfits,
-  //   isOpen: this.props.index === 0
-  // }
   const [outfits, setOutfits] = useState(props.day.outfits)
   const [isOpen, setIsOpen] = useState(props.index === 0)
   const [activeOutfit, setActiveOutfit] = useState()
