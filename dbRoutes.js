@@ -115,6 +115,19 @@ router.get('/additionalItems/:userid', function(req, response) {
     })
 });
 
+// add an additional item section for the logged in user
+router.post('/additionalItems/:userid', function(req, response) {
+  client.query(`
+    INSERT INTO additional_items_json (user_id, list)
+    VALUES ($1, $2)
+    RETURNING id;`,
+    [req.params.userid, JSON.stringify(req.body)]
+  )
+    .then(result => {
+      response.json(result.rows.map(row => ({ id: row.id, list: row.list })))
+    })
+});
+
 // update an additional item section for the logged in user
 router.put('/updateAdditionalItems/:userid/:listid', function(req, response) {
   client.query(`

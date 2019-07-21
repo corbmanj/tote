@@ -160,7 +160,6 @@ export default class SetupMain extends Component {
   updateAdditionalItemCategory = (itemList, id) => {
     var myHeaders = new Headers();
     let sectionToUpdate = this.props.additionalItems.findIndex(section => section.id === id)
-    console.log(sectionToUpdate, id, itemList)
     const itemSection = {
       name: this.props.additionalItems[sectionToUpdate].name,
       items: itemList
@@ -171,6 +170,31 @@ export default class SetupMain extends Component {
       method: 'PUT',
       headers: myHeaders,
       body: JSON.stringify(itemSection),
+      mode: 'cors',
+      cache: 'default'
+    })
+      .then(function(response) {
+        if (response.status >= 400) {
+          throw new Error("Bad response from server")
+        }
+        return response.json()
+      })
+      .then(function(response) {
+        console.log(response)
+      })
+  }
+  addAdditionalItemCategory = (name) => {
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    const JSONbody = {
+      name: "temporary",
+      items: []
+    }
+
+    fetch(`${baseUrl}/db/additionalItems/${this.props.user}`, {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(JSONbody),
       mode: 'cors',
       cache: 'default'
     })
@@ -223,6 +247,7 @@ export default class SetupMain extends Component {
         updateItem={this.updateItem}
         removeItem={this.removeItem}
         updateAdditionalItemCategory={this.updateAdditionalItemCategory}
+        addAdditionalItemCategory={this.addAdditionalItemCategory}
       />
     )
   }
