@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import moment from 'moment'
+import { Icon } from '@blueprintjs/core'
 import AssignOutfit from './AssignOutfit'
 import { Collapse } from '@blueprintjs/core'
 
@@ -35,12 +36,12 @@ export default function AssignDay (props) {
     )
   })
 
-  const carotClass = isOpen ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
+  const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
 
   return (
     <li>
       <h3 onClick={toggleOpen}>
-        <span className={carotClass} />
+        <Icon icon={carotClass} />
         {moment(props.day.date).format('ddd, MMM Do YYYY')}
       </h3>
       <Collapse isOpen={isOpen}>

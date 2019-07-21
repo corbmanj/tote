@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { Icon } from '@blueprintjs/core'
 
 export default function Item (props) {
   const [editing, setEditing] = useState(false)
@@ -41,11 +42,10 @@ export default function Item (props) {
           placeholder="item name ..."
           autoFocus
           onFocus={autoSelect}
-          // onChange={updateItemName}
           onKeyPress={handleKeyPress}
         />
-        <span onClick={toggleEditing} className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
-        <span onClick={deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
+        <Icon onClick={toggleEditing} icon="tick" />
+        <Icon onClick={deleteItem} icon="delete" />
       </li>
     )
   }

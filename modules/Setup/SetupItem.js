@@ -1,4 +1,5 @@
 import React from 'react'
+import { Icon } from '@blueprintjs/core'
 
 export default function SetupItem (props) {
   function updateItem (e, key) {
@@ -14,7 +15,7 @@ export default function SetupItem (props) {
 
   return (
     <tr>
-      <td><button disabled={props.outfitCount} onClick={() => props.removeItem(props.index)}><span className="pt-icon-standard pt-icon-delete" /></button></td>
+      <td><button disabled={props.outfitCount} onClick={() => props.removeItem(props.index)}><Icon icon="delete" /></button></td>
       <td><input type="text" value={props.item.type} onChange={(e)=>{updateItem(e,'type')}} /></td>
       <td><input type="text" value={props.item.dropdown ? props.item.parentType : 'N/A'} onChange={(e)=>{updateItem(e, 'parentType')}} disabled={!props.item.dropdown}/></td>
       <td><input type="checkbox" checked={props.item.dropdown} onChange={toggleDropdown}/></td>

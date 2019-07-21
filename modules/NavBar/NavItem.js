@@ -1,4 +1,5 @@
 import React from 'react'
+import { Icon } from '@blueprintjs/core'
 
 export default function Modal (props) {
   return (
@@ -10,7 +11,7 @@ export default function Modal (props) {
         onClick={props.updateState}
         disabled={props.disabled}
       />
-      { !props.isLast ? <span className="pt-icon-standard pt-icon-chevron-right" /> : null }
+      { !props.isLast ? <Icon icon="chevron-right" /> : null }
     </label>
   )
 }

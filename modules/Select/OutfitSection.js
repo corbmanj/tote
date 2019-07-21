@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Icon } from '@blueprintjs/core'
 import CheckboxSection from './CheckboxSection'
 import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
@@ -130,11 +131,11 @@ export default function OutfitSection (props) {
       </li>
     )
   }
-  const carotClass = props.activeOutfit === props.outfit.id ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
+  const carotClass = props.activeOutfit === props.outfit.id ? 'chevron-down' : 'chevron-right'
   return (
     <li>
       <h4 onClick={updateActiveOutfit} onDoubleClick={renameOutfit}>
-        <span className={carotClass} />
+        <Icon icon={carotClass} />
         {renaming ? renderRenaming() : renderName()}
         {outfitType ? ` (${outfitType})` : null}
       </h4>

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import moment from 'moment'
+import { Icon } from '@blueprintjs/core'
 import OutfitSection from './OutfitSection'
-import Skycons from './../../public/skycons'
+import Skycons from '../Shared/skycons'
 import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
 
@@ -12,10 +13,6 @@ export default function DaySection (props) {
   function toggleOpen () {
     setIsOpen(!isOpen)
   }
-
-  const icons = new Skycons({'resizeClear': true})
-  icons.add(props.image, props.day.icon)
-  icons.play()
 
   function updateDay (key, outfit, inc) {
     let tempState = outfits
@@ -69,13 +66,17 @@ export default function DaySection (props) {
       />
     )
   })
-  const carotClass = isOpen ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
+  const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
   return (
     <li>
       <h4 onClick={toggleOpen}>
-        <span className={carotClass} />
+        <Icon icon={carotClass} />
         {moment(props.day.date).format('ddd, MMM Do YYYY')}
-        <canvas id={props.image} width="42" height="42"></canvas>
+        <Skycons
+          color='black' 
+          icon={props.day.icon.toUpperCase()}
+          autoplay={true}
+        />
       </h4>
       <Collapse isOpen={isOpen}>
         <p>{props.day.summary}</p>

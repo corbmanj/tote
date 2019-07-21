@@ -1,4 +1,5 @@
 import React from 'react'
+import { Icon } from '@blueprintjs/core'
 import AdditionalItem from './AdditionalItem'
 
 export default function AdditionalItemSection (props) {
@@ -23,7 +24,8 @@ export default function AdditionalItemSection (props) {
   }) : null
   return (
     <div>
-      <h4 onClick={addItem}>{props.type}<span className="pt-icon-standard pt-icon-add" /></h4>
+      <h4>{props.type}</h4>
+      <Icon icon="add" onClick={addItem} />
       {items}
     </div>
   )

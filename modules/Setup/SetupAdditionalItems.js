@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Collapse } from '@blueprintjs/core'
+import { Collapse, Icon } from '@blueprintjs/core'
 import SetupAdditionalItemsSection from './SetupAdditionalItemsSection'
 
 export default function SetupAdditionalItems (props) {
@@ -10,11 +10,12 @@ export default function SetupAdditionalItems (props) {
   }
 
   const sections = props.sections.map((section, index) => {
-    const carotClass = isOpen === index ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
+    const carotClass = isOpen === index ? 'chevron-down' : 'chevron-right'
     return (
       <li key={index}>
+        // todo: use ev.target.id with id set to index
         <h4 onClick={() => toggleOpen(index)}>
-          <span className={carotClass} />
+          <Icon icon={carotClass} />
           {section.name}
         </h4>
         <Collapse isOpen={isOpen === index}>

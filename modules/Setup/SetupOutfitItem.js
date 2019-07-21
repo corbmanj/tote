@@ -1,4 +1,5 @@
 import React from 'react'
+import { Icon } from '@blueprintjs/core'
 
 export default function SetupOutfitItem (props) {
   function updateOutfitItem (e) {
@@ -19,7 +20,7 @@ export default function SetupOutfitItem (props) {
         <option value="0">select one...</option>
         {options}
       </select>
-      <span className="pt-icon-standard pt-icon-delete" onClick={removeOutfitItem}>WHERE AM I</span>
+      <Icon className="delete" onClick={removeOutfitItem} />
     </div>
   )
 }

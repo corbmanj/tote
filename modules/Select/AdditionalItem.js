@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Icon } from '@blueprintjs/core'
 
 export default function AdditionalItem (props) {
   const [editing, setEditing] = useState(props.item === 'new item')
@@ -39,8 +40,8 @@ export default function AdditionalItem (props) {
           onChange={updateItemName}
           onKeyPress={logEvent}
         />
-        <span onClick={toggleEditing} className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
-        <span onClick={deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
+        <Icon icon="tick" onClick={toggleEditing}/>
+        <Icon icon="delete" onClick={deleteItem} />
       </div>
     )
   }

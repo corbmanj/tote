@@ -16,7 +16,6 @@ export class AppProvider extends React.Component {
         super(props)
 
         this.state = this.initialState()
-        // this.setTitle.bind(this)
     }
 
     initialState () {

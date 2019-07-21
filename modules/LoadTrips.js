@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import moment from 'moment'
+import { Icon } from '@blueprintjs/core'
 import Modal from './Shared/ConfirmModal'
 import { AppContext } from './AppState';
 require('es6-promise').polyfill()
@@ -8,13 +9,19 @@ require('isomorphic-fetch')
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class LoadTrips extends Component {
-  componentWillMount () {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      showModal: true
+    }
+    this.getTripList=this.getTripList.bind(this)
+    this.loadTrip=this.loadTrip.bind(this)
+  }
+  componentDidMount () {
     this.getTripList()
   }
-  state = {
-    showModal: true
-  }
-  getTripList = () => {
+  getTripList () {
     let that = this
     fetch(`${baseUrl}/db/tote/getTrips/${this.props.userId}`, {
       method: "GET",
@@ -29,7 +36,7 @@ export default class LoadTrips extends Component {
         that.setState({tripList: data})
       });
   }
-  loadTrip = (trip) => {
+  loadTrip (trip) {
     let ev = {}
     ev.target = {}
     ev.target.value = 'schedule'
@@ -70,7 +77,7 @@ export default class LoadTrips extends Component {
         return (
           <li key={index} onClick={() => this.loadTrip(trip)} className="card">
             <p>City: {trip.city}
-              <span onClick={(ev) => this.handleDeleteClick(ev, trip)} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
+              <Icon icon="delete" iconSize={15} onClick={(ev) => this.handleDeleteClick(ev, trip)} />
             </p>
             <p>Start: {moment(trip.startDate).format('dddd, MMMM Do')}</p>
             <p>End: {moment(trip.endDate).format('dddd, MMMM Do')}</p>

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Icon } from '@blueprintjs/core'
 import AssignItem from './AssignItem'
 import { Collapse } from '@blueprintjs/core'
 
@@ -27,12 +28,12 @@ export default function Modal (props) {
     })
     return <div>{items}</div>
   }
-  const carotClass = props.active ? 'pt-icon-standard pt-icon-chevron-down' : 'pt-icon-standard pt-icon-chevron-right'
+  const carotClass = props.active ? 'chevron-down' : 'chevron-right'
 
   return (
     <li>
       <h4 className="outfit" onClick={updateActiveOutfit}>
-        <span className={carotClass} />
+        <Icon icon={carotClass} />
         {props.outfit.realName}: {props.outfit.type}
       </h4>
         <Collapse isOpen={props.active}>

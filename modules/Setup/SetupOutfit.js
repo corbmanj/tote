@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import SetupOutfitItem from './SetupOutfitItem'
+import { Icon } from '@blueprintjs/core'
 
 export default function SetupOutfit (props) {
   const [editing, setEditing] = useState(false)
@@ -46,7 +47,7 @@ export default function SetupOutfit (props) {
     if (!editing) {
       return (
         <span onDoubleClick={toggleEditing}>
-          <span className="pt-icon-standard pt-icon-delete" onClick={handleRemoveOutfit} />
+          <Icon icon="delete" onClick={handleRemoveOutfit} />
           {props.outfit.type}
         </span>)
     } else {
