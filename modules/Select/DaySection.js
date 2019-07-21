@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import moment from 'moment'
 import { Icon } from '@blueprintjs/core'
 import OutfitSection from './OutfitSection'
-import Skycons from '../Shared/skycons'
+import Skycons from '../Shared/Skycons'
 import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
 
