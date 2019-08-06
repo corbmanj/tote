@@ -17,24 +17,7 @@ require('es6-promise').polyfill()
 require('isomorphic-fetch')
 import '../node_modules/@blueprintjs/core/lib/css/blueprint.css'
 
-// const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
-
 export default class Main extends Component {
-  handlePackingCheckboxChange = (section, id, type) => {
-    const tote = {...this.context.tote}
-    if (section === 'named') {
-      const itemIndex = tote.namedItems.findIndex(item => item.id === id)
-      tote.namedItems[itemIndex].packed = !tote.namedItems[itemIndex].packed
-    } else if (section === 'unnamed') {
-      const toggleItemIndex = tote.unnamed.findIndex(item => item.id === id)
-      tote.unnamed[toggleItemIndex].packed = !tote.unnamed[toggleItemIndex].packed
-    } else if (section === 'additional') {
-      let typeIndex = tote.additionalItems.findIndex(thisType => thisType.name === type)
-      let toggleItemIndex = tote.additionalItems[typeIndex].items.findIndex(item => item.id === id)
-      tote.additionalItems[typeIndex].items[toggleItemIndex].packed = !tote.additionalItems[typeIndex].items[toggleItemIndex].packed
-    }
-    this.context.setTote(tote)
-  }
 
   renderToast = () => {
     return (
@@ -63,7 +46,7 @@ export default class Main extends Component {
       case 'assign':
         return <AssignItems />
       case 'packing':
-        return <PackingList handleCheckboxChange={this.handlePackingCheckboxChange} />
+        return <PackingList />
       case 'print':
         return <OutfitsList />
       default:
