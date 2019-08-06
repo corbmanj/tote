@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
+import { AppContext } from '../AppState'
 // import { Collapse } from '@blueprintjs/core'
 
 export default function AssignItem (props) {
@@ -6,9 +7,11 @@ export default function AssignItem (props) {
   const [error, setError] = useState(false)
   const itemName = useRef(null)
   // const [itemName, setItemName] = useState()
+  const context = useContext(AppContext)
 
   function renderSelect () {
-    const options = props.namedItems.filter((filteredItem) => {
+    const namedItems = context.tote.namedItems || []
+    const options = namedItems.filter((filteredItem) => {
       return filteredItem.parentType === props.item.parentType
     }).map((item) => {
       return <option key={item.id} value={item.id}>{item.name}</option>
@@ -56,7 +59,7 @@ export default function AssignItem (props) {
     if (value.trim() === '') {
       setError('Item name cannot be blank')
     } else {
-      let stateArray = props.namedItems
+      let stateArray = context.tote.namedItems || []
       stateArray.sort((a,b) => b.id - a.id)
       const newId = stateArray.length > 0 ? stateArray[0].id + 1 : 1
       let newItem = {parentType: props.item.parentType, name: value, id: newId}

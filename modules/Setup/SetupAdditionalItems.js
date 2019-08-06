@@ -1,19 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Collapse, Icon } from '@blueprintjs/core'
 import SetupAdditionalItemsSection from './SetupAdditionalItemsSection'
+import { AppContext } from '../AppState'
 
 export default function SetupAdditionalItems (props) {
+  const context = useContext(AppContext)
   const [isOpen, setIsOpen] = useState(false)
   
   function toggleOpen (index) {
     setIsOpen(isOpen !== index ? index : false)
   }
 
-  const sections = props.sections.map((section, index) => {
+  const sections = context.additionalItems.map((section, index) => {
     const carotClass = isOpen === index ? 'chevron-down' : 'chevron-right'
+    // TODO: use ev.target.id with id set to index
     return (
       <li key={index}>
-        // todo: use ev.target.id with id set to index
         <h4 onClick={() => toggleOpen(index)}>
           <Icon icon={carotClass} />
           {section.name}

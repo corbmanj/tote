@@ -1,5 +1,4 @@
 import React from 'react'
-
 export default function CheckboxSection (props) {
   function toggleItem (ev) {
     props.toggle(ev.target.value, ev.target.checked)

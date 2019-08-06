@@ -1,7 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from '../AppState'
 
 export default function UnnamedItems (props) {
-  const items = props.items.map((item, index) => {
+  const context = useContext(AppContext)
+  const items = context.tote.unnamed.map((item, index) => {
     return (
       <div key={index}>
         <label>

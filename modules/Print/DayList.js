@@ -6,7 +6,7 @@ import OutfitList from './OutfitList'
 export default function DayList (props) {
 
   const outfits = props.day.outfits.map((outfit, index) => {
-    return <OutfitList key={index} index={index} outfit={outfit} namedItems={props.namedItems} />
+    return <OutfitList key={index} index={index} outfit={outfit} />
   })
       
   return (

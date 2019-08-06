@@ -19,7 +19,6 @@ export default function Modal (props) {
           key={index}
           index={index}
           item={item}
-          namedItems={props.namedItems}
           updateNamedItems={props.updateNamedItems}
           updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
           updateOutfit={updateOutfit}

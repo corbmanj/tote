@@ -1,16 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Item from './Item'
+import { AppContext } from '../AppState'
 
 export default function NamedItems (props) {
+  const context = useContext(AppContext)
   let parentTypes = new Set()
-  props.namedItems.map(item => {
+  const namedItems = context.tote.namedItems || []
+  namedItems.map(item => {
     parentTypes.add(item.parentType)
   })
 
   const itemList = []
 
   parentTypes.forEach(type => {
-    const items = props.namedItems.filter(item => {
+    const items = namedItems.filter(item => {
         return item.parentType === type
       }).map((el, index) => {
         return (

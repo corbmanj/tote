@@ -1,12 +1,14 @@
-import React, {useState} from 'react'
+import React, { useState, useContext} from 'react'
 import Modal from '../Shared/Modal'
 import AssignDay from './AssignDay'
 import AdditionalItemSection from '../Select/AdditionalItemSection'
+import { AppContext } from '../AppState'
 
-export default function AssignItems (props) {
+export default function AssignItems () {
   const [editingNamedItems, setEditingNamedItems] = useState(false)
   const [error, setError] = useState(false)
   const [errorMsg, setErrorMsg] = useState()
+  const context = useContext(AppContext)
 
   function toggleModal () {
     setEditingNamedItems(!editingNamedItems)
@@ -14,89 +16,85 @@ export default function AssignItems (props) {
     body.classList.toggle('no-scroll')
   }
   function updateNamedItems (namedItems) {
-    let stateObj = {}
-    stateObj.tote = props.tote
-    stateObj.tote.namedItems = namedItems
-    props.updateState(stateObj)
+    const tote = {...context.tote}
+    tote.namedItems = namedItems
+    context.setTote(tote)
   }
   function updateNamedItemInAllOutfits (id, newName) {
-    let stateObj = {}
-    stateObj.tote = props.tote
-    const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
-    stateObj.tote.namedItems[oldItemIndex].name = newName
-    props.updateState(stateObj)
+    const tote = {...context.tote}
+    // const oldItemIndex = tote.namedItems.findIndex(item => {return item.id === id})
+    // tote.namedItems[oldItemIndex].name = newName
+    tote.namedItems.find(item => item.id === id).name = newName
+    context.setTote(tote)
   }
   function deleteNamedItem (id) {
-    let stateObj = {}
-    stateObj.tote = props.tote
-    const oldItemIndex = stateObj.tote.namedItems.findIndex(item => {return item.id === id})
-    stateObj.tote.namedItems.splice(oldItemIndex, 1)
-    props.updateState(stateObj)
+    const tote = {...context.tote}
+    const oldItemIndex = tote.namedItems.findIndex(item => {return item.id === id})
+    tote.namedItems.splice(oldItemIndex, 1)
+    context.setTote(tote)
   }
+  // TODO: this function seems weird, why the map? 
+  // also seems like it should be assigning, not filtering
   function updateOutfit (id, outfitIndex, dayIndex) {
-    let stateObj = {}
-    const namedItem = props.tote.namedItems.find(item => {return item.id === Number(id)})
-    stateObj.days = props.days
-    stateObj.days[dayIndex].outfits[outfitIndex].items.filter(item => {
+    const namedItem = context.tote.namedItems.find(item => item.id === Number(id))
+    const days = [...context.days]
+    days[dayIndex].outfits[outfitIndex].items.filter(item => {
       return item.parentType === namedItem.parentType
     }).map(item => {
       item.id = namedItem.id
     })
-    props.updateState(stateObj)
+    context.setDays(days)
   }
   function addItem (index) {
-    let stateObj = {}
-    stateObj.tote = props.tote
-    stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
-    const maxId = stateObj.tote.additionalItems[index].items.reduce((a, b) => {
+    const tote = {...context.tote}
+    tote.additionalItems = tote.additionalItems || []
+    const maxId = tote.additionalItems[index].items.reduce((a, b) => {
       return +a > +b.id ? +a : +b.id
     }, -1)
     const newId = maxId + 1
-    stateObj.tote.additionalItems[index].items.push({id: newId, name: 'new item'})
-    props.updateState(stateObj)
+    tote.additionalItems[index].items.push({id: newId, name: 'new item'})
+    context.setTote(tote)
   }
+  // TODO: doesn't seem like it needs to update tote for editing
   function toggleEditing (index) {
-    let stateObj = props.tote
-    stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
-    props.updateState(stateObj)
+    const tote = {...context.tote}
+    tote.additionalItems[index].editing = !tote.additionalItems[index].editing
+    context.setTote(tote)
   }
   function updateItem (typeIndex, itemId, itemName) {
-    let stateObj = props.tote
-    let itemToUpdate = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
-    stateObj.additionalItems[typeIndex].items[itemToUpdate].name = itemName
-    props.updateState(stateObj)
+    const tote = {...context.tote}
+    let itemToUpdate = tote.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
+    tote.additionalItems[typeIndex].items[itemToUpdate].name = itemName
+    context.setTote(tote)
   }
   function deleteItem (typeIndex, itemId) {
-    let stateObj = props.tote
-    let itemToDelete = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
-    stateObj.additionalItems[typeIndex].items.splice(itemToDelete,1)
-    props.updateState(stateObj)
+    const tote = {...context.tote}
+    let itemToDelete = tote.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
+    tote.additionalItems[typeIndex].items.splice(itemToDelete,1)
+    context.setTote(tote)
   }
   function updateStage () {
-    if (!(props.tote.namedItems && props.tote.namedItems.length)) {
+    if (!(context.tote.namedItems && context.tote.namedItems.length)) {
       setError(true)
       setErrorMsg('Please assign at least one item')
       return
     }
-    let stateObj = {}
-    stateObj.currentStage = 'packing'
-    props.updateState(stateObj)
+    context.setStage('packing')
   }
   
-  const days = props.days.map((day, index) => {
+  const days = context.days.map((day, index) => {
     return (
       <AssignDay
         key={index}
         index={index}
         day={day}
-        namedItems={props.tote.namedItems || []}
         updateNamedItems={updateNamedItems}
         updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
         updateOutfit={updateOutfit}
       />
     )
   })
-  const additionalItemTypes = props.tote.additionalItems.map((type, index) => {
+  const additionalItemTypes = context.tote.additionalItems.map((type, index) => {
     return (
       <AdditionalItemSection
         key={index}
@@ -116,13 +114,12 @@ export default function AssignItems (props) {
         <Modal
           contentType="NamedItems"
           closeModal={toggleModal}
-          namedItems={props.tote.namedItems}
           updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
           deleteNamedItem={deleteNamedItem}
         />
       }
       <div className="flex-5">
-        <button style={{float: 'right'}} onClick={toggleModal} disabled={!props.tote.namedItems}>Edit Named Items</button>
+        <button style={{float: 'right'}} onClick={toggleModal} disabled={!context.tote.namedItems}>Edit Named Items</button>
         <h2 className="header">Pack Items</h2>
         <ul className="sectionList">
           {days}

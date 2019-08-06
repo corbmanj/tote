@@ -1,27 +1,6 @@
 import React from 'react'
 
 export default function Toast (props) {
-  // static propTypes = {
-  //   message: PropTypes.string.isRequired,
-  //   action: PropTypes.func,
-  //   type: PropTypes.oneOf(['warning', 'success'])
-  // }
-
-  // renderUndo = () => {
-  //   return (
-  //     <button
-  //       className="clear-button"
-  //       title="Click to undo previous action"
-  //       onClick={this.props.action}
-  //     >
-  //       <Fa
-  //         name="undo"
-  //         className="toast-undo-icon"
-  //       />
-  //     </button>
-  //   )
-  // }
-
   function renderIcon () {
     switch (props.type) {
       case 'warning':

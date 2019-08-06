@@ -12,9 +12,7 @@ export default class LoadTrips extends Component {
   constructor(props) {
     super(props)
 
-    this.state = {
-      showModal: true
-    }
+    this.state = {}
     this.getTripList=this.getTripList.bind(this)
     this.loadTrip=this.loadTrip.bind(this)
   }
@@ -23,7 +21,7 @@ export default class LoadTrips extends Component {
   }
   getTripList () {
     let that = this
-    fetch(`${baseUrl}/db/tote/getTrips/${this.props.userId}`, {
+    fetch(`${baseUrl}/db/tote/getTrips/${this.context.userId}`, {
       method: "GET",
     })
       .then(function (response) {
@@ -37,11 +35,7 @@ export default class LoadTrips extends Component {
       });
   }
   loadTrip (trip) {
-    let ev = {}
-    ev.target = {}
-    ev.target.value = 'schedule'
-    this.props.updateState(trip)
-    this.props.updateStage(ev)
+    this.context.setTrip(trip)
   }
   handleDeleteClick = (ev, trip) => {
     ev.stopPropagation()
@@ -96,8 +90,7 @@ export default class LoadTrips extends Component {
   render () {
     return (
       <div>
-        <button onClick={() => this.context.setTitle(`Title-${Math.floor(Math.random() * Math.floor(12))}`)}>{this.context.title}</button>
-        {this.state.showModal && this.state.modalTrip ? this.renderModal() : null}
+        {this.state.showModal && this.renderModal()}
         <ol>
           {this.state.tripList && this.renderTripList()}
         </ol>

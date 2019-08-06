@@ -7,7 +7,7 @@ import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
 
 export default function DaySection (props) {
-  const [outfits, setOutfits] = useState(props.day.outfits)
+  // const [outfits, setOutfits] = useState(props.day.outfits)
   const [isOpen, setIsOpen] = useState(props.index === 0)
   const [activeOutfit, setActiveOutfit] = useState()
   function toggleOpen () {
@@ -15,7 +15,7 @@ export default function DaySection (props) {
   }
 
   function updateDay (key, outfit, inc) {
-    let tempState = outfits
+    let tempState = props.day.outfits
     const outfitCopy = cloneDeep(outfit)
     if (inc === 1) {
       tempState[key].items = outfitCopy.items
@@ -28,36 +28,34 @@ export default function DaySection (props) {
     } else if (inc === 0) {
       tempState.splice(key, 1)
     }
-    setOutfits(tempState)
+    console.log('index', props.index, 'key', key, 'outfitCopy', outfitCopy, 'inc', inc)
     props.updateTote(props.index, key, outfitCopy, inc)
   }
   function updateName (key, name) {
-    let tempState = outfits
+    let tempState = props.day.outfits
     tempState[key].realName = name
-    setOutfits(tempState)
     props.updateOutfitName(props.index, key, name)
   }
   function addOutfit () {
-    const num = outfits.length + 1 || 1
+    const num = props.day.outfits.length + 1 || 1
     const newOutfit = {
       id: num,
       realName: 'Outfit ' + num
     }
-    let tempOutfits = outfits
+    let tempOutfits = props.day.outfits
     tempOutfits.push(newOutfit)
-    setOutfits(tempOutfits)
     setActiveOutfit(newOutfit.id)
   }
   function updateActiveOutfit (index) {
     setActiveOutfit(index)
   }
-  const outfitArray = outfits.map((outfit, index) => {
+  const outfitArray = props.day.outfits.map((outfit, index) => {
     return (
       <OutfitSection
         key={index}
         index={index}
+        dayIndex={props.index}
         outfit={outfit}
-        outfitTypes={props.outfitTypes}
         updateDay={updateDay}
         updateName={updateName}
         activeOutfit={activeOutfit || 1}

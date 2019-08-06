@@ -2,11 +2,6 @@ import React from 'react'
 import NavItem from './NavItem'
 
 export default function NavMenu (props) {
-  function updateState (ev) {
-    props.updateState({currentStage: ev.target.value})
-    // this.forceUpdate()
-  }
-
   const stages = ['home', 'schedule', 'select', 'assign', 'packing', 'print']
   
   const navLinks = stages.map((stage, index) => {
@@ -17,7 +12,7 @@ export default function NavMenu (props) {
       <NavItem
         key={index}
         stage={stage}
-        updateState={updateState}
+        // updateState={updateState}
         isLast={last}
         classNames={classNames}
         disabled={props[stage]}

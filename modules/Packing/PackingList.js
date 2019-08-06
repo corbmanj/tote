@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useContext }from 'react'
 import UnnamedItems from './UnnamedItems'
 import NamedItems from './NamedItems'
 import AdditionalItemSectionPacking from './AdditionalItemSectionPacking'
+import { AppContext } from '../AppState'
 
 export default function PackingList (props) {
-  const updateStage = () => {
-    let stateObj = {}
-    stateObj.currentStage = 'print'
-    props.updateState(stateObj)
+  const context = useContext(AppContext)
+  
+  function updateStage () {
+    context.setStage('print')
   }
-  const additionalItemTypes = props.tote.additionalItems.map((type, index) => {
+  
+  const additionalItemTypes = context.tote.additionalItems.map((type, index) => {
       return (
         <AdditionalItemSectionPacking
           key={index}
@@ -19,11 +21,12 @@ export default function PackingList (props) {
         />
       )
   })
+  
   return (
     <div>
       <h3>Packing List</h3>
-      <UnnamedItems items={props.tote.unnamed} handleCheckboxChange={props.handleCheckboxChange}/>
-      <NamedItems items={props.tote.namedItems} handleCheckboxChange={props.handleCheckboxChange}/>
+      <UnnamedItems handleCheckboxChange={props.handleCheckboxChange}/>
+      <NamedItems handleCheckboxChange={props.handleCheckboxChange}/>
       {additionalItemTypes}
       <button onClick={updateStage}>Print Your Tote</button>
     </div>

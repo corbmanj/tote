@@ -27,7 +27,6 @@ export default function AssignDay (props) {
         index={index}
         active={activeOutfit === outfit.id}
         outfit={outfit}
-        namedItems={props.namedItems}
         updateNamedItems={props.updateNamedItems}
         updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
         updateOutfit={updateOutfit}

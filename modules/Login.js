@@ -1,14 +1,18 @@
 import React, {Component} from 'react'
+import { AppContext } from './AppState';
 require('isomorphic-fetch')
 import bcrypt from 'bcryptjs'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class Login extends Component {
-  state = {
-    loggedIn: false,
-    email: 'hannah.robus@gmail.com',
-    password: 'Password1'
+  constructor(props) {
+    super(props)
+    this.state = {
+      loggedIn: false,
+      email: 'hannah.robus@gmail.com',
+      password: 'Password1'
+    }
   }
   submitLogin = (e) => {
     let that = this
@@ -30,23 +34,24 @@ export default class Login extends Component {
             if (res) {
               that.setState({first: response.first, last: response.last, userId: response.id, loggedIn: true, loginError: false})
               // fetch users list of outfits
-              fetch(`${baseUrl}/db/userItems/${that.state.userId}`)
-                .then(function (response) {
-                  if (response.status >= 400) {
+              fetch(`${baseUrl}/db/userItems/${response.id}`)
+                .then(function (responseb) {
+                  if (responseb.status >= 400) {
                     throw new Error("Bad response from server")
                   }
-                  return response.json();
+                  return responseb.json();
                 })
-                .then(function (response) {
-                  if (!response.outfits.length) { // user has not yet set up outfits
-                    that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
+                .then(function (responsec) {
+                  if (!responsec.outfits.length) { // user has not yet set up outfits
+                    that.context.setUser(response.id)
+                    that.context.setStage('setup')
                   }
                   else {
-                    const tote = that.props.tote
-                    console.log(response.additionalItems)
-                    tote.additionalItems = response.additionalItems
-                    that.props.updateState(tote)
-                    that.props.updateState({outfitTypes: response.outfits, userId: that.state.userId})
+                    const tote = that.context.tote
+                    tote.additionalItems = responsec.additionalItems
+                    that.context.setTote(tote)
+                    that.context.setOutfitTypes(responsec.outfits)
+                    that.context.setUser(response.id)
                   }
                 })
             } else {
@@ -73,3 +78,5 @@ export default class Login extends Component {
     )
   }
 }
+
+Login.contextType = AppContext;

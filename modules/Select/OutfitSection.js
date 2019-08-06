@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import { Icon } from '@blueprintjs/core'
-import CheckboxSection from './CheckboxSection'
 import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
+import CheckboxSection from './CheckboxSection'
+import { AppContext } from '../AppState'
 
 export default function OutfitSection (props) {
-  const [outfit, setOutfit] = useState(props.outfit)
   const [disabled, setDisabled] = useState(props.outfit && props.outfit.type)
-  const [outfitType, setOutfitType] = useState(props.outfit ? props.outfit.type : null)
+  const outfitType = props.outfit && props.outfit.type
   const [renaming, setRenaming] = useState(false)
+  const outfitName = useRef(props.outfit.realName)
+  const context = useContext(AppContext)
 
   function selectText (e) {
     e.target.select()
@@ -16,31 +18,26 @@ export default function OutfitSection (props) {
 
   function saveOutfit () {
     setDisabled(true)
-    props.updateDay(props.index, outfit, 1)
+    props.updateDay(props.index, props.outfit, 1)
   }
 
   function editOutfit () {
-    const outfitCopy = cloneDeep(outfit)
-    props.updateDay(props.index, outfit, -1)
+    const outfitCopy = cloneDeep(props.outfit)
+    props.updateDay(props.index, outfitCopy, -1)
     setDisabled(false)
-    setOutfit(outfitCopy)
   }
 
   function removeOutfit () {
-    props.updateDay(props.index, outfit, 0)
+    props.updateDay(props.index, props.outfit, 0)
   }
 
   function renameOutfit () {
     setRenaming(true)
   }
   
-  function updateName (e) {
-    setOutfit({...outfit, realName: e.target.value})
-  }
-  
   function stopRenaming () {
     setRenaming(false)
-    props.updateName(props.index, outfit.realName)
+    props.updateName(props.index, outfitName.current.value)
   }
 
   function handleKeyPress (ev) {
@@ -52,11 +49,11 @@ export default function OutfitSection (props) {
   function renderRenaming () {
     return (
       <input
+        ref={outfitName}
         autoFocus
         onFocus={selectText}
         type="text"
-        value={outfit.realName}
-        onChange={updateName}
+        defaultValue={props.outfit.realName}
         onBlur={stopRenaming}
         onKeyPress={handleKeyPress}
       />
@@ -64,19 +61,13 @@ export default function OutfitSection (props) {
   }
 
   function renderName () {
-    return outfit.realName
+    return props.outfit.realName
   }
 
   function changeOutfitType (ev) {
-    let tempOutfit = JSON.parse(JSON.stringify(props.outfitTypes.find((item) => {
-      return (item.type === ev.target.value)
-    })))
-    setOutfit({
-      items: tempOutfit.items,
-        type: tempOutfit.type,
-        realName: outfit.realName
-    })
-    setOutfitType(ev.target.value)
+    const templateOutfit = context.outfitTypes.find(item => item.type === ev.target.value)
+    const newOutfit = {...props.outfit, type: templateOutfit.type, items: templateOutfit.items}
+    context.setOutfit(props.dayIndex, props.index, newOutfit)
   }
 
   function updateActiveOutfit () {
@@ -84,25 +75,23 @@ export default function OutfitSection (props) {
   }
 
   function toggleItem (name, isChecked) {
-    let tempOutfit = outfit
+    let tempOutfit = props.outfit
 
     tempOutfit.items.forEach((item) => {
       if (item.type === name) { item.isNotIncluded = !isChecked }
     })
-    setOutfit(tempOutfit)
   }
   
   function renderCopyModal () {
-    const modalProps = {outfit: outfit, confirmText: 'Copy Outfit'}
+    const modalProps = {outfit: props.outfit, confirmText: 'Copy Outfit'}
     props.renderCopyModal(modalProps)
   }
 
   function renderOutfitDetails () {
-    const outfitNames = props.outfitTypes.map(function (type, key) {
-      return (
+    const outfitNames = context.outfitTypes.map((type, key) => (
         <option key={key} value={type.type}>{type.type}</option>
       )
-    }, this)
+    )
     return (
       <li>
         <Collapse isOpen={props.activeOutfit === props.outfit.id} transitionDuration={400}>
@@ -119,14 +108,13 @@ export default function OutfitSection (props) {
             <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
           </span>
           <br />
-          {outfitType ?
+          {outfitType &&
             <CheckboxSection
-              outfit={outfit}
+              outfit={props.outfit}
               outfitType={outfitType}
               toggle={toggleItem}
               disabled={disabled}
-            /> : null
-          }
+            />}
         </Collapse>
       </li>
     )

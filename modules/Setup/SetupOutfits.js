@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SetupOutfit from './SetupOutfit'
+import { AppContext } from '../AppState'
 
 export default function SetupOutfits (props) {
-  const types = props.types.sort((a,b) => a.id > b.id).map((type, index) => {
+  const context = useContext(AppContext)
+  const types = context.outfitTypes.sort((a,b) => a.id > b.id).map((type, index) => {
     return (
       <SetupOutfit
         key={index}

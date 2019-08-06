@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { AppContext } from '../AppState';
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
 import SetupAdditionalItems from './SetupAdditionalItems'
@@ -12,15 +13,16 @@ export default class SetupMain extends Component {
   constructor(props) {
     super(props)
     this.state = {
-     outfitTypes: [], items: [], outfitEditor: true
+      outfitEditor: true, items: []
+    //  outfitTypes: [],
     }
     this.addOutfit = this.addOutfit.bind(this)
   }
   
 
-  componentDidlMount () {
+  componentDidMount () {
     const that = this
-    fetch(`${baseUrl}/db/userItems/${this.props.user}`)
+    fetch(`${baseUrl}/db/userItems/${this.context.userId}`)
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -42,7 +44,8 @@ export default class SetupMain extends Component {
             }
           })
         })
-        that.setState({outfitTypes: response.outfits, items})
+        that.setState({ items })
+        that.context.setOutfitTypes(response.outfits)
       })
   }
   addOutfit () {
@@ -50,11 +53,11 @@ export default class SetupMain extends Component {
     myHeaders.append('Content-Type', 'application/json');
 
     let newType = {type: "new outfit type", items: []}
-    let outfitTypes = this.state.outfitTypes
+    let outfitTypes = [...this.context.outfitTypes]
     outfitTypes.push(newType)
     const that = this
 
-    fetch(`${baseUrl}/db/addOutfit/${this.props.user}`, {
+    fetch(`${baseUrl}/db/addOutfit/${this.context.userId}`, {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify(newType),
@@ -69,54 +72,71 @@ export default class SetupMain extends Component {
       })
       .then(function(response) {
         outfitTypes[outfitTypes.length - 1].id = response.id
-        that.setState({outfitTypes})
+        that.context.setOutfitTypes(outfitTypes)
       })
 
   }
   addItemToOutfit = (outfitIndex) => {
     let newItem = {type: 'new item'}
-    let outfitTypes = this.state.outfitTypes
+    let outfitTypes = [...this.context.outfitTypes]
     outfitTypes[outfitIndex].items.push(newItem)
     this.updateDB(outfitTypes[outfitIndex])
-    this.setState(outfitTypes)
+    // TOOD: every time you set outfitTypes, set it in the DB and update it in context
+    this.context.setOutfitTypes(outfitTypes)
   }
   updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
     let itemObj = this.state.items.find(item => item.type === itemType)
-    let tempOutfits = this.state.outfitTypes
+    let tempOutfits = [...this.context.outfitTypes]
     tempOutfits[outfitIndex].items[itemIndex] = itemObj
     this.updateDB(tempOutfits[outfitIndex])
-    this.setState({outfitTypes: tempOutfits})
+    this.context.setOutfitTypes(tempOutfits)
   }
   addItem = () => {
-    let items = this.state.items
-    let newItem = {type: 'new item', parentType: 'none', dropdown: false}
-    items.push(newItem)
-    this.setState({items: items})
+    this.setState((prevState) => {
+      const newItems = [...prevState.items, {type: 'new item', parentType: 'none', dropdown: false}]
+      return {items: newItems}
+    })
+
+
+    // let items = [...this.state.items]
+    // let newItem = {type: 'new item', parentType: 'none', dropdown: false}
+    // items.push(newItem)
+    // this.setState({items: items})
   }
   updateItem = (itemIndex, item) => {
-    let items = this.state.items
-    items[itemIndex] = item
-    this.setState({items: items})
+    this.setState((prevState) => {
+      let newItems = [...prevState.items]
+      newItems[itemIndex] = item
+      return {items: newItems}
+    })
+    // let items = [...this.state.items]
+    // items[itemIndex] = item
+    // this.setState({items: items})
   }
   removeItem = (itemIndex) => {
     this.setState(prevState => {
-      prevState.items.splice(itemIndex, 1)
-      return {items: prevState.items}
+      newItems = [...prevState.items]
+      newItems.splice(itemIndex, 1)
+      return {items: newItems}
     })
   }
   removeOutfitItem = (outfitIndex, itemIndex) => {
-    this.setState(prevState => {
-      prevState.outfitTypes[outfitIndex].items.splice(itemIndex, 1)
-      this.updateDB(prevState.outfitTypes[outfitIndex])
-      return {outfitTypes: prevState.outfitTypes}
-    })
+    // this.setState(prevState => {
+    //   prevState.outfitTypes[outfitIndex].items.splice(itemIndex, 1)
+    //   this.updateDB(prevState.outfitTypes[outfitIndex])
+    //   return {outfitTypes: prevState.outfitTypes}
+    // })
+    newOutfits = [...this.context.outfitTypes]
+    newOutfits[outfitIndex].item.splice(itemIndex, 1)
+    this.updateDB(prevState.outfitTypes[outfitIndex])
+    this.context.setOutfitTypes(newOutfits)
   }
   updateDB = (outfit) => {
     const dbOutfit = {type: outfit.type, items: outfit.items}
     var myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${baseUrl}/db/userItems/${this.props.user}/${outfit.id}`, {
+    fetch(`${baseUrl}/db/userItems/${this.context.userId}/${outfit.id}`, {
       method: 'PUT',
       body: JSON.stringify(dbOutfit),
       headers: myHeaders,
@@ -138,7 +158,7 @@ export default class SetupMain extends Component {
     myHeaders.append('Content-Type', 'application/json');
 
     const that = this
-    fetch(`${baseUrl}/db/deleteOutfit/${this.props.user}/${outfitId}`, {
+    fetch(`${baseUrl}/db/deleteOutfit/${this.context.userId}/${outfitId}`, {
       method: 'DELETE',
       headers: myHeaders,
       mode: 'cors',
@@ -151,22 +171,24 @@ export default class SetupMain extends Component {
         return response.json()
       })
       .then(function(response) {
-        that.setState(prevState => {
-          const newOutfitList = prevState.outfitTypes.filter(outfit => outfit.id !== response.id)
-          return {outfitTypes: newOutfitList}
-        })
+        const newOutfits = this.context.outfitTypes.filter(outfit => outfit.id !== response.id)
+        this.context.setOutfitTypes(newOutfits)
+        // that.setState(prevState => {
+        //   const newOutfitList = prevState.outfitTypes.filter(outfit => outfit.id !== response.id)
+        //   return {outfitTypes: newOutfitList}
+        // })
       })
   }
   updateAdditionalItemCategory = (itemList, id) => {
     var myHeaders = new Headers();
-    let sectionToUpdate = this.props.additionalItems.findIndex(section => section.id === id)
+    let sectionToUpdate = this.context.additionalItems.findIndex(section => section.id === id)
     const itemSection = {
-      name: this.props.additionalItems[sectionToUpdate].name,
+      name: this.context.additionalItems[sectionToUpdate].name,
       items: itemList
     }
     myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${baseUrl}/db/updateAdditionalItems/${this.props.user}/${id}`, {
+    fetch(`${baseUrl}/db/updateAdditionalItems/${this.context.userId}/${id}`, {
       method: 'PUT',
       headers: myHeaders,
       body: JSON.stringify(itemSection),
@@ -191,7 +213,7 @@ export default class SetupMain extends Component {
       items: []
     }
 
-    fetch(`${baseUrl}/db/additionalItems/${this.props.user}`, {
+    fetch(`${baseUrl}/db/additionalItems/${this.context.userId}`, {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify(JSONbody),
@@ -214,12 +236,11 @@ export default class SetupMain extends Component {
   renderOutfitEditor () {
     return (
       <div>
-        <div>{!!this.state.outfitTypes || 'You have not set up your outfits yet!'}</div>
+        <div>{!!this.context.outfitTypes || 'You have not set up your outfits yet!'}</div>
         <div className="flex-container">
           <SetupOutfits
             updateDB={this.updateDB}
             addOutfit={this.addOutfit}
-            types={this.state.outfitTypes}
             addItem={this.addItemToOutfit}
             updateOutfitItem={this.updateOutfitItem}
             removeOutfitItem={this.removeOutfitItem}
@@ -232,7 +253,6 @@ export default class SetupMain extends Component {
             addItem={this.addItem}
             updateItem={this.updateItem}
             removeItem={this.removeItem}
-            outfits={this.state.outfitTypes}
           />
         </div>
       </div>
@@ -242,7 +262,6 @@ export default class SetupMain extends Component {
   renderItemEditor () {
     return (
       <SetupAdditionalItems
-        sections={this.props.additionalItems}
         addItem={this.addItem}
         updateItem={this.updateItem}
         removeItem={this.removeItem}
@@ -255,10 +274,12 @@ export default class SetupMain extends Component {
   render () {
     return (
       <div id="setup">
-        <div><button value='home' onClick={(ev) => {this.props.updateStage(ev)}}>&lt;- Return To Home</button></div>
+        <div><button onClick={() => {this.context.setStage('home')}}>&lt;- Return To Home</button></div>
         <button onClick={this.toggleEditor}>{this.state.outfitEditor ? 'Edit Additional Items' : 'Edit Outfits'}</button>
         {this.state.outfitEditor ? this.renderOutfitEditor() : this.renderItemEditor()}
       </div>
     )
   }
 }
+
+SetupMain.contextType = AppContext;

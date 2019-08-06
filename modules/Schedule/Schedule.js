@@ -1,23 +1,27 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
+import { AppContext } from '../AppState'
+
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default function Schedule (props) {
+export default function Schedule () {
+  const context = useContext(AppContext)
   const [dates, setDates] = useState({
-    startDate: props.startDate ?  moment(props.startDate).format('YYYY-MM-DD') : null,
-    endDate: props.endDate ?  moment(props.startDate).format('YYYY-MM-DD') : null
+    startDate: context.startDate ?  moment(context.startDate).format('YYYY-MM-DD') : null,
+    endDate: context.endDate ?  moment(context.endDate).format('YYYY-MM-DD') : null
   })
-  const cityState = useRef(props.city || 'City, St')
+  const cityState = useRef(context.city || 'City, St')
+  
   
   function updateSchedule () {
     // TODO, if there is already a days array in state, then don't warn before overwriting days
     // let that = this
     let stateObj = {}
-    stateObj.city = cityState.current.value
-    fetch(`${baseUrl}/api/googleapis/maps/${stateObj.city}`)
+      stateObj.city = cityState.current.value
+    fetch(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error('Bad response from server')
@@ -62,8 +66,9 @@ export default function Schedule (props) {
                 stateObj.days = stateObj.days.sort(function(a, b) {
                   return a.date.isBefore(b.date) ? -1 : 1
                 })
-                stateObj.currentStage = 'select'
-                props.updateState(stateObj)
+                context.setSchedule(
+                  stateObj.startDate, stateObj.endDate, stateObj.numDays, stateObj.days, cityState.current.value
+                )
               }
             })
           i++
@@ -75,7 +80,7 @@ export default function Schedule (props) {
   }
 
   function handleKeyPress (ev) {
-    if (ev.charCode === 13 && dates.endDate.isAfter(dates.startDate) && props.city) {
+    if (ev.charCode === 13 && dates.endDate.isAfter(dates.startDate) && context.city) {
       updateSchedule()
     }
 
@@ -84,9 +89,7 @@ export default function Schedule (props) {
     e.target.select()
   }
   function renderButtons () {
-    if (props.days) {
-      let stateObj = {}
-      stateObj.currentStage = 'select'
+    if (context.days) {
       return (
         <div>
           <button
@@ -97,7 +100,7 @@ export default function Schedule (props) {
           </button>
           <button
             value='select'
-            onClick={() => props.updateState(stateObj)}
+            onClick={() => context.setStage('select')}
             disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
           >
             Move to Select Outfits
@@ -140,7 +143,7 @@ export default function Schedule (props) {
           ref={cityState}
           placeholder="City, St"
           type="text"
-          defaultValue={props.city}
+          defaultValue={context.city}
           onFocus={autofocus}
         />
       </div>

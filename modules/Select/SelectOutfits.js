@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
+import { AppContext } from '../AppState'
 import DaySection from './DaySection'
 import AdditionalItemSection from './AdditionalItemSection'
 import { Collapse } from '@blueprintjs/core'
@@ -12,13 +13,14 @@ export default function SelectOutfits (props) {
     isOutfitError: false,
     isDayError: false
   })
+  const context = useContext(AppContext)
 
   function validateOutfits () {
     // check if all outfits have items
     let isOutfitError = false
     let isDayError = false
     let badOutfits = []
-    props.days.map(day => {
+    context.days.map(day => {
       let filteredOutfits = day.outfits.filter(outfit => {
         return !outfit.items
       })
@@ -26,7 +28,7 @@ export default function SelectOutfits (props) {
       badOutfits.push(filteredOutfits)
     })
     let badDays = []
-    props.days.forEach(day => {
+    context.days.forEach(day => {
       if (day.outfits.length === 0) {
         badDays.push(day)
         isDayError = true
@@ -39,38 +41,41 @@ export default function SelectOutfits (props) {
   function updateOutfits () {
     const isError = validateOutfits()
     if (!isError) {
-      let stateObj = {}
-      stateObj.currentStage = 'assign'
-      props.updateState(stateObj)
+      // let stateObj = {}
+      // TODO
+      // props.updateState(stateObj)
+      context.setStage('assign')
     }
   }
 
   function updateTote (dayKey, outfitKey, outfit, inc) {
-    let stateObj = {}
-    stateObj.tote = props.tote
-    stateObj.tote.unnamed = stateObj.tote.unnamed || []
+    const tote = context.tote
+    tote.unnamed = tote.unnamed || []
     outfit.items.map((item) => {
       if (item.dropdown === false && !item.isNotIncluded) {
-        let itemTypeIndex = stateObj.tote.unnamed.findIndex(foundItem => {
+        let itemTypeIndex = tote.unnamed.findIndex(foundItem => {
           return foundItem.id === item.type})
         if (itemTypeIndex === -1) {
-          stateObj.tote.unnamed.push({id: item.type, count: 1})
+          tote.unnamed.push({id: item.type, count: 1})
         } else {
-          stateObj.tote.unnamed[itemTypeIndex].count = stateObj.tote.unnamed[itemTypeIndex].count + inc
+          tote.unnamed[itemTypeIndex].count = tote.unnamed[itemTypeIndex].count + inc
         }
       }
     })
-    props.updateState(stateObj)
+    // TODO
+    context.setTote(tote)
+    // props.updateState(stateObj)
   }
 
   function updateOutfitName (dayKey, outfitKey, name) {
-    let stateObj = {}
-    stateObj.days = props.days
-    stateObj.days[dayKey].outfits[outfitKey].realName = name
-    props.updateState(stateObj)
+    let days = [...context.days]
+    days[dayKey].outfits[outfitKey].realName = name
+    context.setDays(days)
+    // props.updateState(stateObj)
   }
 
   function addItem (index) {
+    // TODO
     let stateObj = {}
     stateObj.tote = props.tote
     stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
@@ -83,12 +88,14 @@ export default function SelectOutfits (props) {
   }
 
   function toggleEditing (index) {
+    // TODO
     let stateObj = props.tote
     stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
     this.props.updateState(stateObj)
   }
 
   function updateItem (typeIndex, itemId, itemName) {
+    // TODO
     let stateObj = props.tote
     let itemToUpdate = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
     stateObj.additionalItems[typeIndex].items[itemToUpdate].name = itemName
@@ -96,6 +103,7 @@ export default function SelectOutfits (props) {
   }
 
   function deleteItem (typeIndex, itemId) {
+    // TODO
     let stateObj = props.tote
     let itemToDelete = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
     stateObj.additionalItems[typeIndex].items.splice(itemToDelete,1)
@@ -103,7 +111,7 @@ export default function SelectOutfits (props) {
   }
 
   function renderCopyModal (modalProps) {
-    modalProps.days = props.days
+    modalProps.days = context.days
     setModalProps(modalProps)
   }
   
@@ -112,23 +120,23 @@ export default function SelectOutfits (props) {
   }
 
   function copyOutfits (copyArray, outfit) {
-    let stateObj = {}
     // copy outfit to each day that was selected
-    stateObj.days = props.days
+    let days = [...context.days]
     copyArray.forEach((day, index) => {
       if (day) {
         const newOutfit = cloneDeep(outfit)
-        newOutfit.id = stateObj.days[index].outfits.length + 1
-        stateObj.days[index].outfits.push(newOutfit)
+        newOutfit.id = days[index].outfits.length + 1
+        days[index].outfits.push(newOutfit)
         updateTote(index, null, newOutfit, 1)
       }
     })
-    props.updateState(stateObj)
+    context.setDays(days);
+    // props.updateState(stateObj)
     setModalProps(false)
-    props.showToast({message: 'Outfit copied successfully', type: 'success'})
+    context.setShowToast({message: 'Outfit copied successfully', type: 'success'})
   }
   
-  const days = props.days.map((day, index) => {
+  const days = context.days.map((day, index) => {
     const imageName = day.icon + index
     return(
       <DaySection
@@ -136,14 +144,13 @@ export default function SelectOutfits (props) {
         index={index}
         day={day}
         image={imageName}
-        outfitTypes={props.outfitTypes}
         updateTote={updateTote}
         updateOutfitName={updateOutfitName}
         renderCopyModal={renderCopyModal}
       />
     )
   })
-  const additionalItemTypes = props.tote.additionalItems.map((type, index) => {
+  const additionalItemTypes = context.tote.additionalItems.map((type, index) => {
     return (
       <AdditionalItemSection
         key={index}
@@ -161,7 +168,7 @@ export default function SelectOutfits (props) {
   if (error.badOutfits) {
     error.badOutfits.forEach((day, index) => {
       day.map(outfit => {
-        badOutfitsArray.push(<li key={`${index}-${outfit.id}`}>{moment(props.days[index].date).format('ddd, MMM Do')} - {outfit.realName}</li>)
+        badOutfitsArray.push(<li key={`${index}-${outfit.id}`}>{moment(context.days[index].date).format('ddd, MMM Do')} - {outfit.realName}</li>)
       })
     })
   }
