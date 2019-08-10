@@ -8,10 +8,10 @@ export default class ReactSkycons extends React.Component {
     color: PropTypes.string,
     autoplay: PropTypes.bool,
     icon: PropTypes.oneOf([
-      'CLEAR_DAY',
-      'CLEAR_NIGHT',
-      'PARTLY_CLOUDY_DAY',
-      'PARTLY_CLOUDY_NIGHT',
+      'CLEAR-DAY',
+      'CLEAR-NIGHT',
+      'PARTLY-CLOUDY-DAY',
+      'PARTLY-CLOUDY-NIGHT',
       'CLOUDY',
       'RAIN',
       'SLEET',
@@ -36,7 +36,7 @@ export default class ReactSkycons extends React.Component {
 
   componentDidMount () {
     const { skycons } = this.state
-    skycons.add(ReactDOM.findDOMNode(this), Skycons[this.props.icon])
+    skycons.add(ReactDOM.findDOMNode(this), Skycons[this.props.icon.split('-').join('_')])
 
     if (this.props.autoplay) {
       skycons.play()
