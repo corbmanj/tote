@@ -22,8 +22,7 @@ export default function OutfitSection (props) {
   }
 
   function editOutfit () {
-    const outfitCopy = cloneDeep(props.outfit)
-    props.updateDay(props.index, outfitCopy, -1)
+    props.updateDay(props.index, props.outfit, -1)
     setDisabled(false)
   }
 
@@ -65,7 +64,7 @@ export default function OutfitSection (props) {
   }
 
   function changeOutfitType (ev) {
-    const templateOutfit = context.outfitTypes.find(item => item.type === ev.target.value)
+    const templateOutfit = cloneDeep(context.outfitTypes.find(item => item.type === ev.target.value))
     const newOutfit = {...props.outfit, type: templateOutfit.type, items: templateOutfit.items}
     context.setOutfit(props.dayIndex, props.index, newOutfit)
   }
@@ -95,7 +94,7 @@ export default function OutfitSection (props) {
     return (
       <li>
         <Collapse isOpen={props.activeOutfit === props.outfit.id} transitionDuration={400}>
-          <select className="outfittype-select" onChange={changeOutfitType} defaultValue={outfitType} disabled={disabled}>
+          <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
             <option value={null}>Select one...</option>
             {outfitNames}
           </select>

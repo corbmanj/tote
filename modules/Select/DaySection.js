@@ -7,7 +7,6 @@ import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
 
 export default function DaySection (props) {
-  // const [outfits, setOutfits] = useState(props.day.outfits)
   const [isOpen, setIsOpen] = useState(props.index === 0)
   const [activeOutfit, setActiveOutfit] = useState()
   function toggleOpen () {
@@ -15,20 +14,28 @@ export default function DaySection (props) {
   }
 
   function updateDay (key, outfit, inc) {
-    let tempState = props.day.outfits
+    let tempState = [...props.day.outfits]
     const outfitCopy = cloneDeep(outfit)
-    if (inc === 1) {
+    if (inc === 0) {
+      tempState.splice(key, 1)
+    } else {
       tempState[key].items = outfitCopy.items
       tempState[key].name = outfitCopy.name
       tempState[key].type = outfitCopy.type
-    } else if (inc === -1) {
-      tempState[key].items = []
-      tempState[key].name = outfitCopy.name
-      tempState[key].type = outfitCopy.type
-    } else if (inc === 0) {
-      tempState.splice(key, 1)
     }
-    console.log('index', props.index, 'key', key, 'outfitCopy', outfitCopy, 'inc', inc)
+    // const outfitCopy = cloneDeep(outfit)
+    // if (inc === 1) {
+    //   tempState[key].items = outfit.items
+    //   tempState[key].name = outfit.name
+    //   tempState[key].type = outfit.type
+    // } else if (inc === -1) {
+    //   tempState[key].items = outfit.items
+    //   tempState[key].name = outfit.name
+    //   tempState[key].type = outfit.type
+    // } else if (inc === 0) {
+    //   tempState.splice(key, 1)
+    // }
+    // console.log('index', props.index, 'key', key, 'outfitCopy', outfitCopy, 'inc', inc)
     props.updateTote(props.index, key, outfitCopy, inc)
   }
   function updateName (key, name) {

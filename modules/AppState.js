@@ -26,6 +26,19 @@ export class AppProvider extends React.Component {
         this.setState({ userId })
     }
 
+    clearTote = () => {
+        this.setState((prevState) => ({
+            tote: {
+                additionalItems: prevState.additionalItems
+            },
+            days: null,
+            startDate: null,
+            endDate: null,
+            city: null,
+            numDays: null
+        }))
+    }
+
     setStage = (stage) => {
         const conditionallySave = this.state.tripId ? this.saveToDB : () => {}
         this.setState({ stage }, () => conditionallySave())
@@ -133,6 +146,7 @@ export class AppProvider extends React.Component {
             <AppContext.Provider
                 value={{
                     userId: this.state.userId,
+                    clearTote: this.clearTote,
                     setUser: this.setUser,
                     stage: this.state.stage,
                     setStage: this.setStage,

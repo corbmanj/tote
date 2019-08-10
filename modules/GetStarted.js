@@ -41,8 +41,7 @@ export default class GetStarted extends Component {
         return response.json()
       })
       .then(function (data) {
-        // stateObj.tripId = data.id
-        // that.props.updateState(stateObj)
+        that.context.clearTote()
         that.context.setTripId(data.id)
         that.context.setStage(newStage)
       });
