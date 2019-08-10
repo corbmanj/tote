@@ -83,9 +83,9 @@ export default function DaySection (props) {
           autoplay={true}
         />
       </h4>
-      <Collapse isOpen={isOpen}>
         <p>{props.day.summary}</p>
         <p>High: {props.day.high} &deg;F Low: {props.day.low}&deg; F</p>
+      <Collapse isOpen={isOpen}>
         <ul className="sectionList">
           {outfitArray}
         </ul>
