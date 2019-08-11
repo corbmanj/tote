@@ -1,11 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Icon } from '@blueprintjs/core'
+import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
 import { Collapse } from '@blueprintjs/core'
 
 export default function AssignOutfit (props) {
+  const context = useContext(AppContext)
   const updateActiveOutfit = () => {
-    props.updateActiveOutfit(props.index+1)
+    context.setExpanded(props.dayIndex, props.index)
+    // props.updateActiveOutfit(props.index+1)
   }
   const renderItems = () => {
     const items = props.outfit.items.filter((item) => {
@@ -25,7 +28,7 @@ export default function AssignOutfit (props) {
     })
     return <div>{items}</div>
   }
-  const carotClass = props.active ? 'chevron-down' : 'chevron-right'
+  const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
 
   return (
     <li>
@@ -33,7 +36,7 @@ export default function AssignOutfit (props) {
         <Icon icon={carotClass} />
         {props.outfit.realName}: {props.outfit.type}
       </h4>
-        <Collapse isOpen={props.active}>
+        <Collapse isOpen={props.outfit.expanded}>
           <ul className="sectionList">
             {renderItems()}
           </ul>

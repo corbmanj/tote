@@ -150,6 +150,19 @@ export class AppProvider extends React.Component {
         })
     }
 
+    expandAll = () => {
+        this.setState(prevState => {
+            const tempDays = [...prevState.days]
+            tempDays.forEach(day => {
+                day.outfits.forEach(outfit => {
+                    outfit.expanded = true
+                })
+            })
+            console.log(tempDays)
+            return { days: tempDays }
+        })
+    }
+
     // Assign Items
     addNamedItem = (parentType, value, newId) => {
         this.setState(prevState => {
@@ -225,6 +238,7 @@ export class AppProvider extends React.Component {
                     setOutfit: this.setOutfit,
                     removeOutfit: this.removeOutfit,
                     setExpanded: this.setExpanded,
+                    expandAll: this.expandAll,
                     updateOutfitItem: this.updateOutfitItem,
                     addNamedItem: this.addNamedItem,
                     rawState: this.state,

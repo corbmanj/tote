@@ -41,9 +41,7 @@ export default function SelectOutfits (props) {
   function updateOutfits () {
     const isError = validateOutfits()
     if (!isError) {
-      // let stateObj = {}
-      // TODO
-      // props.updateState(stateObj)
+      context.expandAll()
       context.setStage('assign')
     }
   }
