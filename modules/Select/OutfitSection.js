@@ -9,6 +9,7 @@ export default function OutfitSection (props) {
   const [disabled, setDisabled] = useState(props.outfit && props.outfit.type)
   const outfitType = props.outfit && props.outfit.type
   const [renaming, setRenaming] = useState(false)
+  const [expanded, setExpanded] = useState(props.dayIndex === 0)
   const outfitName = useRef(props.outfit.realName)
   const context = useContext(AppContext)
 
@@ -69,8 +70,8 @@ export default function OutfitSection (props) {
     context.setOutfit(props.dayIndex, props.index, newOutfit)
   }
 
-  function updateActiveOutfit () {
-    props.updateActiveOutfit(props.outfit.id)
+  function toggleOutfitExpanded () {
+    setExpanded(!expanded)
   }
 
   function toggleItem (name, isChecked) {
@@ -93,7 +94,7 @@ export default function OutfitSection (props) {
     )
     return (
       <li>
-        <Collapse isOpen={props.activeOutfit === props.outfit.id} transitionDuration={400}>
+        <Collapse isOpen={expanded} transitionDuration={400}>
           <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
             <option value={null}>Select one...</option>
             {outfitNames}
@@ -118,10 +119,10 @@ export default function OutfitSection (props) {
       </li>
     )
   }
-  const carotClass = props.activeOutfit === props.outfit.id ? 'chevron-down' : 'chevron-right'
+  const carotClass = expanded ? 'chevron-down' : 'chevron-right'
   return (
     <li>
-      <h4 onClick={updateActiveOutfit} onDoubleClick={renameOutfit}>
+      <h4 onClick={toggleOutfitExpanded} onDoubleClick={renameOutfit}>
         <Icon icon={carotClass} />
         {renaming ? renderRenaming() : renderName()}
         {outfitType ? ` (${outfitType})` : null}
