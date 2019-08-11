@@ -76,7 +76,6 @@ export default function AssignItems () {
         day={day}
         updateNamedItems={updateNamedItems}
         updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
-        updateOutfit={updateOutfit}
       />
     )
   })

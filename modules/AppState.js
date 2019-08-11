@@ -122,7 +122,7 @@ export class AppProvider extends React.Component {
             let updatedDays = [...prevState.days]
             updatedDays[dayIndex].outfits.push(newOutfit)
             return { days: updatedDays }
-        })
+        }, () => this.saveToDB())
     }
 
     setOutfit = (dayIndex, outfitIndex, outfit) => {
@@ -130,7 +130,7 @@ export class AppProvider extends React.Component {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits[outfitIndex] = outfit
             return { days: tempDays }
-        })
+        }, () => this.saveToDB())
     }
 
     removeOutfit = (dayIndex, outfitIndex) => {
@@ -138,7 +138,7 @@ export class AppProvider extends React.Component {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits.splice(outfitIndex, 1)
             return { days: tempDays }
-        })
+        }, () => this.saveToDB())
     }
 
     // Assign Items
@@ -148,7 +148,7 @@ export class AppProvider extends React.Component {
             let newItem = {parentType: parentType, name: value, id: newId}
             namedItems.push(newItem)
             return { tote: {...prevState.tote, namedItems}}
-        })   
+        }, () => this.saveToDB())   
     }
 
     updateOutfitItem = (dayIndex, outfitIndex, parentType, itemId) => {
@@ -156,7 +156,7 @@ export class AppProvider extends React.Component {
             const days = [...prevState.days]
             days[dayIndex].outfits[outfitIndex].items.find(item => item.parentType === parentType).id = itemId
             return { days }
-        })
+        }, () => this.saveToDB())
     }
 
     saveToDB = (currentState = this.state) => {
