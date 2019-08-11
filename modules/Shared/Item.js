@@ -39,7 +39,7 @@ export default function Item (props) {
         <input
           ref={nameInput}
           type="text"
-          placeholder="item name ..."
+          defaultValue={props.item.name}
           autoFocus
           onFocus={autoSelect}
           onKeyPress={handleKeyPress}
