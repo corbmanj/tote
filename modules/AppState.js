@@ -117,7 +117,8 @@ export class AppProvider extends React.Component {
             const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
             const newOutfit = {
                 id: newId,
-                realName: 'Outfit ' + newId
+                realName: 'Outfit ' + newId,
+                expanded: true
             }
             let updatedDays = [...prevState.days]
             updatedDays[dayIndex].outfits.push(newOutfit)
@@ -139,6 +140,14 @@ export class AppProvider extends React.Component {
             tempDays[dayIndex].outfits.splice(outfitIndex, 1)
             return { days: tempDays }
         }, () => this.saveToDB())
+    }
+
+    setExpanded = (dayIndex, outfitIndex) => {
+        this.setState(prevState => {
+            const tempDays = [...prevState.days]
+            tempDays[dayIndex].outfits[outfitIndex].expanded = !prevState.days[dayIndex].outfits[outfitIndex].expanded
+            return { days: tempDays }
+        })
     }
 
     // Assign Items
@@ -215,9 +224,9 @@ export class AppProvider extends React.Component {
                     addOutfit: this.addOutfit,
                     setOutfit: this.setOutfit,
                     removeOutfit: this.removeOutfit,
+                    setExpanded: this.setExpanded,
                     updateOutfitItem: this.updateOutfitItem,
                     addNamedItem: this.addNamedItem,
-
                     rawState: this.state,
                 }}
             >
