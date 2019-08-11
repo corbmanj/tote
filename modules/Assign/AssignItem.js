@@ -1,12 +1,10 @@
 import React, { useState, useRef, useContext } from 'react'
 import { AppContext } from '../AppState'
-// import { Collapse } from '@blueprintjs/core'
 
 export default function AssignItem (props) {
   const [editing, setEditing] = useState(false)
   const [error, setError] = useState(false)
   const itemName = useRef(null)
-  // const [itemName, setItemName] = useState()
   const context = useContext(AppContext)
 
   function renderSelect () {
@@ -59,13 +57,9 @@ export default function AssignItem (props) {
     if (value.trim() === '') {
       setError('Item name cannot be blank')
     } else {
-      let stateArray = context.tote.namedItems || []
-      stateArray.sort((a,b) => b.id - a.id)
-      const newId = stateArray.length > 0 ? stateArray[0].id + 1 : 1
-      let newItem = {parentType: props.item.parentType, name: value, id: newId}
-      stateArray.push(newItem)
-      props.updateNamedItems(stateArray)
-      props.updateOutfit(newId)
+      const newId = context.tote.namedItems && context.tote.namedItems.length ? Math.max(...context.tote.namedItems.map(item => item.id)) + 1 : 1
+      context.addNamedItem(props.item.parentType, value, newId)
+      context.updateOutfitItem(props.dayIndex, props.outfitIndex, props.item.parentType, newId)
       setEditing(false)
     }
   }
@@ -77,7 +71,7 @@ export default function AssignItem (props) {
         setEditing(true)
         break
       default:
-        props.updateOutfit(e.target.value)
+        context.updateOutfitItem(props.dayIndex, props.outfitIndex, props.item.parentType, e.target.value)
     }
   }
   return (

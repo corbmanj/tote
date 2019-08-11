@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import moment from 'moment'
 import { Icon } from '@blueprintjs/core'
+import { AppContext } from '../AppState'
 import OutfitSection from './OutfitSection'
 import Skycons from '../Shared/Skycons'
 import { Collapse } from '@blueprintjs/core'
@@ -8,34 +9,18 @@ import cloneDeep from 'lodash/cloneDeep'
 
 export default function DaySection (props) {
   const [isOpen, setIsOpen] = useState(props.index === 0)
-  const [activeOutfit, setActiveOutfit] = useState()
+  const context = useContext(AppContext)
   function toggleOpen () {
     setIsOpen(!isOpen)
   }
 
   function updateDay (key, outfit, inc) {
+    // TODO: maybe use context.setOutfit
     let tempState = [...props.day.outfits]
     const outfitCopy = cloneDeep(outfit)
-    if (inc === 0) {
-      tempState.splice(key, 1)
-    } else {
-      tempState[key].items = outfitCopy.items
-      tempState[key].name = outfitCopy.name
-      tempState[key].type = outfitCopy.type
-    }
-    // const outfitCopy = cloneDeep(outfit)
-    // if (inc === 1) {
-    //   tempState[key].items = outfit.items
-    //   tempState[key].name = outfit.name
-    //   tempState[key].type = outfit.type
-    // } else if (inc === -1) {
-    //   tempState[key].items = outfit.items
-    //   tempState[key].name = outfit.name
-    //   tempState[key].type = outfit.type
-    // } else if (inc === 0) {
-    //   tempState.splice(key, 1)
-    // }
-    // console.log('index', props.index, 'key', key, 'outfitCopy', outfitCopy, 'inc', inc)
+    tempState[key].items = outfitCopy.items
+    tempState[key].name = outfitCopy.name
+    tempState[key].type = outfitCopy.type
     props.updateTote(props.index, key, outfitCopy, inc)
   }
   function updateName (key, name) {
@@ -44,17 +29,7 @@ export default function DaySection (props) {
     props.updateOutfitName(props.index, key, name)
   }
   function addOutfit () {
-    const num = props.day.outfits.length + 1 || 1
-    const newOutfit = {
-      id: num,
-      realName: 'Outfit ' + num
-    }
-    let tempOutfits = props.day.outfits
-    tempOutfits.push(newOutfit)
-    setActiveOutfit(newOutfit.id)
-  }
-  function updateActiveOutfit (index) {
-    setActiveOutfit(index)
+    context.addOutfit(props.index)
   }
   const outfitArray = props.day.outfits.map((outfit, index) => {
     return (
@@ -65,8 +40,6 @@ export default function DaySection (props) {
         outfit={outfit}
         updateDay={updateDay}
         updateName={updateName}
-        activeOutfit={activeOutfit || 1}
-        updateActiveOutfit={updateActiveOutfit}
         renderCopyModal={props.renderCopyModal}
       />
     )

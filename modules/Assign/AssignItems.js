@@ -22,8 +22,6 @@ export default function AssignItems () {
   }
   function updateNamedItemInAllOutfits (id, newName) {
     const tote = {...context.tote}
-    // const oldItemIndex = tote.namedItems.findIndex(item => {return item.id === id})
-    // tote.namedItems[oldItemIndex].name = newName
     tote.namedItems.find(item => item.id === id).name = newName
     context.setTote(tote)
   }
@@ -32,18 +30,6 @@ export default function AssignItems () {
     const oldItemIndex = tote.namedItems.findIndex(item => {return item.id === id})
     tote.namedItems.splice(oldItemIndex, 1)
     context.setTote(tote)
-  }
-  // TODO: this function seems weird, why the map? 
-  // also seems like it should be assigning, not filtering
-  function updateOutfit (id, outfitIndex, dayIndex) {
-    const namedItem = context.tote.namedItems.find(item => item.id === Number(id))
-    const days = [...context.days]
-    days[dayIndex].outfits[outfitIndex].items.filter(item => {
-      return item.parentType === namedItem.parentType
-    }).map(item => {
-      item.id = namedItem.id
-    })
-    context.setDays(days)
   }
   function addItem (index) {
     const tote = {...context.tote}

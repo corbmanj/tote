@@ -8,10 +8,6 @@ export default function AssignDay (props) {
   const [activeOutfit, setActiveOutfit] = useState(1)
   const [isOpen, setIsOpen] = useState(props.index === 0)
 
-  function updateOutfit (id, outfitIndex) {
-    props.updateOutfit(id, outfitIndex, props.index)
-  }
-
   function updateActiveOutfit (index) {
     setActiveOutfit(index)
   }
@@ -24,12 +20,12 @@ export default function AssignDay (props) {
     return (
       <AssignOutfit
         key={index}
+        dayIndex={props.index}
         index={index}
         active={activeOutfit === outfit.id}
         outfit={outfit}
         updateNamedItems={props.updateNamedItems}
         updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
-        updateOutfit={updateOutfit}
         updateActiveOutfit={updateActiveOutfit}
       />
     )

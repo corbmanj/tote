@@ -112,11 +112,50 @@ export class AppProvider extends React.Component {
     }
 
     // select Outfits
+    addOutfit = (dayIndex) => {
+        this.setState(prevState => {
+            const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
+            const newOutfit = {
+                id: newId,
+                realName: 'Outfit ' + newId
+            }
+            let updatedDays = [...prevState.days]
+            updatedDays[dayIndex].outfits.push(newOutfit)
+            return { days: updatedDays }
+        })
+    }
+
     setOutfit = (dayIndex, outfitIndex, outfit) => {
         this.setState(prevState => {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits[outfitIndex] = outfit
-            return {days: tempDays}
+            return { days: tempDays }
+        })
+    }
+
+    removeOutfit = (dayIndex, outfitIndex) => {
+        this.setState(prevState => {
+            const tempDays = [...prevState.days]
+            tempDays[dayIndex].outfits.splice(outfitIndex, 1)
+            return { days: tempDays }
+        })
+    }
+
+    // Assign Items
+    addNamedItem = (parentType, value, newId) => {
+        this.setState(prevState => {
+            let namedItems = prevState.tote.namedItems || []
+            let newItem = {parentType: parentType, name: value, id: newId}
+            namedItems.push(newItem)
+            return { tote: {...prevState.tote, namedItems}}
+        })   
+    }
+
+    updateOutfitItem = (dayIndex, outfitIndex, parentType, itemId) => {
+        this.setState(prevState => {
+            const days = [...prevState.days]
+            days[dayIndex].outfits[outfitIndex].items.find(item => item.parentType === parentType).id = itemId
+            return { days }
         })
     }
 
@@ -173,7 +212,12 @@ export class AppProvider extends React.Component {
                     tripId: this.state.tripId,
                     setTripId: this.setTripId,
                     setTrip: this.setTrip,
+                    addOutfit: this.addOutfit,
                     setOutfit: this.setOutfit,
+                    removeOutfit: this.removeOutfit,
+                    updateOutfitItem: this.updateOutfitItem,
+                    addNamedItem: this.addNamedItem,
+
                     rawState: this.state,
                 }}
             >

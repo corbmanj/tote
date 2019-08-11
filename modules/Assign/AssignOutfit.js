@@ -3,10 +3,7 @@ import { Icon } from '@blueprintjs/core'
 import AssignItem from './AssignItem'
 import { Collapse } from '@blueprintjs/core'
 
-export default function Modal (props) {
-  const updateOutfit = (id) => {
-    props.updateOutfit(id, props.index)
-  }
+export default function AssignOutfit (props) {
   const updateActiveOutfit = () => {
     props.updateActiveOutfit(props.index+1)
   }
@@ -17,11 +14,12 @@ export default function Modal (props) {
       return (
         <AssignItem
           key={index}
+          dayIndex={props.dayIndex}
+          outfitIndex={props.index}
           index={index}
           item={item}
           updateNamedItems={props.updateNamedItems}
           updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
-          updateOutfit={updateOutfit}
         />
       )
     })
