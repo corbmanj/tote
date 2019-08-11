@@ -28,7 +28,7 @@ export default function OutfitSection (props) {
   }
 
   function removeOutfit () {
-    props.updateDay(props.index, props.outfit, 0)
+    context.removeOutfit(props.dayIndex, props.index)
   }
 
   function renameOutfit () {
