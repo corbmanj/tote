@@ -5,12 +5,7 @@ import AssignOutfit from './AssignOutfit'
 import { Collapse } from '@blueprintjs/core'
 
 export default function AssignDay (props) {
-  const [activeOutfit, setActiveOutfit] = useState(1)
   const [isOpen, setIsOpen] = useState(props.index === 0)
-
-  function updateActiveOutfit (index) {
-    setActiveOutfit(index)
-  }
 
   function toggleOpen () {
     setIsOpen(!isOpen)
@@ -22,11 +17,9 @@ export default function AssignDay (props) {
         key={index}
         dayIndex={props.index}
         index={index}
-        active={activeOutfit === outfit.id}
         outfit={outfit}
         updateNamedItems={props.updateNamedItems}
         updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
-        updateActiveOutfit={updateActiveOutfit}
       />
     )
   })

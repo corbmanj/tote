@@ -8,7 +8,6 @@ export default function AssignOutfit (props) {
   const context = useContext(AppContext)
   const updateActiveOutfit = () => {
     context.setExpanded(props.dayIndex, props.index)
-    // props.updateActiveOutfit(props.index+1)
   }
   const renderItems = () => {
     const items = props.outfit.items.filter((item) => {
