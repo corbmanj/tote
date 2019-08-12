@@ -13,7 +13,8 @@ export default class SetupMain extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      outfitEditor: true, items: []
+      outfitEditor: true,
+      items: []
     //  outfitTypes: [],
     }
     this.addOutfit = this.addOutfit.bind(this)
@@ -115,7 +116,7 @@ export default class SetupMain extends Component {
   }
   removeItem = (itemIndex) => {
     this.setState(prevState => {
-      newItems = [...prevState.items]
+      const newItems = [...prevState.items]
       newItems.splice(itemIndex, 1)
       return {items: newItems}
     })
