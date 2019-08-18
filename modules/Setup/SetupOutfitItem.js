@@ -20,7 +20,7 @@ export default function SetupOutfitItem (props) {
         <option value="0">select one...</option>
         {options}
       </select>
-      <Icon className="delete" onClick={removeOutfitItem} />
+      <Icon icon="delete" onClick={removeOutfitItem} />
     </div>
   )
 }

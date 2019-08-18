@@ -15,9 +15,7 @@ export default class SetupMain extends Component {
     this.state = {
       outfitEditor: true,
       items: []
-    //  outfitTypes: [],
     }
-    this.addOutfit = this.addOutfit.bind(this)
   }
   
 
@@ -49,60 +47,29 @@ export default class SetupMain extends Component {
         that.context.setOutfitTypes(response.outfits)
       })
   }
-  addOutfit () {
-    var myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-
-    let newType = {type: "new outfit type", items: []}
-    let outfitTypes = [...this.context.outfitTypes]
-    outfitTypes.push(newType)
-    const that = this
-
-    fetch(`${baseUrl}/db/addOutfit/${this.context.userId}`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(newType),
-      mode: 'cors',
-      cache: 'default'
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function(response) {
-        outfitTypes[outfitTypes.length - 1].id = response.id
-        that.context.setOutfitTypes(outfitTypes)
-      })
-
-  }
   addItemToOutfit = (outfitIndex) => {
     let newItem = {type: 'new item'}
-    let outfitTypes = [...this.context.outfitTypes]
-    outfitTypes[outfitIndex].items.push(newItem)
-    this.updateDB(outfitTypes[outfitIndex])
+    let tempOutfit = this.context.outfitTypes[outfitIndex]
+    tempOutfit.items.push(newItem)
     // TOOD: every time you set outfitTypes, set it in the DB and update it in context
-    this.context.setOutfitTypes(outfitTypes)
+    this.context.updateOutfitType(tempOutfit)
   }
   updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
     let itemObj = this.state.items.find(item => item.type === itemType)
-    let tempOutfits = [...this.context.outfitTypes]
-    tempOutfits[outfitIndex].items[itemIndex] = itemObj
-    this.updateDB(tempOutfits[outfitIndex])
-    this.context.setOutfitTypes(tempOutfits)
+    let tempOutfit = this.context.outfitTypes[outfitIndex]
+    tempOutfit.items[itemIndex] = itemObj
+    this.context.updateOutfitType(tempOutfit)
+  }
+  removeOutfitItem = (outfitIndex, itemIndex) => {
+    const tempOutfit = this.context.outfitTypes[outfitIndex]
+    tempOutfit.items.splice(itemIndex, 1)
+    this.context.updateOutfitType(tempOutfit)
   }
   addItem = () => {
     this.setState((prevState) => {
       const newItems = [...prevState.items, {type: 'new item', parentType: 'none', dropdown: false}]
       return {items: newItems}
     })
-
-
-    // let items = [...this.state.items]
-    // let newItem = {type: 'new item', parentType: 'none', dropdown: false}
-    // items.push(newItem)
-    // this.setState({items: items})
   }
   updateItem = (itemIndex, item) => {
     this.setState((prevState) => {
@@ -110,9 +77,6 @@ export default class SetupMain extends Component {
       newItems[itemIndex] = item
       return {items: newItems}
     })
-    // let items = [...this.state.items]
-    // items[itemIndex] = item
-    // this.setState({items: items})
   }
   removeItem = (itemIndex) => {
     this.setState(prevState => {
@@ -120,17 +84,6 @@ export default class SetupMain extends Component {
       newItems.splice(itemIndex, 1)
       return {items: newItems}
     })
-  }
-  removeOutfitItem = (outfitIndex, itemIndex) => {
-    // this.setState(prevState => {
-    //   prevState.outfitTypes[outfitIndex].items.splice(itemIndex, 1)
-    //   this.updateDB(prevState.outfitTypes[outfitIndex])
-    //   return {outfitTypes: prevState.outfitTypes}
-    // })
-    newOutfits = [...this.context.outfitTypes]
-    newOutfits[outfitIndex].item.splice(itemIndex, 1)
-    this.updateDB(prevState.outfitTypes[outfitIndex])
-    this.context.setOutfitTypes(newOutfits)
   }
   updateDB = (outfit) => {
     const dbOutfit = {type: outfit.type, items: outfit.items}
@@ -241,7 +194,6 @@ export default class SetupMain extends Component {
         <div className="flex-container">
           <SetupOutfits
             updateDB={this.updateDB}
-            addOutfit={this.addOutfit}
             addItem={this.addItemToOutfit}
             updateOutfitItem={this.updateOutfitItem}
             removeOutfitItem={this.removeOutfitItem}

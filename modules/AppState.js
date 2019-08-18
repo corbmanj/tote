@@ -40,7 +40,7 @@ export class AppProvider extends React.Component {
     }
 
     setStage = (stage) => {
-        const conditionallySave = this.state.tripId ? this.saveToDB : () => {}
+        const conditionallySave = this.state.tripId ? this.saveTrip : () => {}
         this.setState({ stage }, () => conditionallySave())
     }
 
@@ -77,11 +77,11 @@ export class AppProvider extends React.Component {
             days,
             city,
             stage: 'select'
-        }, () => this.saveToDB())
+        }, () => this.saveTrip())
     }
 
     setTote = (tote) => {
-        const conditionallySave = this.state.tripId ? this.saveToDB : () => {}
+        const conditionallySave = this.state.tripId ? this.saveTrip : () => {}
         this.setState({ tote }, () => conditionallySave())
     }
 
@@ -107,12 +107,50 @@ export class AppProvider extends React.Component {
         this.setState({ outfitTypes })
     }
 
+    // Setup Section
+
+    addOutfitType = () => {
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+
+        let newType = {type: "new outfit type", items: []}
+        let outfitTypes = [...this.state.outfitTypes]
+        outfitTypes.push(newType)
+        const that = this
+
+        fetch(`${baseUrl}/db/addOutfit/${this.state.userId}`, {
+        method: 'POST',
+        headers: myHeaders,
+        body: JSON.stringify(newType),
+        mode: 'cors',
+        cache: 'default'
+        })
+        .then(function(response) {
+            if (response.status >= 400) {
+            throw new Error("Bad response from server")
+            }
+            return response.json()
+        })
+        .then(function(response) {
+            outfitTypes[outfitTypes.length - 1].id = response.id
+            that.setOutfitTypes(outfitTypes)
+        })
+    }
+
+    updateOutfitType = (newOutfit, outfitIndex) => {
+        this.setState(prevState => {
+            const newOutfits = prevState.outfitTypes
+            newOutfits[outfitIndex] = newOutfit
+            return { outfitTypes: newOutfits }
+        }, () => this.saveUserSettings('outfit', newOutfit))
+    }
+
     setAdditionalItems = (additionalItems) => {
         this.setState({ additionalItems })
     }
 
     // select Outfits
-    addOutfit = (dayIndex) => {
+    setupAddOutfit = (dayIndex) => {
         this.setState(prevState => {
             const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
             const newOutfit = {
@@ -123,7 +161,7 @@ export class AppProvider extends React.Component {
             let updatedDays = [...prevState.days]
             updatedDays[dayIndex].outfits.push(newOutfit)
             return { days: updatedDays }
-        }, () => this.saveToDB())
+        }, () => this.saveTrip())
     }
 
     setOutfit = (dayIndex, outfitIndex, outfit) => {
@@ -131,7 +169,7 @@ export class AppProvider extends React.Component {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits[outfitIndex] = outfit
             return { days: tempDays }
-        }, () => this.saveToDB())
+        }, () => this.saveTrip())
     }
 
     removeOutfit = (dayIndex, outfitIndex) => {
@@ -139,7 +177,7 @@ export class AppProvider extends React.Component {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits.splice(outfitIndex, 1)
             return { days: tempDays }
-        }, () => this.saveToDB())
+        }, () => this.saveTrip())
     }
 
     setExpanded = (dayIndex, outfitIndex) => {
@@ -158,7 +196,6 @@ export class AppProvider extends React.Component {
                     outfit.expanded = true
                 })
             })
-            console.log(tempDays)
             return { days: tempDays }
         })
     }
@@ -170,7 +207,7 @@ export class AppProvider extends React.Component {
             let newItem = {parentType: parentType, name: value, id: newId}
             namedItems.push(newItem)
             return { tote: {...prevState.tote, namedItems}}
-        }, () => this.saveToDB())   
+        }, () => this.saveTrip())
     }
 
     updateOutfitItem = (dayIndex, outfitIndex, parentType, itemId) => {
@@ -178,10 +215,10 @@ export class AppProvider extends React.Component {
             const days = [...prevState.days]
             days[dayIndex].outfits[outfitIndex].items.find(item => item.parentType === parentType).id = itemId
             return { days }
-        }, () => this.saveToDB())
+        }, () => this.saveTrip())
     }
 
-    saveToDB = (currentState = this.state) => {
+    saveTrip = (currentState = this.state) => {
         var myHeaders = new Headers();
     
         myHeaders.append('Content-Type', 'application/json');
@@ -189,6 +226,33 @@ export class AppProvider extends React.Component {
         fetch(`${baseUrl}/db/tote/updateTrip/${this.state.tripId}`, {
             method: 'POST',
             body: JSON.stringify(currentState),
+            headers: myHeaders,
+            mode: 'cors',
+            cache: 'default'
+        })
+        .then(function(response) {
+            if (response.status >= 400) {
+                throw new Error("Bad response from server")
+            }
+        });
+    }
+
+    saveUserSettings = (setting, update) => {
+        let url = ''
+        let body = {}
+        switch (setting) {
+            case 'outfit':
+            default:
+                url = `${baseUrl}/db/userItems/${this.state.userId}/${update.id}`
+                body = JSON.stringify(update)
+        }
+        var myHeaders = new Headers();
+    
+        myHeaders.append('Content-Type', 'application/json');
+    
+        fetch(url, {
+            method: 'PUT',
+            body,
             headers: myHeaders,
             mode: 'cors',
             cache: 'default'
@@ -227,6 +291,8 @@ export class AppProvider extends React.Component {
                     setSchedule: this.setSchedule,
                     outfitTypes: this.state.outfitTypes,
                     setOutfitTypes: this.setOutfitTypes,
+                    updateOutfitType: this.updateOutfitType,
+                    addOutfitType: this.addOutfitType,
                     additionalItems: this.state.additionalItems,
                     setAdditionalItems: this.setAdditionalItems,
                     tote: this.state.tote,

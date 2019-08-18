@@ -17,7 +17,6 @@ export default function SetupItem (props) {
   }
 
   const { type, dropdown, parentType } = props.item
-  console.log(type, props.outfitCount)
   return (
     <tr>
       <td><Button disabled={props.outfitCount} icon="delete" onClick={removeItem} minimal={true} /></td>

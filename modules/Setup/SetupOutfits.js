@@ -4,6 +4,9 @@ import { AppContext } from '../AppState'
 
 export default function SetupOutfits (props) {
   const context = useContext(AppContext)
+  // function addOutfitType() {
+  //   context.addOutfitType()
+  // }
   const types = context.outfitTypes.sort((a,b) => a.id > b.id).map((type, index) => {
     return (
       <SetupOutfit
@@ -22,7 +25,7 @@ export default function SetupOutfits (props) {
   return (
     <div className="flex-2">
       <h2>Outfit Section</h2>
-      <div><button className="button" onClick={props.addOutfit}>Add New Outfit Type</button></div>
+      <div><button className="button" onClick={context.addOutfitType}>Add New Outfit Type</button></div>
       <ul className="sectionList">
       {types}
       </ul>
