@@ -137,13 +137,44 @@ export class AppProvider extends React.Component {
         })
     }
 
+    updateOutfitTypeById = (newOutfit) => {
+        this.setState(prevState => {
+            const newOutfits = [...prevState.outfitTypes]
+            const oldIndex = newOutfits.findIndex(outfit => outfit.id === newOutfit.id)
+            newOutfits.splice(oldIndex, 1, newOutfit)
+        }, () => this.saveUserSettings('outfit', newOutfit))
+    }
+
     updateOutfitType = (newOutfit, outfitIndex) => {
         this.setState(prevState => {
-            const newOutfits = prevState.outfitTypes
+            const newOutfits = [...prevState.outfitTypes]
             newOutfits[outfitIndex] = newOutfit
             return { outfitTypes: newOutfits }
         }, () => this.saveUserSettings('outfit', newOutfit))
     }
+
+    removeOutfitType = (outfitId) => {
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+    
+        const that = this
+        fetch(`${baseUrl}/db/deleteOutfit/${this.state.userId}/${outfitId}`, {
+          method: 'DELETE',
+          headers: myHeaders,
+          mode: 'cors',
+          cache: 'default'
+        })
+          .then(function(response) {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server")
+            }
+            return response.json()
+          })
+          .then(function(response) {
+            const newOutfits = that.state.outfitTypes.filter(outfit => outfit.id !== response.id)
+            that.setOutfitTypes(newOutfits)
+          })
+      }
 
     setAdditionalItems = (additionalItems) => {
         this.setState({ additionalItems })
@@ -292,6 +323,8 @@ export class AppProvider extends React.Component {
                     outfitTypes: this.state.outfitTypes,
                     setOutfitTypes: this.setOutfitTypes,
                     updateOutfitType: this.updateOutfitType,
+                    updateOutfitTypeById: this.updateOutfitTypeById,
+                    removeOutfitType: this.removeOutfitType,
                     addOutfitType: this.addOutfitType,
                     additionalItems: this.state.additionalItems,
                     setAdditionalItems: this.setAdditionalItems,

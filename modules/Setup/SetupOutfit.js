@@ -1,21 +1,22 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
+import { AppContext } from '../AppState'
 import SetupOutfitItem from './SetupOutfitItem'
 import { Icon } from '@blueprintjs/core'
 
 export default function SetupOutfit (props) {
   const [editing, setEditing] = useState(false)
   const outfitName = useRef(props.outfit.type || null)
+  const { outfitTypes, updateOutfitType, updateOutfitTypeById, removeOutfitType } = useContext(AppContext)
 
   function addItem () {
-    props.addItem(props.index)
+    let newItem = {type: 'new item'}
+    let tempOutfit = {...outfitTypes[props.index]}
+    tempOutfit.items.push(newItem)
+    updateOutfitType(tempOutfit)
   }
 
   function updateOutfitItem (itemIndex, itemType) {
     props.updateOutfitItem(props.index, itemIndex, itemType)
-  }
-
-  function removeOutfitItem (itemIndex) {
-    props.removeOutfitItem(props.index, itemIndex)
   }
 
   function toggleEditing () {
@@ -25,12 +26,12 @@ export default function SetupOutfit (props) {
   function updateOutfitName () {
     let editedOutfit = props.outfit
     editedOutfit.type = outfitName.current.value
-    props.updateDB(editedOutfit)
+    updateOutfitTypeById(editedOutfit)
     toggleEditing()
   }
 
   function handleRemoveOutfit () {
-    props.removeOutfit(this.props.outfit.id)
+    removeOutfitType(props.outfit.id)
   }
 
   function handleKeyPress (ev) {
@@ -71,7 +72,13 @@ export default function SetupOutfit (props) {
   const items = props.outfit.items ? props.outfit.items.map((item, index) => {
     return (
       <li key={index}>
-        <SetupOutfitItem index={index} value={item.type} items={props.items} updateOutfitItem={updateOutfitItem} removeOutfitItem={removeOutfitItem}/>
+        <SetupOutfitItem
+          index={index}
+          outfitIndex={props.index}
+          value={item.type}
+          items={props.items}
+          updateOutfitItem={updateOutfitItem}
+        />
       </li>
     )
   }) : null

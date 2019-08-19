@@ -4,21 +4,15 @@ import { AppContext } from '../AppState'
 
 export default function SetupOutfits (props) {
   const context = useContext(AppContext)
-  // function addOutfitType() {
-  //   context.addOutfitType()
-  // }
-  const types = context.outfitTypes.sort((a,b) => a.id > b.id).map((type, index) => {
+  
+  const types = context.outfitTypes.map((type, index) => {
     return (
       <SetupOutfit
         key={index}
         index={index}
         outfit={type}
-        updateDB={props.updateDB}
-        addItem={props.addItem}
         items={props.items}
         updateOutfitItem={props.updateOutfitItem}
-        removeOutfitItem={props.removeOutfitItem}
-        removeOutfit={props.removeOutfit}
       />
     )
   })
