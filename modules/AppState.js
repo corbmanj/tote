@@ -181,7 +181,7 @@ export class AppProvider extends React.Component {
     }
 
     // select Outfits
-    setupAddOutfit = (dayIndex) => {
+    addOutfit = (dayIndex) => {
         this.setState(prevState => {
             const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
             const newOutfit = {
