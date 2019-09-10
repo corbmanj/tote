@@ -7,7 +7,7 @@ import Modal from '../Shared/Modal'
 import moment from 'moment'
 import cloneDeep from 'lodash/cloneDeep'
 
-export default function SelectOutfits (props) {
+export default function SelectOutfits () {
   const [modalProps, setModalProps] = useState(false)
   const [error, setError] = useState({
     isOutfitError: false,
@@ -46,7 +46,7 @@ export default function SelectOutfits (props) {
     }
   }
 
-  function updateTote (dayKey, outfitKey, outfit, inc) {
+  function updateTote (_dayKey, _outfitKey, outfit, inc) {
     const tote = context.tote
     tote.unnamed = tote.unnamed || []
     outfit.items.map((item) => {
@@ -62,50 +62,44 @@ export default function SelectOutfits (props) {
     })
     // TODO
     context.setTote(tote)
-    // props.updateState(stateObj)
   }
 
   function updateOutfitName (dayKey, outfitKey, name) {
     let days = [...context.days]
     days[dayKey].outfits[outfitKey].realName = name
     context.setDays(days)
-    // props.updateState(stateObj)
   }
 
   function addItem (index) {
-    // TODO
-    let stateObj = {}
-    stateObj.tote = props.tote
-    stateObj.tote.additionalItems = stateObj.tote.additionalItems || []
-    const maxId = stateObj.tote.additionalItems[index].items.reduce((a, b) => {
+    // TODO create an addItem function in context
+    const tote = context.tote
+    tote.additionalItems = tote.additionalItems ? [...tote.additionalItems] : []
+    const maxId = tote.additionalItems[index].items.reduce((a, b) => {
       return +a > +b.id ? +a : +b.id
     }, -1)
     const newId = maxId + 1
-    stateObj.tote.additionalItems[index].items.push({id: newId, name: 'new item'})
-    props.updateState(stateObj)
+    tote.additionalItems[index].items.push({id: newId, name: 'new item'})
+    context.setTote(tote)
   }
 
   function toggleEditing (index) {
-    // TODO
-    let stateObj = props.tote
-    stateObj.additionalItems[index].editing = !stateObj.additionalItems[index].editing
-    this.props.updateState(stateObj)
+    const tote = context.tote
+    tote.additionalItems[index].editing = !tote.additionalItems[index].editing
+    context.setTote(tote)
   }
 
   function updateItem (typeIndex, itemId, itemName) {
-    // TODO
-    let stateObj = props.tote
-    let itemToUpdate = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
-    stateObj.additionalItems[typeIndex].items[itemToUpdate].name = itemName
-    props.updateState(stateObj)
+    const tote = context.tote
+    let itemToUpdate = tote.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
+    tote.additionalItems[typeIndex].items[itemToUpdate].name = itemName
+    context.setTote(tote)
   }
 
   function deleteItem (typeIndex, itemId) {
-    // TODO
-    let stateObj = props.tote
-    let itemToDelete = stateObj.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
-    stateObj.additionalItems[typeIndex].items.splice(itemToDelete,1)
-    props.updateState(stateObj)
+    const tote = context.tote
+    let itemToDelete = tote.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
+    tote.additionalItems[typeIndex].items.splice(itemToDelete,1)
+    context.setTote(tote)
   }
 
   function renderCopyModal (modalProps) {
@@ -129,7 +123,6 @@ export default function SelectOutfits (props) {
       }
     })
     context.setDays(days);
-    // props.updateState(stateObj)
     setModalProps(false)
     context.setShowToast({message: 'Outfit copied successfully', type: 'success'})
   }

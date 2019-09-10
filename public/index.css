@@ -17,6 +17,13 @@ ul.sectionList {
   padding-left: 30px;
 }
 
+.checkbox-input {
+  display: inline-block;
+}
+
+.outfit-name {
+  display: inline-block;
+}
 
 /* NAVBAR */
 .active {

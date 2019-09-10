@@ -123,8 +123,8 @@ export default function OutfitSection (props) {
   const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
   return (
     <li>
-      <h4 onClick={toggleOutfitExpanded} onDoubleClick={renameOutfit}>
-        <Icon icon={carotClass} />
+      <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
+      <h4 onDoubleClick={renameOutfit} className="outfit-name">
         {renaming ? renderRenaming() : renderName()}
         {outfitType ? ` (${outfitType})` : null}
       </h4>

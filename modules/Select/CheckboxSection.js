@@ -5,16 +5,16 @@ export default function CheckboxSection (props) {
   }
   const checkboxes = props.outfit.items.map((item, key) => {
     return (
-      <label key={key}>
-        <input
-          type="checkbox"
-          value={item.type}
-          defaultChecked={!item.isNotIncluded}
-          onClick={toggleItem}
-          disabled={props.disabled}
-        />
-        {item.type}
-      </label>
+        <label key={key} className="checkbox-input">
+          <input
+            type="checkbox"
+            value={item.type}
+            defaultChecked={!item.isNotIncluded}
+            onClick={toggleItem}
+            disabled={props.disabled}
+          />
+          {item.type}
+        </label>
     )
   })
   return <form>{checkboxes}</form>
