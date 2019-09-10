@@ -11,6 +11,14 @@ export default function SetupAdditionalItemsSection (props) {
       props.updateAdditionalItemCategory(tempItems, props.id)
       setItems(tempItems)
   }
+
+  function deleteEditedItem (itemId) {
+    const tempItems = [...items]
+    let itemIndex = tempItems.findIndex(item => item.id === itemId)
+    tempItems.splice(itemIndex, 1)
+    props.updateAdditionalItemCategory(tempItems, props.id)
+    setItems(tempItems)
+  }
   
   function addItem () {
     const tempItems = [...items]
@@ -26,6 +34,7 @@ export default function SetupAdditionalItemsSection (props) {
         key={index}
         item={item}
         saveEditedItem={saveEditedItem}
+        deleteEditedItem={deleteEditedItem}
       />
     )
   })

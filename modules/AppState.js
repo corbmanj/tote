@@ -180,6 +180,31 @@ export class AppProvider extends React.Component {
         this.setState({ additionalItems })
     }
 
+    deleteAdditionalItemCategory = (index) => {
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+
+        const sectionId = this.state.additionalItems[index].id
+    
+        const that = this
+        fetch(`${baseUrl}/db/deleteAdditionalItemSection/${this.state.userId}/${sectionId}`, {
+          method: 'DELETE',
+          headers: myHeaders,
+          mode: 'cors',
+          cache: 'default'
+        })
+          .then(function(response) {
+            if (response.status >= 400) {
+              throw new Error("Bad response from server")
+            }
+            return response.json()
+          })
+          .then(function(response) {
+            const newAdditionalItems = that.state.additionalItems.filter(section => section.id !== response.id)
+            that.setAdditionalItems(newAdditionalItems)
+          })
+    }
+
     // select Outfits
     addOutfit = (dayIndex) => {
         this.setState(prevState => {
@@ -328,6 +353,7 @@ export class AppProvider extends React.Component {
                     addOutfitType: this.addOutfitType,
                     additionalItems: this.state.additionalItems,
                     setAdditionalItems: this.setAdditionalItems,
+                    deleteAdditionalItemCategory: this.deleteAdditionalItemCategory,
                     tote: this.state.tote,
                     setTote: this.setTote,
                     tripId: this.state.tripId,

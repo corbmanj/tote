@@ -193,4 +193,18 @@ router.delete('/tote/deleteTrip/:id', function(req, response) {
     })
 });
 
+// delete an additional item section
+router.delete('/deleteAdditionalItemSection/:user_id/:id', function(req, response) {
+  client.query(`
+    DELETE FROM additional_items_json
+    WHERE user_id=$1
+    AND id=$2
+    returning id;`,
+    [req.params.user_id, req.params.id]
+  )
+    .then(result => {
+      response.json(result.rows[0])
+    })
+});
+
 module.exports = router;

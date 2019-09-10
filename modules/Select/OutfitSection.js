@@ -124,7 +124,7 @@ export default function OutfitSection (props) {
   return (
     <li>
       <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
-      <h4 onDoubleClick={renameOutfit} className="outfit-name">
+      <h4 onDoubleClick={renameOutfit} className="inline-header">
         {renaming ? renderRenaming() : renderName()}
         {outfitType ? ` (${outfitType})` : null}
       </h4>

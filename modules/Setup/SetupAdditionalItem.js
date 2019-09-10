@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import { Icon } from '@blueprintjs/core'
 
 export default function SetupAdditionalItem (props) {
   const [editing, setEditing] = useState(false)
@@ -11,6 +12,11 @@ export default function SetupAdditionalItem (props) {
   function saveItem () {
     toggleEditing()
     props.saveEditedItem(name.current.value, props.item.id)
+  }
+
+  function deleteItem () {
+    toggleEditing()
+    props.deleteEditedItem(props.item.id)
   }
 
   function handleKeyPress (ev) {
@@ -32,10 +38,10 @@ export default function SetupAdditionalItem (props) {
           type="text"
           autoFocus
           onFocus={autoSelect}
-          onBlur={saveItem}
           onKeyPress={handleKeyPress}
         />
         <button onClick={saveItem}>Save</button>
+        <Icon icon="delete" iconSize={15} onClick={deleteItem} />
       </>
     )
   }

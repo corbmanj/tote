@@ -11,14 +11,20 @@ export default function SetupAdditionalItems (props) {
     setIsOpen(isOpen !== index ? index : false)
   }
 
+  function handleDeleteClick (index) {
+    context.deleteAdditionalItemCategory(index)
+  }
+
   const sections = context.additionalItems.map((section, index) => {
     const carotClass = isOpen === index ? 'chevron-down' : 'chevron-right'
     // TODO: use ev.target.id with id set to index
+
     return (
       <li key={index}>
-        <h4 onClick={() => toggleOpen(index)}>
-          <Icon icon={carotClass} />
+        <Icon onClick={() => toggleOpen(index)} icon={carotClass} />
+        <h4 className="inline-header">
           {section.name}
+          <Icon icon="delete" iconSize={15} onClick={() => handleDeleteClick(index)} />
         </h4>
         <Collapse isOpen={isOpen === index}>
           <SetupAdditionalItemsSection
