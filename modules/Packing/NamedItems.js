@@ -5,9 +5,11 @@ import { AppContext } from '../AppState'
 export default function NamedItems (props) {
   const context = useContext(AppContext)
   const parentTypes = new Set()
-  context.tote.namedItems.forEach(item => {
-    parentTypes.add(item.parentType)
-  })
+  if (context.tote.namedItems) {
+    context.tote.namedItems.forEach(item => {
+      parentTypes.add(item.parentType)
+    })
+  }
   const parentTypesArrray = [...parentTypes]
 
   const types = parentTypesArrray.map((parentType, index) => {

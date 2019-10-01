@@ -3,7 +3,7 @@ import { AppContext } from '../AppState'
 
 export default function UnnamedItems (props) {
   const context = useContext(AppContext)
-  const items = context.tote.unnamed.map((item, index) => {
+  const items = context.tote.unnamed ? context.tote.unnamed.map((item, index) => {
     return (
       <div key={index}>
         <label>
@@ -12,7 +12,7 @@ export default function UnnamedItems (props) {
         </label>
       </div>
     )
-  })
+  }) : []
   return (
     <div>
       <h4>Unnamed Items</h4>
