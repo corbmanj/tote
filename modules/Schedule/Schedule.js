@@ -1,3 +1,4 @@
+import fs from 'fs'
 import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
 require('es6-promise').polyfill()
@@ -16,11 +17,14 @@ export default function Schedule () {
   const cityState = useRef(context.city || 'City, St')
   
   
-  function updateSchedule () {
+  async function updateSchedule () {
     // TODO, if there is already a days array in state, then don't warn before overwriting days
     // let that = this
     let stateObj = {}
-      stateObj.city = cityState.current.value
+    stateObj.city = cityState.current.value
+    const place = await fetch(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
+    console.log('this is the place', place.body);
+    fs.ReadStream(place)
     fetch(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
       .then(function(response) {
         if (response.status >= 400) {
