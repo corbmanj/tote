@@ -23,7 +23,7 @@ export default function SetupAdditionalItems (props) {
       <li key={index}>
         <Icon onClick={() => toggleOpen(index)} icon={carotClass} />
         <h4 className="inline-header">
-          {section.name}
+          <span onDoubleClick={() => {console.log('editing')}}>{section.name}</span>
           <Icon icon="delete" iconSize={15} onClick={() => handleDeleteClick(index)} />
         </h4>
         <Collapse isOpen={isOpen === index}>

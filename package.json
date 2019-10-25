@@ -48,6 +48,8 @@
     "prop-types": "^15.5.10",
     "react": "^16.8.6",
     "react-addons-css-transition-group": "^15.3.2",
+    "react-datetime": "^2.16.3",
+    "react-datetime-range-picker": "^2.0.5",
     "react-dom": "^16.8.6",
     "style-loader": "^0.23.1",
     "tls": "0.0.1",

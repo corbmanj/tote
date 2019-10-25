@@ -1,10 +1,9 @@
 import React, {Component} from 'react'
+import axios from 'axios'
 import moment from 'moment'
 import { Icon } from '@blueprintjs/core'
 import Modal from './Shared/ConfirmModal'
 import { AppContext } from './AppState';
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
@@ -19,20 +18,13 @@ export default class LoadTrips extends Component {
   componentDidMount () {
     this.getTripList()
   }
-  getTripList () {
-    let that = this
-    fetch(`${baseUrl}/db/tote/getTrips/${this.context.userId}`, {
-      method: "GET",
-    })
-      .then(function (response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function (data) {
-        that.setState({tripList: data})
-      });
+  async getTripList () {
+    try { 
+      const response = await axios.get(`${baseUrl}/db/tote/getTrips/${this.context.userId}`)
+      this.setState({ tripList: response.data })
+    } catch (err)  {
+      console.error(err)
+    }
   }
   loadTrip (trip) {
     this.context.setTrip(trip)
@@ -41,23 +33,16 @@ export default class LoadTrips extends Component {
     ev.stopPropagation()
     this.setState({showModal: true, modalTrip: trip})
   }
-  deleteTrip = (id) => {
-    let that = this
+  deleteTrip = async (id) => {
     const newList = this.state.tripList
     const deleteIndex = newList.findIndex(trip => {return trip.tripId === id})
-    fetch(`${baseUrl}/db/tote/deleteTrip/${id}`, {
-      method: "DELETE",
-    })
-      .then(function (response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function (data) {
-        newList.splice(deleteIndex, 1)
-        that.setState({showModal: false, tripList: newList})
-      });
+    try { 
+      await axios.delete(`${baseUrl}/db/tote/deleteTrip/${id}`)
+      newList.splice(deleteIndex, 1)
+      this.setState({showModal: false, tripList: newList})
+    } catch (err)  {
+      console.error(err)
+    }
   }
   renderTripList = () => {
     const tripList = this.state.tripList.sort((a,b) => {

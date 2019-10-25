@@ -1,9 +1,7 @@
 import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
 import axios from 'axios'
-// require('es6-promise').polyfill()
-// require('isomorphic-fetch')
-// import fetch from 'isomorphic-fetch'
+import DatetimeRangePicker from 'react-datetime-range-picker';
 
 import { AppContext } from '../AppState'
 

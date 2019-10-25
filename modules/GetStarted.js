@@ -1,55 +1,36 @@
 import React, {Component} from 'react'
-import { AppContext } from './AppState';
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
+import { AppContext } from './AppState'
+import axios from 'axios'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class GetStarted extends Component {
-  componentDidMount () {
-  const that = this
-    fetch(`${baseUrl}/db/userItems/${that.context.userId}`)
-      .then(function (response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json();
-      })
-      .then(function (response) {
-        if (!response.outfits.length) { // user has not yet set up outfits
-          that.context.setStage('setup')
-        }
-        else {
-          // that.props.updateStateNoSave({outfitTypes: response.outfits, additionalItems: response.additionalItems})
-          that.context.setOutfitTypes(response.outfits)
-          that.context.setAdditionalItems(response.additionalItems)
-        }
-      })
+  async componentDidMount () {
+    const response = await axios.get(`${baseUrl}/db/userItems/${this.context.userId}`)
+    if (!response.data.outfits.length) { // user has not yet set up outfits
+      this.context.setStage('setup')
+    } else {
+      this.context.setOutfitTypes(response.data.outfits)
+      this.context.setAdditionalItems(response.data.additionalItems)
+    }
   }
 
-  initializeTrip = (ev) => {
+  initializeTrip = async (ev) => {
     const newStage = ev.target.value
-    // let stateObj = {}
-    const that = this
-    fetch(`${baseUrl}/db/tote/newTrip/${that.context.userId}`, {
-      method: "POST",
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function (data) {
-        that.context.clearTote()
-        that.context.setTripId(data.id)
-        that.context.setStage(newStage)
-      });
-    // this.context.setStage(newStage)
+    try {
+      const response = await axios.post(`${baseUrl}/db/tote/newTrip/${this.context.userId}`)
+      this.context.clearTote()
+      this.context.setTripId(response.data.id)
+      this.context.setStage(newStage)
+    } catch (err) {
+      console.error(err)
+    }
   }
+
   updateStage = (ev) => {
     this.context.setStage(ev.target.value)
   }
+
   render () {
     return (
       <div>

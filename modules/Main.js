@@ -12,9 +12,6 @@ import LoadTrips from './LoadTrips'
 import Toast from './Shared/Toast'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { AppContext } from './AppState'
-
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
 import '../node_modules/@blueprintjs/core/lib/css/blueprint.css'
 
 export default class Main extends Component {
