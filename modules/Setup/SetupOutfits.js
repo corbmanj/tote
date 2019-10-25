@@ -1,26 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SetupOutfit from './SetupOutfit'
+import { AppContext } from '../AppState'
 
 export default function SetupOutfits (props) {
-  const types = props.types.sort((a,b) => a.id > b.id).map((type, index) => {
+  const context = useContext(AppContext)
+  
+  const types = context.outfitTypes.map((type, index) => {
     return (
       <SetupOutfit
         key={index}
         index={index}
         outfit={type}
-        updateDB={props.updateDB}
-        addItem={props.addItem}
         items={props.items}
         updateOutfitItem={props.updateOutfitItem}
-        removeOutfitItem={props.removeOutfitItem}
-        removeOutfit={props.removeOutfit}
       />
     )
   })
   return (
     <div className="flex-2">
       <h2>Outfit Section</h2>
-      <div><button className="button" onClick={props.addOutfit}>Add New Outfit Type</button></div>
+      <div><button className="button" onClick={context.addOutfitType}>Add New Outfit Type</button></div>
       <ul className="sectionList">
       {types}
       </ul>

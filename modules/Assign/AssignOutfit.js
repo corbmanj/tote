@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Icon } from '@blueprintjs/core'
+import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
-import { Collapse } from "@blueprintjs/core"
+import { Collapse } from '@blueprintjs/core'
 
-export default function Modal (props) {
-  const updateOutfit = (id) => {
-    props.updateOutfit(id, props.index)
-  }
+export default function AssignOutfit (props) {
+  const context = useContext(AppContext)
   const updateActiveOutfit = () => {
-    props.updateActiveOutfit(props.index+1)
+    context.setExpanded(props.dayIndex, props.index)
   }
   const renderItems = () => {
     const items = props.outfit.items.filter((item) => {
@@ -16,26 +16,26 @@ export default function Modal (props) {
       return (
         <AssignItem
           key={index}
+          dayIndex={props.dayIndex}
+          outfitIndex={props.index}
           index={index}
           item={item}
-          namedItems={props.namedItems}
           updateNamedItems={props.updateNamedItems}
           updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
-          updateOutfit={updateOutfit}
         />
       )
     })
     return <div>{items}</div>
   }
-  const carotClass = props.active ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
+  const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
 
   return (
     <li>
       <h4 className="outfit" onClick={updateActiveOutfit}>
-        <span className={carotClass} />
+        <Icon icon={carotClass} />
         {props.outfit.realName}: {props.outfit.type}
       </h4>
-        <Collapse isOpen={props.active}>
+        <Collapse isOpen={props.outfit.expanded}>
           <ul className="sectionList">
             {renderItems()}
           </ul>

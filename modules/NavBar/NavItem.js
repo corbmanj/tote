@@ -1,16 +1,22 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { Icon } from '@blueprintjs/core'
+import { AppContext } from '../AppState'
 
 export default function Modal (props) {
+  const context = useContext(AppContext)
+  function updateStage (ev) {
+    context.setStage(ev.target.value)
+  }
   return (
     <label>
       <input
         className={props.classNames}
         type="button"
         value={props.stage}
-        onClick={props.updateState}
+        onClick={updateStage}
         disabled={props.disabled}
       />
-      { !props.isLast ? <span className="pt-icon-standard pt-icon-chevron-right" /> : null }
+      { !props.isLast ? <Icon icon="chevron-right" /> : null }
     </label>
   )
 }

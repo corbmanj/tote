@@ -1,45 +1,53 @@
-import React, {Component} from 'react'
+import React, { useState, useRef } from 'react'
+import { Icon } from '@blueprintjs/core'
 
-export default class Item extends Component {
-  state = {
-    editing: false,
-    name: this.props.item.name
-  }
-  toggleEditing = () => {
-    if (this.state.editing) {
-      if (!(this.state.name.trim() === '')) {
-        this.props.updateNamedItemInAllOutfits(this.props.item.id, this.state.name)
+export default function Item (props) {
+  const [editing, setEditing] = useState(false)
+  const nameInput = useRef(null)
+
+  function toggleEditing () {
+    if (editing) {
+      if (nameInput.current.value && !(nameInput.current.value.trim() === '')) {
+        props.updateNamedItemInAllOutfits(props.item.id, nameInput.current.value)
       }
     }
-    this.setState({name: this.props.item.name, editing: !this.state.editing})
+    setEditing(!editing)
   }
-  updateItemName = (ev) => {
-    this.setState({name: ev.target.value})
+
+  function renderName () {
+    return <li onDoubleClick={toggleEditing}>{props.item.name}</li>
   }
-  renderName = () => {
-    return <li onDoubleClick={this.toggleEditing}>{this.props.item.name}</li>
+
+  function deleteItem () {
+    props.deleteNamedItem(props.item.id)
+    setEditing(false)
   }
-  deleteItem = () => {
-    this.props.deleteNamedItem(this.props.item.id)
-    this.setState({editing: false})
+
+  function autoSelect (ev) {
+    ev.target.select()
   }
-  renderEdit = () => {
+
+  function handleKeyPress (ev) {
+    if (ev.charCode === 13) {
+      toggleEditing()
+    }
+  }
+
+  function renderEdit () {
     return (
       <li>
         <input
+          ref={nameInput}
           type="text"
-          value={this.state.name}
+          defaultValue={props.item.name}
           autoFocus
-          onFocus={ev => ev.target.select()}
-          onChange={this.updateItemName}
-          onKeyPress={this.logEvent}
+          onFocus={autoSelect}
+          onKeyPress={handleKeyPress}
         />
-        <span onClick={this.toggleEditing} className="curvedBorder"><span className="pt-icon-standard pt-icon-tick" /></span>
-        <span onClick={this.deleteItem} className="curvedBorder"><span className="pt-icon-standard pt-icon-delete" /></span>
+        <Icon onClick={toggleEditing} icon="tick" />
+        <Icon onClick={deleteItem} icon="delete" />
       </li>
     )
   }
-  render () {
-    return this.state.editing ? this.renderEdit() : this.renderName()
-  }
+  return editing ? renderEdit() : renderName()
 }

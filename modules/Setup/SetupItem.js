@@ -1,23 +1,28 @@
 import React from 'react'
+import { Button } from '@blueprintjs/core'
 
 export default function SetupItem (props) {
-  const updateItem = (e, key) => {
+  function updateItem (e) {
     let tempItem = props.item
-    tempItem[key] = e.target.value
+    tempItem[e.target.id] = e.target.value
     props.updateItem(props.index, tempItem)
   }
-  const toggleDropdown = () => {
+  function toggleDropdown () {
     let tempItem = props.item
     tempItem.dropdown = !tempItem.dropdown
     props.updateItem(tempItem)
   }
+  function removeItem () {
+    props.removeItem(props.index)
+  }
 
+  const { type, dropdown, parentType } = props.item
   return (
     <tr>
-      <td><button disabled={props.outfitCount} onClick={() => props.removeItem(props.index)}><span className="pt-icon-standard pt-icon-delete" /></button></td>
-      <td><input type="text" value={props.item.type} onChange={(e)=>{updateItem(e,'type')}} /></td>
-      <td><input type="text" value={props.item.dropdown ? props.item.parentType : 'N/A'} onChange={(e)=>{updateItem(e, 'parentType')}} disabled={!props.item.dropdown}/></td>
-      <td><input type="checkbox" checked={props.item.dropdown} onChange={toggleDropdown}/></td>
+      <td><Button disabled={props.outfitCount} icon="delete" onClick={removeItem} minimal={true} /></td>
+      <td><input type="text" id="type" value={type} onChange={updateItem} /></td>
+      <td><input type="text" id="parentType" value={dropdown ? parentType : 'N/A'} onChange={updateItem} disabled={!dropdown}/></td>
+      <td><input type="checkbox" checked={dropdown} onChange={toggleDropdown}/></td>
       <td>{props.outfitCount}</td>
     </tr>
   )

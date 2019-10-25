@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from '../AppState'
+import { Icon } from '@blueprintjs/core'
 
 export default function SetupOutfitItem (props) {
-  const updateOutfitItem = (e) => {
+  const { outfitTypes, updateOutfitType } = useContext(AppContext) 
+  function updateOutfitItem (e) {
     props.updateOutfitItem(props.index, e.target.value)
   }
+
+  function removeOutfitItem () {
+    const tempOutfit = outfitTypes[props.outfitIndex]
+    tempOutfit.items.splice(props.index, 1)
+    updateOutfitType(tempOutfit)
+  }
+
   const options = props.items.map((item, index) => {
     return <option key={index} value={item.type}>{item.type}</option>
   })
@@ -14,7 +24,7 @@ export default function SetupOutfitItem (props) {
         <option value="0">select one...</option>
         {options}
       </select>
-      <span className="pt-icon-standard pt-icon-delete" onClick={() => props.removeOutfitItem(props.index)} />
+      <Icon icon="delete" onClick={removeOutfitItem} />
     </div>
   )
 }

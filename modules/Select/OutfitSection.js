@@ -1,136 +1,136 @@
-import React, {Component} from 'react'
-import CheckboxSection from './CheckboxSection'
-import { Collapse } from "@blueprintjs/core"
+import React, { useState, useRef, useContext } from 'react'
+import { Icon } from '@blueprintjs/core'
+import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash/cloneDeep'
+import CheckboxSection from './CheckboxSection'
+import { AppContext } from '../AppState'
 
-export default class OutfitSection extends Component {
-  state = {
-    outfit: this.props.outfit,
-    disabled: this.props.outfit && this.props.outfit.type,
-    outfitType: this.props.outfit ? this.props.outfit.type : null,
-    outfitTypes: this.props.outfitTypes
-  }
-  selectText = (e) => {
+export default function OutfitSection (props) {
+  const [disabled, setDisabled] = useState(props.outfit && props.outfit.type)
+  const outfitType = props.outfit && props.outfit.type
+  const [renaming, setRenaming] = useState(false)
+  // const [expanded, setExpanded] = useState(props.dayIndex === 0)
+  const outfitName = useRef(props.outfit.realName)
+  const context = useContext(AppContext)
+
+  function selectText (e) {
     e.target.select()
   }
-  saveOutfit = () => {
-    this.setState({ disabled: true })
-    this.props.updateDay(this.props.index, this.state.outfit, 1)
+
+  function saveOutfit () {
+    setDisabled(true)
+    props.updateDay(props.index, props.outfit, 1)
   }
-  editOutfit = () => {
-    const outfitCopy = cloneDeep(this.state.outfit)
-    this.props.updateDay(this.props.index, this.state.outfit, -1)
-    this.setState({ disabled: false, outfit: outfitCopy})
+
+  function editOutfit () {
+    props.updateDay(props.index, props.outfit, -1)
+    setDisabled(false)
   }
-  removeOutfit = () => {
-    this.props.updateDay(this.props.index, this.state.outfit, 0)
+
+  function removeOutfit () {
+    context.removeOutfit(props.dayIndex, props.index)
   }
-  renameOutfit = () => {
-    let tempState = this.state
-    tempState.renaming = true
-    this.setState({tempState})
+
+  function renameOutfit () {
+    setRenaming(true)
   }
-  updateName = (e) => {
-    let tempState = this.state.outfit
-    tempState.realName = e.target.value
-    this.setState({tempState})
+  
+  function stopRenaming () {
+    setRenaming(false)
+    props.updateName(props.index, outfitName.current.value)
   }
-  stopRenaming = () => {
-    this.setState({renaming: false})
-    this.props.updateName(this.props.index, this.state.outfit.realName)
+
+  function handleKeyPress (ev) {
+    if (ev.charCode === 13) {
+      stopRenaming()
+    }
   }
-  renderRenaming = () => {
+
+  function renderRenaming () {
     return (
-      <span>
-        <input
-          autoFocus
-          onFocus={this.selectText}
-          type="text"
-          value={this.state.outfit.realName}
-          onChange={this.updateName}
-          onBlur={this.stopRenaming}
-        />
-      </span>
+      <input
+        ref={outfitName}
+        autoFocus
+        onFocus={selectText}
+        type="text"
+        defaultValue={props.outfit.realName}
+        onBlur={stopRenaming}
+        onKeyPress={handleKeyPress}
+      />
     )
   }
-  renderName = () => {
-    return this.state.outfit.realName
+
+  function renderName () {
+    return props.outfit.realName
   }
-  changeOutfitType = (ev) => {
-    let tempOutfit = JSON.parse(JSON.stringify(this.props.outfitTypes.find((item) => {
-      return (item.type === ev.target.value)
-    })))
-    this.setState({
-      outfit: {
-        items: tempOutfit.items,
-        type: tempOutfit.type,
-        realName: this.state.outfit.realName
-      },
-      outfitType: ev.target.value
-    })
+
+  function changeOutfitType (ev) {
+    const templateOutfit = cloneDeep(context.outfitTypes.find(item => item.type === ev.target.value))
+    const newOutfit = {...props.outfit, type: templateOutfit.type, items: templateOutfit.items}
+    context.setOutfit(props.dayIndex, props.index, newOutfit)
   }
-  updateActiveOutfit = () => {
-    this.props.updateActiveOutfit(this.props.outfit.id)
+
+  function toggleOutfitExpanded () {
+    // setExpanded(!expanded)
+    context.setExpanded(props.dayIndex, props.index)
   }
-  toggleItem = (name, isChecked) => {
-    let tempOutfit = this.state.outfit
+
+  function toggleItem (name, isChecked) {
+    let tempOutfit = props.outfit
 
     tempOutfit.items.forEach((item) => {
       if (item.type === name) { item.isNotIncluded = !isChecked }
     })
-    this.setState({ outfit: tempOutfit })
   }
-  renderCopyModal = () => {
-    const modalProps = {outfit: this.state.outfit, confirmText: 'Copy Outfit'}
-    this.props.renderCopyModal(modalProps)
+  
+  function renderCopyModal () {
+    const modalProps = {outfit: props.outfit, confirmText: 'Copy Outfit'}
+    props.renderCopyModal(modalProps)
   }
-  renderOutfitDetails = () => {
-    const outfitNames = this.state.outfitTypes.map(function (type, key) {
-        return (
-          <option key={key} value={type.type}>{type.type}</option>
-        )
-      }, this)
+
+  function renderOutfitDetails () {
+    const outfitNames = context.outfitTypes.map((type, key) => (
+        <option key={key} value={type.type}>{type.type}</option>
+      )
+    )
     return (
       <li>
-        <Collapse isOpen={this.props.activeOutfit === this.props.outfit.id} transitionDuration={400}>
-          <select className="outfittype-select" onChange={this.changeOutfitType} defaultValue={this.state.outfitType} disabled={this.state.disabled}>
+        <Collapse isOpen={props.outfit.expanded} transitionDuration={400}>
+          <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
             <option value={null}>Select one...</option>
             {outfitNames}
           </select>
           <span>
-          {this.state.disabled ?
-            <button className="outfittype-select" onClick={this.editOutfit}>Edit Outfit</button>
-            : <button className="outfittype-select" disabled={!this.state.outfitType} onClick={this.saveOutfit}>Save Outfit</button>
+          {disabled ?
+            <button className="outfittype-select" onClick={editOutfit}>Edit Outfit</button>
+            : <button className="outfittype-select" disabled={!outfitType} onClick={saveOutfit}>Save Outfit</button>
           }
-            <button className="outfittype-select" onClick={this.removeOutfit}>Remove Outfit</button>
-            <button className="outfittype-select" onClick={this.renderCopyModal}>Copy Outfit</button>
+            <button className="outfittype-select" onClick={removeOutfit}>Remove Outfit</button>
+            <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
           </span>
           <br />
-          {this.state.outfitType ?
+          {outfitType &&
             <CheckboxSection
-              outfit={this.state.outfit}
-              outfitType={this.state.outfitType}
-              toggle={this.toggleItem}
-              disabled={this.state.disabled}
-            /> : null
-          }
+              outfit={props.outfit}
+              outfitType={outfitType}
+              toggle={toggleItem}
+              disabled={disabled}
+            />}
         </Collapse>
       </li>
     )
   }
-  render () {
-    const carotClass = this.props.activeOutfit === this.props.outfit.id ? "pt-icon-standard pt-icon-chevron-down" : "pt-icon-standard pt-icon-chevron-right"
-    return (
-      <li>
-        <h4 onClick={this.updateActiveOutfit} onDoubleClick={this.renameOutfit}>
-          <span className={carotClass} />
-          {this.state.renaming ? this.renderRenaming() : this.renderName()}
-          {this.state.outfitType ? ` (${this.state.outfitType})` : null}
-        </h4>
-        <ul className="sectionList">
-            {this.renderOutfitDetails()}
-          </ul>
-      </li>
-    )
-  }
+  const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
+  return (
+    <li>
+      <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
+      <h4 onDoubleClick={renameOutfit} className="inline-header">
+        {renaming ? renderRenaming() : renderName()}
+        {outfitType ? ` (${outfitType})` : null}
+      </h4>
+      <ul className="sectionList">
+          {renderOutfitDetails()}
+        </ul>
+    </li>
+  )
 }

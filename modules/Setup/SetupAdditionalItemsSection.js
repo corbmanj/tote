@@ -1,46 +1,49 @@
-import React, {Component} from 'react'
+import React, { useState } from 'react'
 import SetupAdditionalItem from './SetupAdditionalItem';
 
-export default class SetupAdditionalItemsSection extends Component {
-  state = {
-    items: this.props.items
-  }
-  saveEditedItem = (itemName, itemId) => {
-    this.setState(prevState => {
-      let itemToUpdate = prevState.items.findIndex(item => item.id === itemId)
-      prevState.items[itemToUpdate].name = itemName
-      console.log('itemList:', prevState.items)
-      this.props.updateAdditionalItemCategory(prevState.items, this.props.id)
-      return prevState
-    })
-  }
-  
-  addItem = () => {
-    this.setState(prevState => {
-      // todo: find max item id
-      const newItemId = this.props.items.length + 1
-      prevState.items.push({id: newItemId, name: 'new item'})
-      return prevState
-    })
+export default function SetupAdditionalItemsSection (props) {
+  const [items, setItems] = useState(props.items)
+
+  function saveEditedItem (itemName, itemId) {
+      const tempItems = [...items]
+      let itemToUpdate = tempItems.findIndex(item => item.id === itemId)
+      tempItems[itemToUpdate].name = itemName
+      props.updateAdditionalItemCategory(tempItems, props.id)
+      setItems(tempItems)
   }
 
-  render () {    
-    const items = this.state.items.map((item, index) => {
-      return (
-        <SetupAdditionalItem
-          key={index}
-          item={item}
-          saveEditedItem={this.saveEditedItem}
-        />
-      )
-    })
-    return (
-      <div>
-        <ul>
-          {items}
-          <button onClick={this.addItem}>Add Item</button>
-        </ul>
-      </div>
-    )
+  function deleteEditedItem (itemId) {
+    const tempItems = [...items]
+    let itemIndex = tempItems.findIndex(item => item.id === itemId)
+    tempItems.splice(itemIndex, 1)
+    props.updateAdditionalItemCategory(tempItems, props.id)
+    setItems(tempItems)
   }
+  
+  function addItem () {
+    const tempItems = [...items]
+    const maxId = Math.max(...tempItems.map(item => item.id))
+    const newItemId = maxId + 1
+    tempItems.push({id: newItemId, name: 'new item'})
+    setItems(tempItems)
+  }
+
+  const itemsArray = items.map((item, index) => {
+    return (
+      <SetupAdditionalItem
+        key={index}
+        item={item}
+        saveEditedItem={saveEditedItem}
+        deleteEditedItem={deleteEditedItem}
+      />
+    )
+  })
+  return (
+    <div>
+      <ul>
+        {itemsArray}
+        <button onClick={addItem}>Add Item</button>
+      </ul>
+    </div>
+  )
 }

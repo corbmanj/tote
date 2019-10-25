@@ -1,13 +1,14 @@
 import React, {Component} from 'react'
+import { AppContext } from './AppState';
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class GetStarted extends Component {
-  componentWillMount () {
+  componentDidMount () {
   const that = this
-    fetch(`${baseUrl}/db/userItems/${that.props.userId}`)
+    fetch(`${baseUrl}/db/userItems/${that.context.userId}`)
       .then(function (response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -16,18 +17,21 @@ export default class GetStarted extends Component {
       })
       .then(function (response) {
         if (!response.outfits.length) { // user has not yet set up outfits
-          that.props.updateState({userId: that.state.userId, currentStage: 'setup'})
+          that.context.setStage('setup')
         }
         else {
-          that.props.updateStateNoSave({outfitTypes: response.outfits, additionalItems: response.additionalItems})
+          // that.props.updateStateNoSave({outfitTypes: response.outfits, additionalItems: response.additionalItems})
+          that.context.setOutfitTypes(response.outfits)
+          that.context.setAdditionalItems(response.additionalItems)
         }
       })
   }
 
   initializeTrip = (ev) => {
-    let stateObj = {}
+    const newStage = ev.target.value
+    // let stateObj = {}
     const that = this
-    fetch(`${baseUrl}/db/tote/newTrip/${that.props.userId}`, {
+    fetch(`${baseUrl}/db/tote/newTrip/${that.context.userId}`, {
       method: "POST",
     })
       .then(function(response) {
@@ -37,18 +41,24 @@ export default class GetStarted extends Component {
         return response.json()
       })
       .then(function (data) {
-        stateObj.tripId = data.id
-        that.props.updateState(stateObj)
+        that.context.clearTote()
+        that.context.setTripId(data.id)
+        that.context.setStage(newStage)
       });
-    this.props.updateStage(ev)
+    // this.context.setStage(newStage)
+  }
+  updateStage = (ev) => {
+    this.context.setStage(ev.target.value)
   }
   render () {
     return (
       <div>
         <button value='schedule' onClick={this.initializeTrip}>Plan a New Trip</button>
-        <button value='load' onClick={this.props.updateStage}>Load a Saved Trip</button>
-        <button value='setup' onClick={this.props.updateStage}>Edit User Settings</button>
+        <button value='load' onClick={this.updateStage}>Load a Saved Trip</button>
+        <button value='setup' onClick={this.updateStage}>Edit User Settings</button>
       </div>
     )
   }
 }
+
+GetStarted.contextType = AppContext;

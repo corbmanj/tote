@@ -19,34 +19,17 @@ client.connect(function (err) {
 });
 
 router.get('/users', function(req, response) {
-  var result = []
   client.query('SELECT * from users;')
     .then(result => {
       response.json(result.rows)
     })
-    // .on('row', function (row) {
-    //   result.push(row)
-    // })
-    // .on('end', function (){
-    //   res.json(result)
-    // });
 });
 
 router.get('/user/:email', function(req, response) {
-  var result = []
-  client.query("SELECT * from users WHERE email = '" + req.params.email + "';")
+  client.query('SELECT * from users WHERE email = \'' + req.params.email + '\';')
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   result.push(row)
-    // })
-    // .on('end', function (){
-    //   res.json(result[0])
-    // });
 });
 
 router.get('/userItems/:userid', function(req, response) {
@@ -68,34 +51,14 @@ router.get('/userItems/:userid', function(req, response) {
         WHERE user_id = $1;
       `, [req.params.userid])
       .then(additionalItems => {
-        console.log(additionalItems.rows)
         ret.additionalItems = additionalItems.rows.map(row => ({
           id: row.id,
-          list: row.list
+          name: row.list.name,
+          items: row.list.items
         }))
         response.json(ret)
       })
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   row.outfit.id = row.id
-    //   result.outfits.push(row.outfit)
-    // })
-    // .on('end', function (){
-    //   client.query("SELECT id, list from additional_items_json WHERE user_id = '" + req.params.userid + "';")
-    //     .on('error', function (err) {
-    //       res.json(err)
-    //     })
-    //     .on('row', function (row) {
-    //       row.list.id = row.id
-    //       result.additionalItems.push(row.list)
-    //     })
-    //     .on('end', function (){
-    //       res.json(result)
-    //     })
-    // });
 });
 
 // add an outfit type for the logged in user
@@ -109,16 +72,10 @@ router.post('/addOutfit/:userid', function(req, response) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   response.json(err)
-    // })
-    // .on('row', function (row) {
-    //   response.json(row)
-    // });
 });
 
 // delete an outfit type for the logged in user
-router.delete('/deleteOutfit/:userid/:outfitid', function(req, respose) {
+router.delete('/deleteOutfit/:userid/:outfitid', function(req, response) {
   client.query(`
     DELETE FROM outfit_types_json 
     WHERE user_id = $1 and id = $2
@@ -128,16 +85,10 @@ router.delete('/deleteOutfit/:userid/:outfitid', function(req, respose) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   res.json(row)
-    // });
 });
 
 // save or update an outfit type for the logged in user
-router.put('/userItems/:userid/:outfitid', function(req, respose) {
+router.put('/userItems/:userid/:outfitid', function(req, response) {
   client.query(`
     INSERT INTO outfit_types_json (id, outfit, user_id) VALUES($1, $2, $3)
     ON CONFLICT (id) DO UPDATE
@@ -148,12 +99,6 @@ router.put('/userItems/:userid/:outfitid', function(req, respose) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   res.json(row)
-    // });
 });
 
 // get list of additional items for the logged in user
@@ -167,15 +112,19 @@ router.get('/additionalItems/:userid', function(req, response) {
     .then(result => {
       response.json(result.rows.map(row => ({ id: row.id, list: row.list })))
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   result.push(row)
-    // })
-    // .on('end', function (){
-    //   res.json(result)
-    // });
+});
+
+// add an additional item section for the logged in user
+router.post('/additionalItems/:userid', function(req, response) {
+  client.query(`
+    INSERT INTO additional_items_json (user_id, list)
+    VALUES ($1, $2)
+    RETURNING id;`,
+    [req.params.userid, JSON.stringify(req.body)]
+  )
+    .then(result => {
+      response.json(result.rows.map(row => ({ id: row.id, list: row.list })))
+    })
 });
 
 // update an additional item section for the logged in user
@@ -190,12 +139,6 @@ router.put('/updateAdditionalItems/:userid/:listid', function(req, response) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   res.json(row)
-    // });
 });
 
 // get all saved totes for a user
@@ -209,16 +152,6 @@ router.get('/tote/getTrips/:userid', function(req, response) {
     .then(result => {
       response.json(result.rows.map(row => row.trip))
     })
-    // .on('error', function (err) {
-    //   console.log('error', err)
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   result.push(row.trip)
-    // })
-    // .on('end', function (){
-    //   res.json(result)
-    // });
 });
 
 // initialize a new trip (saved tote)
@@ -232,12 +165,6 @@ router.post('/tote/newTrip/:userid', function(req, response) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   res.send(row)
-    // });
 });
 
 // update a saved tote
@@ -252,12 +179,6 @@ router.post('/tote/updateTrip/:id', function(req, response) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   res.send(row)
-    // });
 });
 
 router.delete('/tote/deleteTrip/:id', function(req, response) { 
@@ -270,12 +191,20 @@ router.delete('/tote/deleteTrip/:id', function(req, response) {
     .then(result => {
       response.json(result.rows[0])
     })
-    // .on('error', function (err) {
-    //   res.json(err)
-    // })
-    // .on('row', function (row) {
-    //   res.send(row)
-    // });
+});
+
+// delete an additional item section
+router.delete('/deleteAdditionalItemSection/:user_id/:id', function(req, response) {
+  client.query(`
+    DELETE FROM additional_items_json
+    WHERE user_id=$1
+    AND id=$2
+    returning id;`,
+    [req.params.user_id, req.params.id]
+  )
+    .then(result => {
+      response.json(result.rows[0])
+    })
 });
 
 module.exports = router;

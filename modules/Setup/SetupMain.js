@@ -1,21 +1,27 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
+import { AppContext } from '../AppState';
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
-import SetupAdditionalItems from "./SetupAdditionalItems"
+import SetupAdditionalItems from './SetupAdditionalItems'
 // import outfitTypes from "../Select/outfitTypes";
 
 require('es6-promise').polyfill()
 require('isomorphic-fetch')
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class SetupMain extends Component {
-  state = {
-    outfitTypes: [], items: [], outfitEditor: true
+  constructor(props) {
+    super(props)
+    this.state = {
+      outfitEditor: true,
+      items: []
+    }
   }
-  baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
+  
 
-  componentWillMount () {
+  componentDidMount () {
     const that = this
-    fetch(`${this.baseUrl}/db/userItems/${this.props.user}`)
+    fetch(`${baseUrl}/db/userItems/${this.context.userId}`)
       .then(function(response) {
         if (response.status >= 400) {
           throw new Error("Bad response from server")
@@ -37,84 +43,49 @@ export default class SetupMain extends Component {
             }
           })
         })
-        that.setState({outfitTypes: response.outfits, items})
+        that.setState({ items })
+        that.context.setOutfitTypes(response.outfits)
       })
-  }
-  addOutfit = () => {
-    var myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-
-    let newType = {type: "new outfit type", items: []}
-    let outfitTypes = this.state.outfitTypes
-    outfitTypes.push(newType)
-    const that = this
-
-    fetch(`${this.baseUrl}/db/addOutfit/${this.props.user}`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(newType),
-      mode: 'cors',
-      cache: 'default'
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function(response) {
-        outfitTypes[outfitTypes.length - 1].id = response.id
-        that.setState({outfitTypes})
-      })
-
-  }
-  addItemToOutfit = (outfitIndex) => {
-    let newItem = {type: 'new item'}
-    let outfitTypes = this.state.outfitTypes
-    outfitTypes[outfitIndex].items.push(newItem)
-    this.updateDB(outfitTypes[outfitIndex])
-    this.setState(outfitTypes)
   }
   updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
     let itemObj = this.state.items.find(item => item.type === itemType)
-    let tempOutfits = this.state.outfitTypes
-    tempOutfits[outfitIndex].items[itemIndex] = itemObj
-    this.updateDB(tempOutfits[outfitIndex])
-    this.setState({outfitTypes: tempOutfits})
+    let tempOutfit = {...this.context.outfitTypes[outfitIndex]}
+    tempOutfit.items[itemIndex] = itemObj
+    this.context.updateOutfitType(tempOutfit)
   }
   addItem = () => {
-    let items = this.state.items
-    let newItem = {type: 'new item', parentType: 'none', dropdown: false}
-    items.push(newItem)
-    this.setState({items: items})
+    this.setState((prevState) => {
+      const newItems = [...prevState.items, {type: 'new item', parentType: 'none', dropdown: false}]
+      return {items: newItems}
+    })
   }
   updateItem = (itemIndex, item) => {
-    let items = this.state.items
-    items[itemIndex] = item
-    this.setState({items: items})
+    this.setState((prevState) => {
+      let newItems = [...prevState.items]
+      newItems[itemIndex] = item
+      return {items: newItems}
+    })
   }
   removeItem = (itemIndex) => {
     this.setState(prevState => {
-      prevState.items.splice(itemIndex, 1)
-      return {items: prevState.items}
+      const newItems = [...prevState.items]
+      newItems.splice(itemIndex, 1)
+      return {items: newItems}
     })
   }
-  removeOutfitItem = (outfitIndex, itemIndex) => {
-    this.setState(prevState => {
-      prevState.outfitTypes[outfitIndex].items.splice(itemIndex, 1)
-      this.updateDB(prevState.outfitTypes[outfitIndex])
-      return {outfitTypes: prevState.outfitTypes}
-    })
-  }
-  updateDB = (outfit) => {
-    const dbOutfit = {type: outfit.type, items: outfit.items}
+  updateAdditionalItemCategory = (itemList, id) => {
     var myHeaders = new Headers();
+    let sectionToUpdate = this.context.additionalItems.findIndex(section => section.id === id)
+    const itemSection = {
+      name: this.context.additionalItems[sectionToUpdate].name,
+      items: itemList
+    }
     myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${this.baseUrl}/db/userItems/${this.props.user}/${outfit.id}`, {
+    fetch(`${baseUrl}/db/updateAdditionalItems/${this.context.userId}/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(dbOutfit),
       headers: myHeaders,
+      body: JSON.stringify(itemSection),
       mode: 'cors',
       cache: 'default'
     })
@@ -128,44 +99,18 @@ export default class SetupMain extends Component {
         console.log(response)
       })
   }
-  removeOutfit = (outfitId) => {
-    var myHeaders = new Headers();
+  addAdditionalItemCategory = (name) => {
+    let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-
-    const that = this
-    fetch(`${this.baseUrl}/db/deleteOutfit/${this.props.user}/${outfitId}`, {
-      method: 'DELETE',
-      headers: myHeaders,
-      mode: 'cors',
-      cache: 'default'
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function(response) {
-        that.setState(prevState => {
-          const newOutfitList = prevState.outfitTypes.filter(outfit => outfit.id !== response.id)
-          return {outfitTypes: newOutfitList}
-        })
-      })
-  }
-  updateAdditionalItemCategory = (itemList, id) => {
-    var myHeaders = new Headers();
-    let sectionToUpdate = this.props.additionalItems.findIndex(section => section.id === id)
-    console.log(sectionToUpdate, id, itemList)
-    const itemSection = {
-      name: this.props.additionalItems[sectionToUpdate].name,
-      items: itemList
+    const JSONbody = {
+      name: "temporary",
+      items: []
     }
-    myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${this.baseUrl}/db/updateAdditionalItems/${this.props.user}/${id}`, {
-      method: 'PUT',
+    fetch(`${baseUrl}/db/additionalItems/${this.context.userId}`, {
+      method: 'POST',
       headers: myHeaders,
-      body: JSON.stringify(itemSection),
+      body: JSON.stringify(JSONbody),
       mode: 'cors',
       cache: 'default'
     })
@@ -185,16 +130,10 @@ export default class SetupMain extends Component {
   renderOutfitEditor () {
     return (
       <div>
-        <div>{!!this.state.outfitTypes || 'You have not set up your outfits yet!'}</div>
+        <div>{!!this.context.outfitTypes || 'You have not set up your outfits yet!'}</div>
         <div className="flex-container">
           <SetupOutfits
-            updateDB={this.updateDB}
-            addOutfit={this.addOutfit}
-            types={this.state.outfitTypes}
-            addItem={this.addItemToOutfit}
             updateOutfitItem={this.updateOutfitItem}
-            removeOutfitItem={this.removeOutfitItem}
-            removeOutfit={this.removeOutfit}
             items={this.state.items}
             />
 
@@ -203,7 +142,6 @@ export default class SetupMain extends Component {
             addItem={this.addItem}
             updateItem={this.updateItem}
             removeItem={this.removeItem}
-            outfits={this.state.outfitTypes}
           />
         </div>
       </div>
@@ -213,11 +151,11 @@ export default class SetupMain extends Component {
   renderItemEditor () {
     return (
       <SetupAdditionalItems
-        sections={this.props.additionalItems}
         addItem={this.addItem}
         updateItem={this.updateItem}
         removeItem={this.removeItem}
         updateAdditionalItemCategory={this.updateAdditionalItemCategory}
+        addAdditionalItemCategory={this.addAdditionalItemCategory}
       />
     )
   }
@@ -225,10 +163,12 @@ export default class SetupMain extends Component {
   render () {
     return (
       <div id="setup">
-        <div><button value='home' onClick={(ev) => {this.props.updateStage(ev)}}>&lt;- Return To Home</button></div>
+        <div><button onClick={() => {this.context.setStage('home')}}>&lt;- Return To Home</button></div>
         <button onClick={this.toggleEditor}>{this.state.outfitEditor ? 'Edit Additional Items' : 'Edit Outfits'}</button>
         {this.state.outfitEditor ? this.renderOutfitEditor() : this.renderItemEditor()}
       </div>
     )
   }
 }
+
+SetupMain.contextType = AppContext;

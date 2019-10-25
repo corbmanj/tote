@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import SetupItem from './SetupItem'
+import { AppContext } from '../AppState'
 
 export default function SetupItems (props) {
+  const context = useContext(AppContext)
   const items = props.items.map((item, index) => {
     let outfitCount = 0
-    for (let outfit in props.outfits) {
-      for (let outfitItem in props.outfits[outfit].items) {
-        if (props.outfits[outfit].items[outfitItem].type === item.type) {
+    for (let outfit in context.outfitTypes) {
+      for (let outfitItem in context.outfitTypes[outfit].items) {
+        if (context.outfitTypes[outfit].items[outfitItem].type === item.type) {
           outfitCount++
         }
       }

@@ -9,7 +9,6 @@ export default class Modal extends Component {
         this.setState({
           body:
             (<NamedItems
-            namedItems={this.props.namedItems}
             updateNamedItemInAllOutfits={this.props.updateNamedItemInAllOutfits}
             deleteNamedItem={this.props.deleteNamedItem}
           />),

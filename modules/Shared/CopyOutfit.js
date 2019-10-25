@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 export default function CopyOutfit (props) {
-  const updateChecked = (ev) => {
+  function updateChecked (ev) {
     props.updateCopyArray(ev.target.value, ev.target.checked)
   }
   const days = props.days.map((day, index) => {

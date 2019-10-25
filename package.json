@@ -9,13 +9,14 @@
   "scripts": {
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "webpack-dev-server --host 0.0.0.0 --port=8081 --hot --inline --content-base public --history-api-fallback & node server.js",
-    "start:prod": "webpack && node server.js"
+    "start:prod": "webpack && node server.js",
+    "lint": "eslint --fix ."
   },
   "author": "Jordan Corbman",
   "license": "ISC",
   "dependencies": {
     "@babel/core": "^7.5.0",
-    "@babel/plugin-proposal-class-properties": "^7.5.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.5.0",
     "@babel/preset-react": "^7.0.0",
     "@blueprintjs/core": "^3.17.1",
@@ -39,7 +40,7 @@
     "fs": "0.0.1-security",
     "if-env": "^1.0.0",
     "isomorphic-fetch": "^2.2.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.14",
     "moment": "^2.15.2",
     "net": "^1.0.2",
     "pg": "^7.11.0",
@@ -54,6 +55,9 @@
     "webpack-dev-server": "^3.7.2"
   },
   "devDependencies": {
+    "eslint": "^6.0.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.2",
     "http-server": "^0.11.1",
     "react-hot-loader": "^4.12.3",
     "webpack-cli": "^3.3.5"

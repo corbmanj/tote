@@ -4,6 +4,7 @@
 }
 
 body {
+  background: #efefef;
   margin-bottom: 30px;
 }
 
@@ -16,6 +17,13 @@ ul.sectionList {
   padding-left: 30px;
 }
 
+.checkbox-input {
+  display: inline-block;
+}
+
+.inline-header {
+  display: inline-block;
+}
 
 /* NAVBAR */
 .active {
@@ -51,14 +59,14 @@ ul.sectionList {
 }
 
 .flex-5 {
-  border: solid grey 1px;
+  background: white;
   -webkit-flex: 5;
   flex: 5;
   min-width: 250px;
 }
 
 .flex-2 {
-  border: solid grey 1px;
+  background: white;
   -webkit-flex: 2;
   flex: 2;
 }

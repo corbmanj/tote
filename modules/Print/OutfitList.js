@@ -1,9 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { AppContext } from '../AppState'
 
 export default function OutfitList (props) {
+  const context = useContext(AppContext)
   const items = props.outfit.items.map((item, key) => {
     if (item.id) {
-      const itemName = props.namedItems.find(namedItem => namedItem.id === item.id).name
+      if (props.index === 1) {
+        console.log(context.tote.namedItems, 'and', item)
+      }
+      // todo: coerce item id to number before saving it instead of here
+      const foundItem = context.tote.namedItems.find(namedItem => Number(namedItem.id) === Number(item.id)) 
+      const itemName = foundItem ? foundItem.name : ''
       return <span key={key}><b>{item.parentType}:</b> {itemName}</span>
     } else { return null }
   })

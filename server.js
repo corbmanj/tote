@@ -29,8 +29,8 @@ var DARKSKY_SECRET_KEY = 'd309e32e8c63522fabf78f33fac01ca4'
 var darksky_prefix = 'https://api.darksky.net/forecast/'+DARKSKY_SECRET_KEY+'/'
 var darksky_excludes = '?exclude=currently,hourly,flags'
 app.get('/api/darksky/:lat/:lng/:time', function(req, res) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With')
   if (process.env.NODE_ENV !== 'production') {
     return res.status(200).json(weather)
   }
@@ -51,15 +51,15 @@ app.get('/api/darksky/:lat/:lng/:time', function(req, res) {
         res.status(200).json(payload)
       })
   } catch(err) {
-    console.log("Errors occurs requesting Dark Sky API", err);
+    console.log('Errors occurs requesting Dark Sky API', err);
     res.status(500).json({'message': 'Errors occurs requesting Dark Sky API', 'details' : err})
   }
 })
 
 var google_prefix = 'https://maps.googleapis.com/maps/api/geocode/json?address='
 app.get('/api/googleapis/maps/:cityState', function(req, res) {
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With')
   if (process.env.NODE_ENV !== 'production') {
     return res.status(200).json(city)
   }
@@ -81,7 +81,7 @@ app.get('/api/googleapis/maps/:cityState', function(req, res) {
         res.status(200).json(payload);
       });
   } catch(err) {
-    console.log("Errors occurs requesting Google Location API", err);
+    console.log('Errors occurs requesting Google Location API', err);
     res.status(500).json({'message': 'Errors occurs requesting Dark Sky API', 'details' : err});
   }
 })
