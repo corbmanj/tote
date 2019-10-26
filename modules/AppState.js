@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 
 export const AppContext = React.createContext({})
 export const AppConsumer = AppContext.Consumer
@@ -109,32 +110,30 @@ export class AppProvider extends React.Component {
 
     // Setup Section
 
-    addOutfitType = () => {
+    addOutfitType = async () => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
 
         let newType = {type: "new outfit type", items: []}
         let outfitTypes = [...this.state.outfitTypes]
         outfitTypes.push(newType)
-        const that = this
 
-        fetch(`${baseUrl}/db/addOutfit/${this.state.userId}`, {
-        method: 'POST',
-        headers: myHeaders,
-        body: JSON.stringify(newType),
-        mode: 'cors',
-        cache: 'default'
-        })
-        .then(function(response) {
-            if (response.status >= 400) {
-            throw new Error("Bad response from server")
-            }
-            return response.json()
-        })
-        .then(function(response) {
-            outfitTypes[outfitTypes.length - 1].id = response.id
-            that.setOutfitTypes(outfitTypes)
-        })
+        try {
+            const result = await axios.post(
+                `${baseUrl}/db/addOutfit/${this.state.userId}`,
+                newType,
+                { 
+                    method: 'POST',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                }
+            )
+            outfitTypes[outfitTypes.length - 1].id = result.data.id
+            this.setOutfitTypes(outfitTypes)
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     updateOutfitTypeById = (newOutfit) => {
@@ -153,56 +152,52 @@ export class AppProvider extends React.Component {
         }, () => this.saveUserSettings('outfit', newOutfit))
     }
 
-    removeOutfitType = (outfitId) => {
+    removeOutfitType = async (outfitId) => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
     
-        const that = this
-        fetch(`${baseUrl}/db/deleteOutfit/${this.state.userId}/${outfitId}`, {
-          method: 'DELETE',
-          headers: myHeaders,
-          mode: 'cors',
-          cache: 'default'
-        })
-          .then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server")
-            }
-            return response.json()
-          })
-          .then(function(response) {
-            const newOutfits = that.state.outfitTypes.filter(outfit => outfit.id !== response.id)
-            that.setOutfitTypes(newOutfits)
-          })
+        try {
+            const response = await axios.delete(
+                `${baseUrl}/db/deleteOutfit/${this.state.userId}/${outfitId}`, 
+                {
+                    method: 'DELETE',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                })
+            const newOutfits = this.state.outfitTypes.filter(outfit => outfit.id !== response.data.id)
+            this.setOutfitTypes(newOutfits)
+        } catch (err) {
+            console.error(err)
+        }
       }
 
     setAdditionalItems = (additionalItems) => {
         this.setState({ additionalItems })
     }
 
-    deleteAdditionalItemCategory = (index) => {
+    deleteAdditionalItemCategory = async (index) => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
 
         const sectionId = this.state.additionalItems[index].id
     
-        const that = this
-        fetch(`${baseUrl}/db/deleteAdditionalItemSection/${this.state.userId}/${sectionId}`, {
-          method: 'DELETE',
-          headers: myHeaders,
-          mode: 'cors',
-          cache: 'default'
-        })
-          .then(function(response) {
-            if (response.status >= 400) {
-              throw new Error("Bad response from server")
-            }
-            return response.json()
-          })
-          .then(function(response) {
-            const newAdditionalItems = that.state.additionalItems.filter(section => section.id !== response.id)
-            that.setAdditionalItems(newAdditionalItems)
-          })
+        try {
+            const response = await axios.delete(
+                `${baseUrl}/db/deleteAdditionalItemSection/${this.state.userId}/${sectionId}`, 
+                {
+                    method: 'DELETE',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                }
+            )
+            const newAdditionalItems = this.state.additionalItems.filter(section => section.id !== response.data.id)
+            this.setAdditionalItems(newAdditionalItems)
+        } catch (err) {
+            console.error(err)
+        }
+
     }
 
     // select Outfits
@@ -274,50 +269,57 @@ export class AppProvider extends React.Component {
         }, () => this.saveTrip())
     }
 
-    saveTrip = (currentState = this.state) => {
+    saveTrip = async (currentState = this.state) => {
         var myHeaders = new Headers();
     
         myHeaders.append('Content-Type', 'application/json');
     
-        fetch(`${baseUrl}/db/tote/updateTrip/${this.state.tripId}`, {
-            method: 'POST',
-            body: JSON.stringify(currentState),
-            headers: myHeaders,
-            mode: 'cors',
-            cache: 'default'
-        })
-        .then(function(response) {
+        try {
+            const response = await axios.post(
+                `${baseUrl}/db/tote/updateTrip/${this.state.tripId}`,
+                currentState,
+                {
+                    method: 'POST',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                }
+            )
             if (response.status >= 400) {
                 throw new Error("Bad response from server")
             }
-        });
+        } catch (err) {
+            console.error(err)
+        }
     }
 
-    saveUserSettings = (setting, update) => {
+    saveUserSettings = async (setting, update) => {
         let url = ''
-        let body = {}
         switch (setting) {
             case 'outfit':
             default:
                 url = `${baseUrl}/db/userItems/${this.state.userId}/${update.id}`
-                body = JSON.stringify(update)
         }
         var myHeaders = new Headers();
-    
         myHeaders.append('Content-Type', 'application/json');
     
-        fetch(url, {
-            method: 'PUT',
-            body,
-            headers: myHeaders,
-            mode: 'cors',
-            cache: 'default'
-        })
-        .then(function(response) {
+        try {
+            const response = await axios.put(url, 
+                update,
+                {
+                    method: 'PUT',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                }
+            )
+            
             if (response.status >= 400) {
                 throw new Error("Bad response from server")
             }
-        });
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     render() {

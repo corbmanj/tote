@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
-import { AppContext } from '../AppState';
+import axios from 'axios'
+import { AppContext } from '../AppState'
 import SetupOutfits from './SetupOutfits'
 import SetupItems from './SetupItems'
 import SetupAdditionalItems from './SetupAdditionalItems'
 // import outfitTypes from "../Select/outfitTypes";
 
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default class SetupMain extends Component {
@@ -19,33 +18,24 @@ export default class SetupMain extends Component {
   }
   
 
-  componentDidMount () {
-    const that = this
-    fetch(`${baseUrl}/db/userItems/${this.context.userId}`)
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json();
-      })
-      .then(function(response) {
-        const items  = []
-        response.outfits.forEach(outfit => {
-          outfit.items.forEach(item => {
-            let alreadyExists = false
-            items.forEach(existingItem => {
-              if (item.type === existingItem.type) {
-                alreadyExists = true
-              }
-            })
-            if (!alreadyExists) {
-              items.push(item)
+  async componentDidMount () {
+    const response = await axios.get(`${baseUrl}/db/userItems/${this.context.userId}`)
+      const items  = []
+      response.data.outfits.forEach(outfit => {
+        outfit.items.forEach(item => {
+          let alreadyExists = false
+          items.forEach(existingItem => {
+            if (item.type === existingItem.type) {
+              alreadyExists = true
             }
           })
+          if (!alreadyExists) {
+            items.push(item)
+          }
         })
-        that.setState({ items })
-        that.context.setOutfitTypes(response.outfits)
       })
+      this.setState({ items })
+      this.context.setOutfitTypes(response.data.outfits)
   }
   updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
     let itemObj = this.state.items.find(item => item.type === itemType)
@@ -73,7 +63,7 @@ export default class SetupMain extends Component {
       return {items: newItems}
     })
   }
-  updateAdditionalItemCategory = (itemList, id) => {
+  updateAdditionalItemCategory = async (itemList, id) => {
     var myHeaders = new Headers();
     let sectionToUpdate = this.context.additionalItems.findIndex(section => section.id === id)
     const itemSection = {
@@ -82,47 +72,41 @@ export default class SetupMain extends Component {
     }
     myHeaders.append('Content-Type', 'application/json');
 
-    fetch(`${baseUrl}/db/updateAdditionalItems/${this.context.userId}/${id}`, {
-      method: 'PUT',
-      headers: myHeaders,
-      body: JSON.stringify(itemSection),
-      mode: 'cors',
-      cache: 'default'
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
+    try {
+      await axios.put(
+        `${baseUrl}/db/updateAdditionalItems/${this.context.userId}/${id}`, 
+        itemSection,
+        {
+          method: 'PUT',
+          headers: myHeaders,
+          mode: 'cors',
+          cache: 'default'
         }
-        return response.json()
-      })
-      .then(function(response) {
-        console.log(response)
-      })
+      )
+    } catch (err) {
+      console.error(err)
+    }
   }
-  addAdditionalItemCategory = (name) => {
+  addAdditionalItemCategory = async (name) => {
     let myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
     const JSONbody = {
       name: "temporary",
       items: []
     }
-
-    fetch(`${baseUrl}/db/additionalItems/${this.context.userId}`, {
-      method: 'POST',
-      headers: myHeaders,
-      body: JSON.stringify(JSONbody),
-      mode: 'cors',
-      cache: 'default'
-    })
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json()
-      })
-      .then(function(response) {
-        console.log(response)
-      })
+    try {
+      await axios.post(
+        `${baseUrl}/db/additionalItems/${this.context.userId}`, 
+        JSONbody,
+        {
+          method: 'POST',
+          headers: myHeaders,
+          mode: 'cors',
+          cache: 'default'
+        })
+    } catch(err) {
+      console.error(err)
+    }
   }
   toggleEditor = () => {
     this.setState(prevState => {return {outfitEditor: !prevState.outfitEditor}})

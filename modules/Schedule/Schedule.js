@@ -1,8 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
-require('es6-promise').polyfill()
-require('isomorphic-fetch')
-
+import axios from 'axios'
 import { AppContext } from '../AppState'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
@@ -16,65 +14,54 @@ export default function Schedule () {
   const cityState = useRef(context.city || 'City, St')
   
   
-  function updateSchedule () {
+  async function updateSchedule () {
     // TODO, if there is already a days array in state, then don't warn before overwriting days
-    // let that = this
     let stateObj = {}
-      stateObj.city = cityState.current.value
-    fetch(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
-      .then(function(response) {
-        if (response.status >= 400) {
-          throw new Error('Bad response from server')
-        }
-        return response.json();
-      })
-      .then(function(response) {
-        const lat = response.results[0].geometry.location.lat
-        const lng = response.results[0].geometry.location.lng
+    stateObj.city = cityState.current.value
+    try {
+      const place = await axios.get(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
+      console.log('this is the place', place);
+      const lat = place.data.results[0].geometry.location.lat
+      const lng = place.data.results[0].geometry.location.lng
 
-        stateObj.startDate = moment(dates.startDate)
-        stateObj.endDate = moment(dates.endDate)
-        stateObj.days = []
-        stateObj.numDays = stateObj.endDate.diff(stateObj.startDate, 'd')+1
-        let i = 0
-        let j = 0
-        while (i < stateObj.numDays) {
-          let newDay = {
-            date: moment(stateObj.startDate).add(i, 'd')
-          }
-          fetch(`${baseUrl}/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)
-            .then(function(response) {
-              if (response.status >= 400) {
-                throw new Error('Bad response from server')
-              }
-              return response.json()
-            })
-            .then(function(ds) {
-              newDay.low = ds.daily.data[0].temperatureMin
-              newDay.high = ds.daily.data[0].temperatureMax
-              newDay.precip = ds.daily.data[0].precipProbability
-              newDay.summary = ds.daily.data[0].summary
-              newDay.icon = ds.daily.data[0].icon
-              newDay.sunrise = ds.daily.data[0].sunriseTime
-              newDay.sunset = ds.daily.data[0].sunsetTime
-              newDay.outfits = []
-              stateObj.days.push(newDay)
-            })
-            .then(function () {
-              j++
-              if (j === stateObj.numDays) {
-                stateObj.days = stateObj.days.sort(function(a, b) {
-                  return a.date.isBefore(b.date) ? -1 : 1
-                })
-                context.setSchedule(
-                  stateObj.startDate, stateObj.endDate, stateObj.numDays, stateObj.days, cityState.current.value
-                )
-              }
-            })
-          i++
+      stateObj.startDate = moment(dates.startDate)
+      stateObj.endDate = moment(dates.endDate)
+      stateObj.days = []
+      stateObj.numDays = stateObj.endDate.diff(stateObj.startDate, 'd')+1
+      let i = 0
+      let j = 0
+      while (i < stateObj.numDays) {
+        let newDay = {
+          date: moment(stateObj.startDate).add(i, 'd')
         }
-      })
+        const { daily } = (await axios.get(`${baseUrl}/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)).data
+        console.log('ds', daily)
+        newDay.low = daily.data[0].temperatureMin
+        newDay.high = daily.data[0].temperatureMax
+        newDay.precip = daily.data[0].precipProbability
+        newDay.summary = daily.data[0].summary
+        newDay.icon = daily.data[0].icon
+        newDay.sunrise = daily.data[0].sunriseTime
+        newDay.sunset = daily.data[0].sunsetTime
+        newDay.outfits = []
+        stateObj.days.push(newDay)
+        j++
+        if (j === stateObj.numDays) {
+          stateObj.days = stateObj.days.sort(function(a, b) {
+            return a.date.isBefore(b.date) ? -1 : 1
+          })
+          context.setSchedule(
+            stateObj.startDate, stateObj.endDate, stateObj.numDays, stateObj.days, cityState.current.value
+          )
+        }
+        i++
+      }
+    } catch (err) {
+      console.error(err)
+    }
+    
   }
+
   function updateDate (ev) {
     setDates({...dates, [ev.target.name]: moment(ev.target.value)})
   }

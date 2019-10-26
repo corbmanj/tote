@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
+import axios from 'axios'
 import { AppContext } from './AppState';
-require('isomorphic-fetch')
 import bcrypt from 'bcryptjs'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
@@ -14,52 +14,38 @@ export default class Login extends Component {
       password: 'Password1'
     }
   }
-  submitLogin = (e) => {
-    let that = this
+  submitLogin = async (e) => {
     e.preventDefault()
     this.setState({loginError: false})
-    fetch(`${baseUrl}/db/user/${this.state.email}`)
-      .then(function (response) {
-        if (response.status >= 400) {
-          throw new Error("Bad response from server")
-        }
-        return response.json();
-      })
-      .then(function (response) {
-        if (!response || response === {}) {
-          that.setState({loginError: true})
-        }
-        else {
-          bcrypt.compare(that.state.password, response.password, function(err, res) {
-            if (res) {
-              that.setState({first: response.first, last: response.last, userId: response.id, loggedIn: true, loginError: false})
-              // fetch users list of outfits
-              fetch(`${baseUrl}/db/userItems/${response.id}`)
-                .then(function (responseb) {
-                  if (responseb.status >= 400) {
-                    throw new Error("Bad response from server")
-                  }
-                  return responseb.json();
-                })
-                .then(function (responsec) {
-                  if (!responsec.outfits.length) { // user has not yet set up outfits
-                    that.context.setUser(response.id)
-                    that.context.setStage('setup')
-                  }
-                  else {
-                    const tote = that.context.tote
-                    tote.additionalItems = responsec.additionalItems
-                    that.context.setTote(tote)
-                    that.context.setOutfitTypes(responsec.outfits)
-                    that.context.setUser(response.id)
-                  }
-                })
-            } else {
-              that.setState({loginError: true})
+    try {
+      const response = await axios.get(`${baseUrl}/db/user/${this.state.email}`)
+      if (!response.data || response.data === {}) {
+        this.setState({loginError: true})
+      } else {
+        bcrypt.compare(this.state.password, response.data.password, async (_err, res) => {
+          if (res) {
+            this.setState({first: response.data.first, last: response.data.last, userId: response.data.id, loggedIn: true, loginError: false})
+            // fetch users list of outfits
+            const outfitResponse = await axios.get(`${baseUrl}/db/userItems/${response.data.id}`)
+            if (!outfitResponse.data.outfits.length) { // user has not yet set up outfits
+              this.context.setUser(response.data.id)
+              this.context.setStage('setup')
             }
-          })
-        }
-      })
+            else {
+              const tote = {...this.context.tote}
+              tote.additionalItems = outfitResponse.data.additionalItems
+              this.context.setTote(tote)
+              this.context.setOutfitTypes(outfitResponse.data.outfits)
+              this.context.setUser(response.data.id)
+            }
+          } else {
+            this.setState({loginError: true})
+          }
+        })
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
   renderError = () => {
     return <span className="error">Error: Invalid email or password</span>
