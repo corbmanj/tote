@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import axios from 'axios'
+import { AppContext } from './AppState';
 import bcrypt from 'bcryptjs'
-import { AppContext } from './AppState'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 

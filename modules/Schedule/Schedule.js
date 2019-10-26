@@ -1,8 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
 import axios from 'axios'
-import DatetimeRangePicker from 'react-datetime-range-picker';
-
 import { AppContext } from '../AppState'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'

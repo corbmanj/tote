@@ -20,30 +20,6 @@ export default class SetupMain extends Component {
 
   async componentDidMount () {
     const response = await axios.get(`${baseUrl}/db/userItems/${this.context.userId}`)
-      // .then(function(response) {
-      //   if (response.status >= 400) {
-      //     throw new Error("Bad response from server")
-      //   }
-      //   return response.json();
-      // })
-      // .then(function(response) {
-      //   const items  = []
-      //   response.outfits.forEach(outfit => {
-      //     outfit.items.forEach(item => {
-      //       let alreadyExists = false
-      //       items.forEach(existingItem => {
-      //         if (item.type === existingItem.type) {
-      //           alreadyExists = true
-      //         }
-      //       })
-      //       if (!alreadyExists) {
-      //         items.push(item)
-      //       }
-      //     })
-      //   })
-      //   that.setState({ items })
-      //   that.context.setOutfitTypes(response.outfits)
-      // })
       const items  = []
       response.data.outfits.forEach(outfit => {
         outfit.items.forEach(item => {
@@ -110,16 +86,6 @@ export default class SetupMain extends Component {
     } catch (err) {
       console.error(err)
     }
-      // .then(function(response) {
-      //   if (response.status >= 400) {
-      //     throw new Error("Bad response from server")
-      //   }
-      //   return response.json()
-      // })
-      // .then(function(response) {
-      //   console.log(response)
-      // })
-    
   }
   addAdditionalItemCategory = async (name) => {
     let myHeaders = new Headers();
@@ -128,7 +94,6 @@ export default class SetupMain extends Component {
       name: "temporary",
       items: []
     }
-
     try {
       await axios.post(
         `${baseUrl}/db/additionalItems/${this.context.userId}`, 
@@ -139,15 +104,6 @@ export default class SetupMain extends Component {
           mode: 'cors',
           cache: 'default'
         })
-        // .then(function(response) {
-        //   if (response.status >= 400) {
-        //     throw new Error("Bad response from server")
-        //   }
-        //   return response.json()
-        // })
-        // .then(function(response) {
-        //   console.log(response)
-        // })
     } catch(err) {
       console.error(err)
     }
