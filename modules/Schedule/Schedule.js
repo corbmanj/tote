@@ -20,7 +20,6 @@ export default function Schedule () {
     stateObj.city = cityState.current.value
     try {
       const place = await axios.get(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
-      console.log('this is the place', place);
       const lat = place.data.results[0].geometry.location.lat
       const lng = place.data.results[0].geometry.location.lng
 
@@ -35,7 +34,6 @@ export default function Schedule () {
           date: moment(stateObj.startDate).add(i, 'd')
         }
         const { daily } = (await axios.get(`${baseUrl}/api/darksky/${lat}/${lng}/${newDay.date.unix()}`)).data
-        console.log('ds', daily)
         newDay.low = daily.data[0].temperatureMin
         newDay.high = daily.data[0].temperatureMax
         newDay.precip = daily.data[0].precipProbability
