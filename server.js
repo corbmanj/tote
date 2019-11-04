@@ -24,7 +24,7 @@ app.get('/', function(req, res) {
 })
 
 // Following is an example to proxy client request to DarkSky forecast API
-var DARKSKY_SECRET_KEY = 'd309e32e8c63522fabf78f33fac01ca4'
+var DARKSKY_SECRET_KEY = process.env.DARKSKY_SECRET_KEY
 
 var darksky_prefix = 'https://api.darksky.net/forecast/'+DARKSKY_SECRET_KEY+'/'
 var darksky_excludes = '?exclude=currently,hourly,flags'
@@ -66,7 +66,7 @@ app.get('/api/googleapis/maps/:cityState', function(req, res) {
   try {
     var coordinates = req.params.cityState
     var url = google_prefix + coordinates
-    var key = 'AIzaSyDZt10DXNu-bVGAvZ2NLt75FK_ftYgEr1k'
+    var key = process.env.G_API_KEY
     url = url + '&key=' + key
     console.log('Fetching '+url)
 
