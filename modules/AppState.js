@@ -176,6 +176,60 @@ export class AppProvider extends React.Component {
         this.setState({ additionalItems })
     }
 
+    addAdditionalItemCategory = async () => {
+        let myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        const newCategory = {
+            name: "temporary",
+            items: []
+        }
+        try {
+            const result = await axios.post(
+            `${baseUrl}/db/additionalItems/${this.state.userId}`, 
+            newCategory,
+            {
+                method: 'POST',
+                headers: myHeaders,
+                mode: 'cors',
+                cache: 'default'
+            })
+            newCategory.id = result.id
+            const tempItemCategories = [...this.state.additionalItems]
+            tempItemCategories.push(newCategory)
+            this.setAdditionalItems(tempItemCategories)
+        } catch(err) {
+            console.error(err)
+        }
+    }
+
+    updateAdditionalItemCategory = async (itemList, id, name) => {
+        var myHeaders = new Headers();
+        let sectionToUpdate = this.state.additionalItems.findIndex(section => section.id === id)
+        const itemSection = {
+            name: name || this.state.additionalItems[sectionToUpdate].name,
+            items: itemList
+        }
+        myHeaders.append('Content-Type', 'application/json');
+    
+        try {
+            await axios.put(
+                `${baseUrl}/db/updateAdditionalItems/${this.state.userId}/${id}`, 
+                itemSection,
+                {
+                method: 'PUT',
+                headers: myHeaders,
+                mode: 'cors',
+                cache: 'default'
+                }
+            )
+            const tempItemCategories = [...this.state.additionalItems]
+            tempItemCategories[sectionToUpdate] = itemSection
+            this.setAdditionalItems(tempItemCategories)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     deleteAdditionalItemCategory = async (index) => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
@@ -355,6 +409,8 @@ export class AppProvider extends React.Component {
                     addOutfitType: this.addOutfitType,
                     additionalItems: this.state.additionalItems,
                     setAdditionalItems: this.setAdditionalItems,
+                    addAdditionalItemCategory: this.addAdditionalItemCategory,
+                    updateAdditionalItemCategory: this.updateAdditionalItemCategory,
                     deleteAdditionalItemCategory: this.deleteAdditionalItemCategory,
                     tote: this.state.tote,
                     setTote: this.setTote,

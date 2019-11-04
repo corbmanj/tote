@@ -63,51 +63,6 @@ export default class SetupMain extends Component {
       return {items: newItems}
     })
   }
-  updateAdditionalItemCategory = async (itemList, id) => {
-    var myHeaders = new Headers();
-    let sectionToUpdate = this.context.additionalItems.findIndex(section => section.id === id)
-    const itemSection = {
-      name: this.context.additionalItems[sectionToUpdate].name,
-      items: itemList
-    }
-    myHeaders.append('Content-Type', 'application/json');
-
-    try {
-      await axios.put(
-        `${baseUrl}/db/updateAdditionalItems/${this.context.userId}/${id}`, 
-        itemSection,
-        {
-          method: 'PUT',
-          headers: myHeaders,
-          mode: 'cors',
-          cache: 'default'
-        }
-      )
-    } catch (err) {
-      console.error(err)
-    }
-  }
-  addAdditionalItemCategory = async (name) => {
-    let myHeaders = new Headers();
-    myHeaders.append('Content-Type', 'application/json');
-    const JSONbody = {
-      name: "temporary",
-      items: []
-    }
-    try {
-      await axios.post(
-        `${baseUrl}/db/additionalItems/${this.context.userId}`, 
-        JSONbody,
-        {
-          method: 'POST',
-          headers: myHeaders,
-          mode: 'cors',
-          cache: 'default'
-        })
-    } catch(err) {
-      console.error(err)
-    }
-  }
   toggleEditor = () => {
     this.setState(prevState => {return {outfitEditor: !prevState.outfitEditor}})
   }
@@ -138,8 +93,6 @@ export default class SetupMain extends Component {
         addItem={this.addItem}
         updateItem={this.updateItem}
         removeItem={this.removeItem}
-        updateAdditionalItemCategory={this.updateAdditionalItemCategory}
-        addAdditionalItemCategory={this.addAdditionalItemCategory}
       />
     )
   }

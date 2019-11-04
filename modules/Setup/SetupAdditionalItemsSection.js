@@ -5,18 +5,18 @@ export default function SetupAdditionalItemsSection (props) {
   const [items, setItems] = useState(props.items)
 
   function saveEditedItem (itemName, itemId) {
-      const tempItems = [...items]
-      let itemToUpdate = tempItems.findIndex(item => item.id === itemId)
-      tempItems[itemToUpdate].name = itemName
-      props.updateAdditionalItemCategory(tempItems, props.id)
-      setItems(tempItems)
+    const tempItems = [...items]
+    let itemToUpdate = tempItems.findIndex(item => item.id === itemId)
+    tempItems[itemToUpdate].name = itemName
+    context.updateAdditionalItemCategory(tempItems, props.id)
+    setItems(tempItems)
   }
 
   function deleteEditedItem (itemId) {
     const tempItems = [...items]
     let itemIndex = tempItems.findIndex(item => item.id === itemId)
     tempItems.splice(itemIndex, 1)
-    props.updateAdditionalItemCategory(tempItems, props.id)
+    context.updateAdditionalItemCategory(tempItems, props.id)
     setItems(tempItems)
   }
   
