@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import axios from 'axios'
-import { AppContext } from './AppState';
 import bcrypt from 'bcryptjs'
+import { InputGroup } from '@blueprintjs/core';
+import { AppContext } from './AppState';
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
@@ -51,16 +52,21 @@ export default class Login extends Component {
     return <span className="error">Error: Invalid email or password</span>
   }
 
+  handleChange = (e) => {
+    this.setState({ [e.target.name]: e.target.value })
+  }
+
   render () {
     return (
-      <div>
-        <form onSubmit={this.submitLogin}>
-          <input type="email" placeholder="enter email" onChange={(e) => { this.setState({email: e.target.value}) }} />
-          <input type="password" placeholder="enter password" onChange={(e) => { this.setState({password: e.target.value}) }} />
-          <input type="submit" />
+      <>
+        <form className="loginForm" onSubmit={this.submitLogin}>
+          <InputGroup leftIcon="person" />
+          <input type="email" name="email" placeholder="email address" onChange={this.handleChange} />
+          <input type="password" name="password" placeholder="password" onChange={this.handleChange} />
+          <input type="submit" value="continue" disabled={!this.state.email || !this.state.password} />
         </form>
         {this.state.loginError ? this.renderError() : null}
-      </div>
+      </>
     )
   }
 }
