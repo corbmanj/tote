@@ -26,7 +26,7 @@ export default class Main extends Component {
   }
 
   conditionallyRenderNavMenu () {
-    if (this.context.stage !== 'setup') {
+    if (!['setup', 'home'].includes(this.context.stage)) {
       return <NavMenu active={this.context.stage} />
     }
   }
@@ -48,8 +48,8 @@ export default class Main extends Component {
         return <OutfitsList />
       default:
         return (
-          <div>
-            <h1>Welcome to Tote</h1>
+          <div className="">
+            <h1 className="welcome">Welcome to Tote!</h1>
             {this.context.userId ? <GetStarted /> : <Login />}
           </div>
         )
