@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
-import { InputGroup } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { AppContext } from './AppState';
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
@@ -38,6 +38,7 @@ export default class Login extends Component {
               this.context.setTote(tote)
               this.context.setOutfitTypes(outfitResponse.data.outfits)
               this.context.setUser(response.data.id)
+              this.context.setStage('getStarted')
             }
           } else {
             this.setState({loginError: true})
@@ -74,9 +75,7 @@ export default class Login extends Component {
             <input type="password" name="password" placeholder="password" onChange={this.handleChange} />
           </div>
           <div className="inputRow">
-            <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M4.93151 1C4.93151 0.447715 5.37922 0 5.93151 0H12.0685C12.6208 0 13.0685 0.447715 13.0685 1V2.94521C13.0685 3.13018 13.0183 3.30343 12.9307 3.45205H16C17.1046 3.45205 18 4.34749 18 5.45205V14.0274C18 15.132 17.1046 16.0274 16 16.0274H2C0.89543 16.0274 0 15.132 0 14.0274V5.45205C0 4.34748 0.895431 3.45205 2 3.45205H5.06929C4.98173 3.30343 4.93151 3.13018 4.93151 2.94521V1ZM7.16438 0.986301C6.6121 0.986301 6.16438 1.43402 6.16438 1.9863V2.45205C6.16438 3.00434 6.6121 3.45205 7.16438 3.45205H10.8356C11.3879 3.45205 11.8356 3.00434 11.8356 2.45205V1.9863C11.8356 1.43402 11.3879 0.986301 10.8356 0.986301H7.16438Z" fill="#757575"/>
-            </svg>
+            <Icon icon="briefcase" color="#757575" />
             <input type="submit" value="continue" disabled={!this.state.email || !this.state.password} />
           </div>
         </form>
