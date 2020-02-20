@@ -1,22 +1,21 @@
 import React, { useContext } from 'react'
-import { Icon } from '@blueprintjs/core'
 import { AppContext } from '../AppState'
 
-export default function Modal (props) {
+export default function NavItem (props) {
   const context = useContext(AppContext)
   function updateStage (ev) {
-    context.setStage(ev.target.value)
+    context.setStage(ev.target.value.toLowerCase())
   }
   return (
-    <label>
-      <input
-        className={props.classNames}
-        type="button"
-        value={props.stage}
-        onClick={updateStage}
-        disabled={props.disabled}
-      />
-      { !props.isLast ? <Icon icon="chevron-right" /> : null }
+    <label className="navItem">
+        <div className="navNumber">{props.stageNumber}</div>
+        <input
+          className={props.classNames}
+          type="button"
+          value={props.stage}
+          onClick={updateStage}
+          disabled={props.disabled}
+        />
     </label>
   )
 }

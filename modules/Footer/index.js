@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import { Icon } from '@blueprintjs/core'
 import { AppContext } from '../AppState'
+import './footer.css'
 
-export default function NavMenu (props) {
+export default function Footer (props) {
     const { setStage } = useContext(AppContext)
     const { isSetup } = props
     const mainClass = isSetup ? 'footerItem' : 'footerItem active'

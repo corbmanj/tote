@@ -38,7 +38,7 @@ export default class Login extends Component {
               this.context.setTote(tote)
               this.context.setOutfitTypes(outfitResponse.data.outfits)
               this.context.setUser(response.data.id)
-              this.context.setStage('getStarted')
+              this.context.setStage('home')
             }
           } else {
             this.setState({loginError: true})

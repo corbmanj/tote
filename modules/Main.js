@@ -27,13 +27,13 @@ export default class Main extends Component {
   }
 
   conditionallyRenderNavMenu () {
-    if (!['setup', 'home', 'getStarted'].includes(this.context.stage)) {
+    if (!['login', 'setup'].includes(this.context.stage)) {
       return <NavMenu active={this.context.stage} />
     }
   }
 
   conditionallyRenderFooter () {
-    if (!['home', 'setup'].includes(this.context.stage)) {
+    if (!['login', 'setup'].includes(this.context.stage)) {
       return <Footer isSetup={this.context.stage === "setup"} />
     }
   }
@@ -54,7 +54,7 @@ export default class Main extends Component {
         return <PackingList />
       case 'print':
         return <OutfitsList />
-      case 'getStarted':
+      case 'home':
         return <GetStarted />
       default:
         return (

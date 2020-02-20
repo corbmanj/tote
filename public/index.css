@@ -83,53 +83,6 @@ ul.sectionList {
   display: inline-block;
 }
 
-/* NAVBAR */
-.active {
-  color: lightgreen;
-}
-
-.navLink {
-  border: none;
-  background: none;
-  font-size: 1em;
-}
-
-.disabled {
-  border: none;
-  background: none;
-  font-size: 1em;
-  color: lightgray;
-}
-
-.navLink:hover {
-  color: lightgreen;
-}
-/* ------------------ */
-
-/* FOOTER */
-
-.footer {
-  display: flex;
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 5em;
-}
-
-.footerItem {
-  flex: 1 1 auto;
-  border: 2px solid #B5BDC5;
-  background: #fefefe;
-  text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.footerItem.active {
-  color: #9BD2F6;
-}
-
 /* FLEXBOX COMPONENTS */
 .flex-container {
   display: -webkit-flex;
@@ -445,7 +398,7 @@ ul.sectionList {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10em;
+  margin-top: 13em;
 }
 
 .getStarted button {
