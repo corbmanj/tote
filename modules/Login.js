@@ -79,7 +79,9 @@ export default class Login extends Component {
             <input type="submit" value="continue" disabled={!this.state.email || !this.state.password} />
           </div>
         </form>
-        {this.state.loginError ? this.renderError() : null}
+        {this.state.loginError && this.renderError()}
+
+
       </>
     )
   }
