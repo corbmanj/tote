@@ -74,7 +74,7 @@ export default class LoadTrips extends Component {
   }
   render () {
     return (
-      <div>
+      <div className="tripList">
         {this.state.showModal && this.renderModal()}
         <ol>
           {this.state.tripList && this.renderTripList()}

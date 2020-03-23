@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
 import axios from 'axios'
 import { AppContext } from '../AppState'
+import './schedule.css'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
@@ -99,31 +100,26 @@ export default function Schedule () {
           onClick={updateSchedule}
           disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
         >
-          Select Outfits
+          Continue
         </button>
       )
     }
   }
   return (
-    <div>
-      <h2 className="header">Schedule</h2>
-      <div onKeyPress={handleKeyPress}>
-        Start Date:
+    <div className="schedule">
+      <h1>When is your trip?</h1>
         <input
           defaultValue={dates.startDate ? moment(dates.startDate).format('YYYY-MM-DD') : null}
           type="date"
           name="startDate"
           onChange={updateDate}
         />
-        <br />
-          End Date:
         <input
           defaultValue={dates.endDate ? moment(dates.endDate).format('YYYY-MM-DD') : null}
           type="date" name="endDate"
           onChange={updateDate}
         />
-        <br />
-        Destination:
+        <h1>Where are you going?</h1>
         <input
           ref={cityState}
           placeholder="City, St"
@@ -131,7 +127,6 @@ export default function Schedule () {
           defaultValue={context.city}
           onFocus={autofocus}
         />
-      </div>
       {renderButtons()}
     </div>
   )

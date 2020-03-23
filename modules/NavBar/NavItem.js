@@ -6,9 +6,10 @@ export default function NavItem (props) {
   function updateStage (ev) {
     context.setStage(ev.target.value.toLowerCase())
   }
+
   return (
-    <label className="navItem">
-        <div className="navNumber">{props.stageNumber}</div>
+    <label key={props.stage} className="navItem">
+        <div className="navNumber">{props.svg}</div>
         <input
           className={props.classNames}
           type="button"

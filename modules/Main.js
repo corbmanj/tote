@@ -70,7 +70,6 @@ export default class Main extends Component {
     return (
       <div>
         {this.conditionallyRenderNavMenu()}
-        {this.conditionallyRenderFooter()}
         {this.renderStage(this.context.stage)}
         <ReactCSSTransitionGroup
           transitionName="toast"
@@ -82,6 +81,7 @@ export default class Main extends Component {
         >
           {this.context.showToast && this.renderToast()}
         </ReactCSSTransitionGroup>
+        {this.conditionallyRenderFooter()}
       </div>
     )
   }
