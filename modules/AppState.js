@@ -15,7 +15,7 @@ export class AppProvider extends React.Component {
 
     initialState () {
         const defaultState = {
-            stage: 'home',
+            stage: 'login',
             showToast: false,
             tote: {}
         };

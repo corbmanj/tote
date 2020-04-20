@@ -6,6 +6,7 @@ import AssignItems from './Assign/AssignItems'
 import PackingList from './Packing/PackingList'
 import OutfitsList from './Print/OutfitsList'
 import NavMenu from './NavBar/NavMenu'
+import Footer from './Footer'
 import GetStarted from './GetStarted'
 import Setup from './Setup/SetupMain'
 import LoadTrips from './LoadTrips'
@@ -26,10 +27,17 @@ export default class Main extends Component {
   }
 
   conditionallyRenderNavMenu () {
-    if (!['setup', 'home'].includes(this.context.stage)) {
+    if (!['login', 'setup'].includes(this.context.stage)) {
       return <NavMenu active={this.context.stage} />
     }
   }
+
+  conditionallyRenderFooter () {
+    if (!['login', 'setup'].includes(this.context.stage)) {
+      return <Footer isSetup={this.context.stage === "setup"} />
+    }
+  }
+
   renderStage = (stage) => {
     switch (stage) {
       case 'load':
@@ -46,11 +54,13 @@ export default class Main extends Component {
         return <PackingList />
       case 'print':
         return <OutfitsList />
+      case 'home':
+        return <GetStarted />
       default:
         return (
-          <div className="">
+          <div>
             <h1 className="welcome">Welcome to Tote!</h1>
-            {this.context.userId ? <GetStarted /> : <Login />}
+              <Login />
           </div>
         )
     }
@@ -71,6 +81,7 @@ export default class Main extends Component {
         >
           {this.context.showToast && this.renderToast()}
         </ReactCSSTransitionGroup>
+        {this.conditionallyRenderFooter()}
       </div>
     )
   }
