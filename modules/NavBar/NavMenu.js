@@ -1,5 +1,4 @@
 import React from 'react'
-import { Icon } from '@blueprintjs/core'
 import NavItem from './NavItem'
 import * as svg from '../../public/svg/navBar'
 import './nav.css'
@@ -14,15 +13,15 @@ function getStageValue(value) {
       return 3
     case 'packing':
       return 4
-    case 'print':
-      return 5
+    // case 'print':
+    //   return 5
     default:
       return 0
   }
 }
 
 export default function NavMenu (props) {
-  const stages = ['Home', 'Schedule', 'Select', 'Assign', 'Packing', 'Print']
+  const stages = ['Home', 'Schedule', 'Select', 'Assign', 'Packing'] //, 'Print']
 
   function getSvg(stage) {
     console.log('1', getStageValue(props.active), '2', getStageValue(stage))
@@ -65,7 +64,7 @@ export default function NavMenu (props) {
           disabled={props[stage]}
           svg={getSvg(stage)}
         />
-        {index < stages.length - 1 && svg.line}
+        {index < stages.length - 1 && <div className="line">{svg.line}</div>}
       </div>
     )
   })
