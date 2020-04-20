@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
+import DateRangePicker from '@wojtekmaj/react-daterange-picker'
 import axios from 'axios'
 import { AppContext } from '../AppState'
 import './schedule.css'
@@ -61,8 +62,14 @@ export default function Schedule () {
     
   }
 
-  function updateDate (ev) {
-    setDates({...dates, [ev.target.name]: moment(ev.target.value)})
+  function updateDate ({start, end}) {
+    // setDates({...dates, [ev.target.name]: moment(ev.target.value)})
+    console.log(start, end)
+    setDates({ startDate: start, endDate: end })
+  }
+
+  function handleSelectDates (...args) {
+    console.log('arg', args)
   }
 
   function handleKeyPress (ev) {
@@ -105,10 +112,18 @@ export default function Schedule () {
       )
     }
   }
+  console.log('value', dates)
   return (
     <div className="schedule">
       <h1>When is your trip?</h1>
-        <input
+        <DateRangePicker
+          className="trip-calendar"
+          onChange={updateDate}
+          value={dates.startDate && dates.endDate && [dates.startDate, dates.endDate]}
+          singleDateRange
+          // numberOfCalendars={2}
+        />
+        {/* <input
           defaultValue={dates.startDate ? moment(dates.startDate).format('YYYY-MM-DD') : null}
           type="date"
           name="startDate"
@@ -118,7 +133,7 @@ export default function Schedule () {
           defaultValue={dates.endDate ? moment(dates.endDate).format('YYYY-MM-DD') : null}
           type="date" name="endDate"
           onChange={updateDate}
-        />
+        /> */}
         <h1>Where are you going?</h1>
         <input
           ref={cityState}

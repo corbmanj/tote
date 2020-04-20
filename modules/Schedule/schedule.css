@@ -8,7 +8,7 @@
     font-weight: 700;
 }
 
-.schedule input, button {
+/* .schedule input, button {
     flex: 1 0 auto;
     width: 27%;
     height: 3.25em;
@@ -31,4 +31,44 @@
 .schedule button:disabled {
     background: #dedede;
     cursor: not-allowed;
+} */
+
+/* .schedule .trip-calendar {
+    background: white;
 }
+
+.schedule .DateRangePicker__Month {
+    margin: 0;
+}
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date {
+    border: none;
+}
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date--is-selected {
+    color: inherit
+}
+
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date--today {}
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date--weekend {
+    background-color: white;
+}
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date .DateRangePicker__CalendarSelection {
+    background-color: rgba(155,210,246,0.4);
+    border: none;
+}
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date .DateRangePicker__CalendarSelection--start {
+    border-radius: 0;
+    border-left: 2px solid rgb(67, 107, 218);
+    left: 0;
+}
+
+.schedule .DateRangePicker__Month .DateRangePicker__Date .DateRangePicker__CalendarSelection--end {
+    border-radius: 0;
+    border-right: 2px solid rgb(67, 107, 218);
+    right: 0;
+} */
