@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from 'react'
 import { Icon } from '@blueprintjs/core'
 import { Collapse } from '@blueprintjs/core'
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash.clonedeep'
 import CheckboxSection from './CheckboxSection'
 import { AppContext } from '../AppState'
 
