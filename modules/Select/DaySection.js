@@ -5,7 +5,7 @@ import { AppContext } from '../AppState'
 import OutfitSection from './OutfitSection'
 import Skycons from '../Shared/Skycons'
 import { Collapse } from '@blueprintjs/core'
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash.clonedeep'
 
 export default function DaySection (props) {
   const [isOpen, setIsOpen] = useState(props.index === 0)

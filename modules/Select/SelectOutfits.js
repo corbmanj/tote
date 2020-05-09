@@ -5,7 +5,7 @@ import AdditionalItemSection from './AdditionalItemSection'
 import { Collapse } from '@blueprintjs/core'
 import Modal from '../Shared/Modal'
 import moment from 'moment'
-import cloneDeep from 'lodash/cloneDeep'
+import cloneDeep from 'lodash.clonedeep'
 
 export default function SelectOutfits () {
   const [modalProps, setModalProps] = useState(false)
