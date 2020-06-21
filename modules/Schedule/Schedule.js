@@ -1,6 +1,8 @@
 import React, { useState, useRef, useContext } from 'react'
 import moment from 'moment'
-import DateRangePicker from '@wojtekmaj/react-daterange-picker'
+import { DateRange } from 'react-date-range'
+import 'react-date-range/dist/styles.css'; // main css file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 import axios from 'axios'
 import { AppContext } from '../AppState'
 import './schedule.css'
@@ -10,8 +12,8 @@ const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8
 export default function Schedule () {
   const context = useContext(AppContext)
   const [dates, setDates] = useState({
-    startDate: context.startDate ?  moment(context.startDate).format('YYYY-MM-DD') : null,
-    endDate: context.endDate ?  moment(context.endDate).format('YYYY-MM-DD') : null
+    startDate: context.startDate ?  moment(context.startDate) : moment(new Date()),
+    endDate: context.endDate ?  moment(context.endDate) : moment(new Date())
   })
   const cityState = useRef(context.city || 'City, St')
   
@@ -62,22 +64,21 @@ export default function Schedule () {
     
   }
 
-  function updateDate ({start, end}) {
-    // setDates({...dates, [ev.target.name]: moment(ev.target.value)})
-    console.log(start, end)
-    setDates({ startDate: start, endDate: end })
+  function updateDate ({selection}) {
+    const { startDate, endDate } = selection
+    setDates({startDate: moment(startDate), endDate: moment(endDate)})
   }
 
-  function handleSelectDates (...args) {
-    console.log('arg', args)
-  }
+  // function handleSelectDates (...args) {
+  //   console.log('arg', args)
+  // }
 
-  function handleKeyPress (ev) {
-    if (ev.charCode === 13 && dates.endDate.isAfter(dates.startDate) && context.city) {
-      updateSchedule()
-    }
+  // function handleKeyPress (ev) {
+  //   if (ev.charCode === 13 && dates.endDate.isAfter(dates.startDate) && context.city) {
+  //     updateSchedule()
+  //   }
 
-  }
+  // }
   function autofocus (e) {
     e.target.select()
   }
@@ -89,14 +90,14 @@ export default function Schedule () {
             onClick={updateSchedule}
             disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
           >
-            Reset Schedule
+            Set New Dates
           </button>
           <button
             value='select'
             onClick={() => context.setStage('select')}
             disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
           >
-            Move to Select Outfits
+            Keep Previous Dates
           </button>
         </div>
       )
@@ -112,28 +113,17 @@ export default function Schedule () {
       )
     }
   }
-  console.log('value', dates)
   return (
     <div className="schedule">
       <h1>When is your trip?</h1>
-        <DateRangePicker
-          className="trip-calendar"
+        <DateRange
           onChange={updateDate}
-          value={dates.startDate && dates.endDate && [dates.startDate, dates.endDate]}
-          singleDateRange
-          // numberOfCalendars={2}
+          ranges={[{
+            startDate: dates.startDate.toDate(),
+            endDate: dates.endDate.toDate(),
+            key:"selection"
+          }]}
         />
-        {/* <input
-          defaultValue={dates.startDate ? moment(dates.startDate).format('YYYY-MM-DD') : null}
-          type="date"
-          name="startDate"
-          onChange={updateDate}
-        />
-        <input
-          defaultValue={dates.endDate ? moment(dates.endDate).format('YYYY-MM-DD') : null}
-          type="date" name="endDate"
-          onChange={updateDate}
-        /> */}
         <h1>Where are you going?</h1>
         <input
           ref={cityState}
