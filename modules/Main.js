@@ -13,7 +13,7 @@ import LoadTrips from './LoadTrips'
 import Toast from './Shared/Toast'
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import { AppContext } from './AppState'
-import '../node_modules/@blueprintjs/core/lib/css/blueprint.css'
+import './main.scss'
 
 export default class Main extends Component {
 
@@ -68,9 +68,11 @@ export default class Main extends Component {
 
   render() {
     return (
-      <div>
+      <div className="main">
         {this.conditionallyRenderNavMenu()}
-        {this.renderStage(this.context.stage)}
+        <div className="stage">
+          {this.renderStage(this.context.stage)}
+        </div>
         <CSSTransitionGroup
           transitionName="toast"
           transitionEnter
@@ -81,7 +83,9 @@ export default class Main extends Component {
         >
           {this.context.showToast && this.renderToast()}
         </CSSTransitionGroup>
-        {this.conditionallyRenderFooter()}
+        <div className="footer">
+          {this.conditionallyRenderFooter()}
+        </div>
       </div>
     )
   }

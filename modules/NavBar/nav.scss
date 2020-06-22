@@ -13,27 +13,28 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.navItem input {
-    color: #878787;
+    input {
+        color: #878787;
+    }
 }
 
 .navNumber {
     flex: 1 0 3em;
-}
-
-.navLink.active {
-    border-bottom: 3px solid #6BC142;
-    position: relative;
-    top: 2px;
 }
   
 .navLink {
     border: none;
     background: none;
     font-size: 1em;
-    border-bottom: 3px solid #efefef;
+    outline: none;
+    &.active {
+        border-bottom: 3px solid #6BC142;
+        position: relative;
+        top: 2px;        
+    }
+    &:hover {
+        color: #B5BDC5;
+    }
 }
   
 .disabled {
@@ -41,10 +42,6 @@
     background: none;
     font-size: 1em;
     color: lightgray;
-}
-
-.navLink:hover {
-    color: #B5BDC5;
 }
 
 .flex {

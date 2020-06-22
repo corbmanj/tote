@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Icon } from '@blueprintjs/core'
 import { AppContext } from '../AppState'
-import './footer.css'
+import './footer.scss'
 
 export default function Footer (props) {
     const { setStage } = useContext(AppContext)

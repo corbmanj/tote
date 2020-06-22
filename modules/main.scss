@@ -1,0 +1,11 @@
+@import '~@blueprintjs/core/lib/css/blueprint.css';
+
+.main {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  .stage {
+    flex: 1 1 auto;
+    overflow-y: scroll;
+  }
+}

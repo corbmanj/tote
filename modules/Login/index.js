@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
-import { Icon } from '@blueprintjs/core';
-import { AppContext } from './AppState';
+import { Icon } from '@blueprintjs/core'
+import { AppContext } from '../AppState'
+import './login.scss'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 

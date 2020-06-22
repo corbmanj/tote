@@ -6,6 +6,7 @@ import { Collapse } from '@blueprintjs/core'
 import Modal from '../Shared/Modal'
 import moment from 'moment'
 import cloneDeep from 'lodash.clonedeep'
+import './select.scss'
 
 export default function SelectOutfits () {
   const [modalProps, setModalProps] = useState(false)
@@ -168,7 +169,7 @@ export default function SelectOutfits () {
       return <li key={day.date}>{moment(day.date).format('ddd, MMM Do')}</li>
   }) : []
   return (
-    <div className="flex-container">
+    <div className="select-outfits">
       {modalProps &&
         <Modal
           contentType="CopyOutfit"
@@ -204,10 +205,10 @@ export default function SelectOutfits () {
           </div>
         </Collapse>
       </div>
-      <div className="flex-2">
+      {/* <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
         {additionalItemTypes}
-      </div>
+      </div> */}
     </div>
   )
 }
