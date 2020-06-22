@@ -1,11 +1,9 @@
-import React, { useState, useRef, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import moment from 'moment'
 import { DateRange } from 'react-date-range'
-import 'react-date-range/dist/styles.css'; // main css file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import axios from 'axios'
 import { AppContext } from '../AppState'
-import './schedule.css'
+import './schedule.scss'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
@@ -15,15 +13,15 @@ export default function Schedule () {
     startDate: context.startDate ?  moment(context.startDate) : moment(new Date()),
     endDate: context.endDate ?  moment(context.endDate) : moment(new Date())
   })
-  const cityState = useRef(context.city || 'City, St')
+  const [cityState, setCityState] = useState(context.city)
   
   
   async function updateSchedule () {
     // TODO, if there is already a days array in state, then don't warn before overwriting days
     let stateObj = {}
-    stateObj.city = cityState.current.value
+    stateObj.city = cityState
     try {
-      const place = await axios.get(`${baseUrl}/api/googleapis/maps/${cityState.current.value}`)
+      const place = await axios.get(`${baseUrl}/api/googleapis/maps/${cityState}`)
       const lat = place.data.results[0].geometry.location.lat
       const lng = place.data.results[0].geometry.location.lng
 
@@ -53,7 +51,7 @@ export default function Schedule () {
             return a.date.isBefore(b.date) ? -1 : 1
           })
           context.setSchedule(
-            stateObj.startDate, stateObj.endDate, stateObj.numDays, stateObj.days, cityState.current.value
+            stateObj.startDate, stateObj.endDate, stateObj.numDays, stateObj.days, cityState
           )
         }
         i++
@@ -83,35 +81,34 @@ export default function Schedule () {
     e.target.select()
   }
   function renderButtons () {
+    const isDisabled = !cityState
     if (context.days) {
       return (
         <div>
           <button
+            className={isDisabled ? 'continue-button disabled' : 'continue-button'}
             onClick={updateSchedule}
-            disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
+            disabled={isDisabled}
           >
-            Set New Dates
-          </button>
-          <button
-            value='select'
-            onClick={() => context.setStage('select')}
-            disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
-          >
-            Keep Previous Dates
+            Update Schedule
           </button>
         </div>
       )
     } else {
       return (
         <button
-          value='select'
+          className={isDisabled ? 'continue-button disabled' : 'continue-button'}
+          value="select"
           onClick={updateSchedule}
-          disabled={dates.startDate && dates.endDate ? moment(dates.startDate).isAfter(moment(dates.endDate)) : true}
+          disabled={isDisabled}
         >
           Continue
         </button>
       )
     }
+  }
+  function updateCityState (ev) {
+    setCityState(ev.target.value)
   }
   return (
     <div className="schedule">
@@ -126,11 +123,12 @@ export default function Schedule () {
         />
         <h1>Where are you going?</h1>
         <input
-          ref={cityState}
+          className="city-input"
           placeholder="City, St"
+          value={cityState}
           type="text"
-          defaultValue={context.city}
           onFocus={autofocus}
+          onChange={updateCityState}
         />
       {renderButtons()}
     </div>
