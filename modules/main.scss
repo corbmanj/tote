@@ -1,11 +1,15 @@
 @import '~@blueprintjs/core/lib/css/blueprint.css';
 
 .main {
+  background: #B5BDC5;
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
   flex-direction: column;
   .stage {
     flex: 1 1 auto;
+    max-height: calc(100vh - 12em);
     overflow-y: scroll;
+    padding: 2em 1em 0 1em;
+    width: 400px
   }
 }

@@ -168,6 +168,7 @@ export default function SelectOutfits () {
   const badDaysArray = error.badDays ? error.badDays.map(day => {
       return <li key={day.date}>{moment(day.date).format('ddd, MMM Do')}</li>
   }) : []
+
   return (
     <div className="select-outfits">
       {modalProps &&
@@ -178,33 +179,31 @@ export default function SelectOutfits () {
           confirmAction={copyOutfits}
         />
       }
-      <div className="flex-5">
-        <h2 className="header">Select Outfits</h2>
-        <ul className="sectionList">
-          {days}
-        </ul>
+      {/* <h2 className="header">Select Outfits</h2> */}
+      <div className="day-list">
+        {days}
         <button
-          style={{float: 'right'}}
+          className="continue"
           onClick={updateOutfits}
         >
-          Assign Items
+          Continue
         </button>
-        <br />
-        <Collapse isOpen={error.isOutfitError}>
-          <div className="error">There are errors with the following outfits:
-            <ul>
-              {badOutfitsArray}
-            </ul>
-          </div>
-        </Collapse>
-        <Collapse isOpen={error.isDayError}>
-          <div className="error">Please add at least one outfit to each of the following days:
-            <ul>
-              {badDaysArray}
-            </ul>
-          </div>
-        </Collapse>
       </div>
+      
+      <Collapse isOpen={error.isOutfitError}>
+        <div className="error">There are errors with the following outfits:
+          <ul>
+            {badOutfitsArray}
+          </ul>
+        </div>
+      </Collapse>
+      <Collapse isOpen={error.isDayError}>
+        <div className="error">Please add at least one outfit to each of the following days:
+          <ul>
+            {badDaysArray}
+          </ul>
+        </div>
+      </Collapse>
       {/* <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
         {additionalItemTypes}

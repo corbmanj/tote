@@ -46,25 +46,26 @@ export default function DaySection (props) {
   })
   const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
   return (
-    <li>
-      <h4 onClick={toggleOpen}>
-        <Icon icon={carotClass} />
+    <li className="day-section">
+      <div className="day-details">
+        {/* <Icon icon={carotClass} /> */}
         {moment(props.day.date).format('ddd, MMM Do YYYY')}
         <Skycons
           color='black' 
           icon={props.day.icon.toUpperCase()}
           autoplay={true}
         />
-      </h4>
-        <p>{props.day.summary}</p>
-        <p>High: {props.day.high} &deg;F Low: {props.day.low}&deg; F</p>
-      <Collapse isOpen={isOpen}>
-        <ul className="sectionList">
-          {outfitArray}
-        </ul>
-        <button onClick={addOutfit}>Add Outfit</button>
-        <hr />
-      </Collapse>
+        <div>{props.day.summary}</div>
+        <div className="day-temps">
+          <div>High: {props.day.high} &deg;F</div>
+          <div>Low: {props.day.low}&deg; F</div>
+        </div>
+      </div>
+      <div className="outfit-list">
+        {outfitArray}
+        <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
+      </div>
+      
     </li>
   )
 }
