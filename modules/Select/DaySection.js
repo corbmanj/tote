@@ -46,7 +46,7 @@ export default function DaySection (props) {
   })
   const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
   return (
-    <li className="day-section">
+    <div className="day-section">
       <div className="day-details">
         {/* <Icon icon={carotClass} /> */}
         {moment(props.day.date).format('ddd, MMM Do YYYY')}
@@ -65,7 +65,6 @@ export default function DaySection (props) {
         {outfitArray}
         <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
       </div>
-      
-    </li>
+    </div>
   )
 }

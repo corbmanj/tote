@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import moment from 'moment'
-import { Icon } from '@blueprintjs/core'
 import AssignOutfit from './AssignOutfit'
-import { Collapse } from '@blueprintjs/core'
+import Skycons from '../Shared/Skycons'
 
 export default function AssignDay (props) {
   const [isOpen, setIsOpen] = useState(props.index === 0)
@@ -27,18 +26,23 @@ export default function AssignDay (props) {
   const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
 
   return (
-    <li>
-      <h3 onClick={toggleOpen}>
-        <Icon icon={carotClass} />
+    <div className="day-section">
+      <div className="day-details">
         {moment(props.day.date).format('ddd, MMM Do YYYY')}
-      </h3>
-      <Collapse isOpen={isOpen}>
-        <p>{props.day.summary}</p>
-        <p>High: {props.day.high} &deg;F Low: {props.day.low}&deg; F</p>
-        <ul className="sectionList">
-          {outfits}
-        </ul>
-      </Collapse>
-    </li>
+        <Skycons
+          color='black' 
+          icon={props.day.icon.toUpperCase()}
+          autoplay={true}
+        />
+        <div>{props.day.summary}</div>
+        <div className="day-temps">
+          <div>High: {props.day.high} &deg;F</div>
+          <div>Low: {props.day.low}&deg; F</div>
+        </div>
+      </div>
+      <div className="outfit-list">
+        {outfits}
+      </div>
+    </div>
   )
 }

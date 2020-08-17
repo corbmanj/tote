@@ -3,6 +3,7 @@ import Modal from '../Shared/Modal'
 import AssignDay from './AssignDay'
 import AdditionalItemSection from '../Select/AdditionalItemSection'
 import { AppContext } from '../AppState'
+import './assign.scss'
 
 export default function AssignItems () {
   const [editingNamedItems, setEditingNamedItems] = useState(false)
@@ -94,7 +95,7 @@ export default function AssignItems () {
     )
   })
   return (
-    <div className="flex-container">
+    <div className="assign-items">
       {editingNamedItems &&
         <Modal
           contentType="NamedItems"
@@ -103,19 +104,25 @@ export default function AssignItems () {
           deleteNamedItem={deleteNamedItem}
         />
       }
-      <div className="flex-5">
-        <button style={{float: 'right'}} onClick={toggleModal} disabled={!context.tote.namedItems}>Edit Named Items</button>
-        <h2 className="header">Pack Items</h2>
-        <ul className="sectionList">
+      {/* <div className="flex-5">
+        <button style={{float: 'right'}}
+          onClick={toggleModal}
+          disabled={!context.tote.namedItems}
+        >
+          Edit Named Items
+        </button> */}
+        {/* <h2 className="header">Pack Items</h2> */}
+        <div className="day-list">
           {days}
-        </ul>
+          <button
+            className="continue"
+            onClick={updateStage}
+          >
+            Continue
+          </button>
+        </div>
         { error ? <span style={{float: 'right'}} className="error">{errorMsg}</span> : null }
-        <button
-          style={{float: 'right'}}
-          onClick={updateStage}
-        >Pack Items</button>
-        <br />
-      </div>
+      {/* </div> */}
       <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
         {additionalItemTypes}
