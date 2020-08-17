@@ -86,7 +86,7 @@ export class AppProvider extends React.Component {
         this.setState({ tote }, () => conditionallySave())
     }
 
-    setTrip = (trip) => {
+    setTrip = async (trip) => {
         this.setState({
             tripId: trip.tripId,
             additionalItems: trip.additionalItems,

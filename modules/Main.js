@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { Switch, Route } from 'react-router-dom'
 import Login from './Login'
 import Schedule from './Schedule/Schedule'
 import SelectOutfits from './Select/SelectOutfits'
@@ -66,12 +67,46 @@ export default class Main extends Component {
     }
   }
 
+  renderStageNew = () => {
+    return (
+      <Switch>
+        <Route path="/load">
+          <LoadTrips />
+        </Route>
+        <Route path="/setup">
+          <Setup />
+        </Route>
+        <Route path="/schedule">
+          <Schedule />
+        </Route>
+        <Route path="/select">
+          <SelectOutfits />
+        </Route>
+        <Route path="/assign">
+          <AssignItems />
+        </Route>
+        <Route path="/packing">
+          <PackingList />
+        </Route>
+        <Route path="/home">
+          <GetStarted />
+        </Route>
+        <Route path="/">
+          <div>
+            <h1 className="welcome">Welcome to Tote!</h1>
+              <Login />
+          </div>
+        </Route>
+      </Switch>
+    )
+  }
+
   render() {
     return (
       <div className="main">
         {this.conditionallyRenderNavMenu()}
         <div className="stage">
-          {this.renderStage(this.context.stage)}
+          {this.renderStageNew(this.context.stage)}
         </div>
         <CSSTransitionGroup
           transitionName="toast"
