@@ -1,0 +1,60 @@
+.select-outfits {
+    .day-list {
+      display: flex;
+      flex-direction: column;
+      .continue {
+        width: 20%;
+        margin: 20px auto;
+      }
+    }
+    .day-section {
+      display: flex;
+      flex-direction: column;
+      .day-details {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .day-temps {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+      .outfit-list {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        .outfit-card {
+          background: #fefefe;
+          width: 90%;
+          margin: 10px 0;
+          box-shadow: -2px 2px 2px darkgrey;
+
+          .outfit-card-header {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+
+            select {
+              margin-left: auto;
+            }
+          }
+
+          .outfit-details {
+            .buttons {
+              display: flex;
+              justify-content: flex-end;
+              button {
+                margin: 2px 5px;
+              }
+            }
+          }
+        }
+        .add-outfit {
+          width: 90%;
+          margin: 10px 0;
+        }
+      }
+    }
+    
+  }

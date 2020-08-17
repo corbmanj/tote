@@ -89,48 +89,47 @@ export default function OutfitSection (props) {
   }
 
   function renderOutfitDetails () {
-    const outfitNames = context.outfitTypes.map((type, key) => (
-        <option key={key} value={type.type}>{type.type}</option>
-      )
-    )
     return (
-      <li>
-        <Collapse isOpen={props.outfit.expanded} transitionDuration={400}>
-          <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
-            <option value={null}>Select one...</option>
-            {outfitNames}
-          </select>
-          <span>
-          {disabled ?
-            <button className="outfittype-select" onClick={editOutfit}>Edit Outfit</button>
+      <Collapse isOpen={props.outfit.expanded} transitionDuration={400}>
+        {outfitType &&
+          <CheckboxSection
+            outfit={props.outfit}
+            outfitType={outfitType}
+            toggle={toggleItem}
+            disabled={disabled}
+          />
+        }
+        <div className="buttons">
+          {disabled
+            ? <button className="outfittype-select" onClick={editOutfit}>Edit Outfit</button>
             : <button className="outfittype-select" disabled={!outfitType} onClick={saveOutfit}>Save Outfit</button>
           }
-            <button className="outfittype-select" onClick={removeOutfit}>Remove Outfit</button>
-            <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
-          </span>
-          <br />
-          {outfitType &&
-            <CheckboxSection
-              outfit={props.outfit}
-              outfitType={outfitType}
-              toggle={toggleItem}
-              disabled={disabled}
-            />}
-        </Collapse>
-      </li>
+          <button className="outfittype-select" onClick={removeOutfit}>Remove Outfit</button>
+          <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
+        </div>
+      </Collapse>
     )
   }
   const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
+  const outfitNames = context.outfitTypes.map((type, key) => (
+    <option key={key} value={type.type}>{type.type}</option>
+  ))
   return (
-    <li>
-      <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
-      <h4 onDoubleClick={renameOutfit} className="inline-header">
-        {renaming ? renderRenaming() : renderName()}
-        {outfitType ? ` (${outfitType})` : null}
-      </h4>
-      <ul className="sectionList">
-          {renderOutfitDetails()}
-        </ul>
-    </li>
+    <div className="outfit-card">
+      <div className="outfit-card-header">
+        <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
+        <h4 onDoubleClick={renameOutfit} className="inline-header">
+          {renaming ? renderRenaming() : renderName()}
+          {outfitType ? ` (${outfitType})` : null}
+        </h4>
+        <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
+          <option value={null}>Select one...</option>
+          {outfitNames}
+        </select>
+      </div>
+      <div className="outfit-details">
+        {renderOutfitDetails()}
+      </div>
+    </div>
   )
 }

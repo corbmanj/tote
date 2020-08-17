@@ -1,7 +1,7 @@
 import React from 'react'
 import NavItem from './NavItem'
 import * as svg from '../../public/svg/navBar'
-import './nav.css'
+import './nav.scss'
 
 function getStageValue(value) {
   switch(value.toLowerCase()) {

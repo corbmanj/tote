@@ -2,6 +2,21 @@ var router = require('express').Router();
 
 //db connection
 var pg = require('pg')
+
+config = {
+  user: process.env.RDS_USERNAME,
+    host: process.env.RDS_HOSTNAME,
+    database: process.env.RDS_DB_NAME,
+    password: process.env.RDS_PASSWORD,
+    port: process.env.RDS_PORT,
+  // connectionString?: string, // e.g. postgres://user:password@host:5432/database
+  // ssl?: any, // passed directly to node.TLSSocket, supports all tls.connect options
+  // types?: any, // custom type parsers
+  // statement_timeout?: number, // number of milliseconds before a statement in query will time out, default is no timeout
+  // query_timeout?: number, // number of milliseconds before a query call will timeout, default is no timeout
+  // connectionTimeoutMillis?: number, // number of milliseconds to wait for connection, default is no timeout
+}
+// 
 let client = new pg.Client('postgres://localhost:5432/tote_local');
 // if (process.env.NODE_ENV === 'production') {
 //   client = new pg.Client({

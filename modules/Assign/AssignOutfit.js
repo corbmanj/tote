@@ -1,46 +1,82 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { Icon } from '@blueprintjs/core'
 import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
 import { Collapse } from '@blueprintjs/core'
 
+function NewMenu (props) {
+  const [active, setActive] = useState('one')
+  const leftThings = ['one', 'two', 'three', 'four', 'five']
+  const rightThings = ['aaay', 'beee', 'ceeee', 'deee', 'eeeeey']
+  function handleMenuClick (name) {
+    setActive(name)
+  }
+  return (
+    <div className="item-picker">
+      <div className="left-column-nav">
+        {leftThings.map(thing => (
+          <div
+            key={thing}
+            className={thing === active ? 'active' : ''}
+            name={thing}
+            onClick={() => handleMenuClick(thing)}
+          >
+            {thing}
+            {thing === active && <div className="triangle"></div>}
+          </div>
+        ))}
+      </div>
+      <div className="right-column">
+        {rightThings.map(thing => (<div key={thing}>{thing}</div>))}
+      </div>
+    </div>
+  )
+}
+
 export default function AssignOutfit (props) {
   const context = useContext(AppContext)
-  const updateActiveOutfit = () => {
-    context.setExpanded(props.dayIndex, props.index)
+  const { dayIndex, index, updateNamedItems, updateNamedItemInAllOutfits, outfit } = props
+
+  function updateActiveOutfit () {
+    context.setExpanded(dayIndex, index)
   }
-  const renderItems = () => {
-    const items = props.outfit.items.filter((item) => {
+
+
+  function renderItems () {
+    const items = outfit.items
+    .filter((item) => {
       return item.dropdown === true && item.isNotIncluded !== true
-    }).map((item, index) => {
+    })
+    .map((item, index) => {
       return (
         <AssignItem
           key={index}
-          dayIndex={props.dayIndex}
-          outfitIndex={props.index}
+          dayIndex={dayIndex}
+          outfitIndex={index}
           index={index}
           item={item}
-          updateNamedItems={props.updateNamedItems}
-          updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
+          updateNamedItems={updateNamedItems}
+          updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
         />
       )
     })
     return <div>{items}</div>
   }
-  const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
+  const carotClass = outfit.expanded ? 'chevron-down' : 'chevron-right'
 
   return (
-    <li>
-      <h4 className="outfit" onClick={updateActiveOutfit}>
-        <Icon icon={carotClass} />
-        {props.outfit.realName}: {props.outfit.type}
-      </h4>
-        <Collapse isOpen={props.outfit.expanded}>
-          <ul className="sectionList">
-            {renderItems()}
-          </ul>
+    <div className="outfit-card">
+      <div className="outfit-card-header" onClick={updateActiveOutfit}>
+        <div className="outfit-card-toggle">
+          <Icon icon={carotClass} />
+          <div>{outfit.realName}</div>
+        </div>
+        <div className="outfit-type">{outfit.type}</div>
+      </div>
+        <Collapse isOpen={outfit.expanded}>
+          <NewMenu />
+          {/*renderItems()*/}
         </Collapse>
-      <hr />
-    </li>
+    </div>
   )
 }
