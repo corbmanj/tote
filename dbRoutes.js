@@ -169,6 +169,20 @@ router.get('/tote/getTrips/:userid', function(req, response) {
     })
 });
 
+// get a saved tote for a user by id
+router.get('/tote/getTrip/:userid/:tripId', function(req, response) {
+  client.query(`
+    SELECT trip
+    FROM saved_trips_json
+    WHERE user_id=$1
+    AND id=$2;`,
+    [req.params.userid, req.params.tripId]
+  )
+    .then(result => {
+      response.json(result.rows.map(row => row.trip))
+    })
+});
+
 // initialize a new trip (saved tote)
 router.post('/tote/newTrip/:userid', function(req, response) {
   client.query(`

@@ -19,11 +19,15 @@ export class AppProvider extends React.Component {
             showToast: false,
             tote: {}
         };
+        // if localStorage.userId, load user info
+
+        // if localStorage.tripId, load trip info
 
         return defaultState;
     }
 
     setUser = (userId) => {
+        window.localStorage.setItem('userId', userId)
         this.setState({ userId })
     }
 
@@ -70,7 +74,7 @@ export class AppProvider extends React.Component {
         this.setState({ numDays: numDays })
     }
 
-    setSchedule = (startDate, endDate, numDays, days, city) => {
+    setSchedule = async (startDate, endDate, numDays, days, city) => {
         this.setState({
             startDate,
             endDate,
@@ -86,7 +90,8 @@ export class AppProvider extends React.Component {
         this.setState({ tote }, () => conditionallySave())
     }
 
-    setTrip = (trip) => {
+    setTrip = async (trip) => {
+        window.localStorage.setItem('tripId', trip.tripId)
         this.setState({
             tripId: trip.tripId,
             additionalItems: trip.additionalItems,
@@ -376,6 +381,38 @@ export class AppProvider extends React.Component {
         }
     }
 
+    handleReload = async () => {
+        if (!this.state.userId && !this.state.tripId) {
+          var myHeaders = new Headers();
+          myHeaders.append('Content-Type', 'application/json');
+    
+          try {
+            const userId = window.localStorage.getItem('userId')
+            const tripId = window.localStorage.getItem('tripId')
+            if (userId && tripId) {
+              const url = `${baseUrl}/db/tote/getTrip/${userId}/${tripId}`
+              const response = await axios.get(url,
+                {
+                    method: 'GET',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                }
+              )
+              if (response.status >= 400) {
+                throw new Error("Bad response from server")
+              }
+              this.setTrip(response.data[0])
+            }
+            else {
+                this.setStage('login')
+            }  
+          } catch (err) {
+            console.error(err)
+          }
+        }
+    }
+
     render() {
         const { children } = this.props;
 
@@ -425,6 +462,7 @@ export class AppProvider extends React.Component {
                     updateOutfitItem: this.updateOutfitItem,
                     addNamedItem: this.addNamedItem,
                     rawState: this.state,
+                    handleReload: this.handleReload
                 }}
             >
                 {children}
