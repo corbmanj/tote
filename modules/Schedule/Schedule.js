@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 import { DateRange } from 'react-date-range'
 import axios from 'axios'
@@ -8,12 +9,22 @@ import './schedule.scss'
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default function Schedule () {
+  const history = useHistory()
   const context = useContext(AppContext)
   const [dates, setDates] = useState({
     startDate: context.startDate ?  moment(context.startDate) : moment(new Date()),
     endDate: context.endDate ?  moment(context.endDate) : moment(new Date())
   })
   const [cityState, setCityState] = useState(context.city)
+
+  useEffect(() => {
+    async function handleReload () {
+      await context.handleReload()
+      setDates({startDate: context.startDate || moment(new Date()), endDate: context.endDate || moment(new Date())})
+      setCityState(context.city)
+    }
+    handleReload()
+  }, [])
   
   
   async function updateSchedule () {
@@ -50,9 +61,10 @@ export default function Schedule () {
           stateObj.days = stateObj.days.sort(function(a, b) {
             return a.date.isBefore(b.date) ? -1 : 1
           })
-          context.setSchedule(
+          await context.setSchedule(
             stateObj.startDate, stateObj.endDate, stateObj.numDays, stateObj.days, cityState
           )
+          history.push('/select')
         }
         i++
       }

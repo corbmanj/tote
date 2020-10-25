@@ -1,21 +1,25 @@
 import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import { AppContext } from '../AppState'
 
 export default function NavItem (props) {
   const context = useContext(AppContext)
+  const history = useHistory()
+  const { stage, svg, classNames, disabled } = props
   function updateStage (ev) {
     context.setStage(ev.target.value.toLowerCase())
+    history.push(`/${ev.target.value.toLowerCase()}`)
   }
 
   return (
-    <label key={props.stage} className="navItem">
-        <div className="navNumber">{props.svg}</div>
+    <label key={stage} className="navItem">
+        <div className="navNumber">{svg}</div>
         <input
-          className={props.classNames}
+          className={classNames}
           type="button"
-          value={props.stage}
+          value={stage}
           onClick={updateStage}
-          disabled={props.disabled}
+          disabled={disabled}
         />
     </label>
   )
