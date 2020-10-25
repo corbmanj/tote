@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
-import { Icon } from '@blueprintjs/core'
+import DeleteIcon from '@material-ui/icons/Delete';
 import Modal from './Shared/ConfirmModal'
 import { AppContext } from './AppState';
 
 const baseUrl = process.env.API_URL || 'http://localhost:8080'
 
-export default function LoadTrips (props) {
+export default function LoadTrips () {
   const context = useContext(AppContext)
   const history = useHistory()
   const [state, setState] = useState({})
@@ -56,7 +56,7 @@ export default function LoadTrips (props) {
         return (
           <li key={index} onClick={() => loadTrip(trip)} className="card">
             <p>City: {trip.city}
-              <Icon icon="delete" iconSize={15} onClick={(ev) => handleDeleteClick(ev, trip)} />
+              <DeleteIcon onClick={(ev) => handleDeleteClick(ev, trip)} />
             </p>
             <p>Start: {moment(trip.startDate).format('dddd, MMMM Do')}</p>
             <p>End: {moment(trip.endDate).format('dddd, MMMM Do')}</p>

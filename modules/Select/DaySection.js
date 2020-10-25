@@ -1,10 +1,8 @@
 import React, { useState, useContext } from 'react'
 import moment from 'moment'
-import { Icon } from '@blueprintjs/core'
 import { AppContext } from '../AppState'
 import OutfitSection from './OutfitSection'
 import Skycons from '../Shared/Skycons'
-import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash.clonedeep'
 
 export default function DaySection (props) {
@@ -48,7 +46,6 @@ export default function DaySection (props) {
   return (
     <div className="day-section">
       <div className="day-details">
-        {/* <Icon icon={carotClass} /> */}
         {moment(props.day.date).format('ddd, MMM Do YYYY')}
         <Skycons
           color='black' 

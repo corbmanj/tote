@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button } from '@blueprintjs/core'
+import IconButton from '@material-ui/core/IconButton';
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 
 export default function SetupItem (props) {
   function updateItem (e) {
@@ -19,7 +20,11 @@ export default function SetupItem (props) {
   const { type, dropdown, parentType } = props.item
   return (
     <tr>
-      <td><Button disabled={props.outfitCount} icon="delete" onClick={removeItem} minimal={true} /></td>
+      <td>
+        <IconButton disabled={props.outfitCount} onClick={removeItem} minimal={true}>
+          <AddCircleOutlineIcon />
+        </IconButton>
+      </td>
       <td><input type="text" id="type" value={type} onChange={updateItem} /></td>
       <td><input type="text" id="parentType" value={dropdown ? parentType : 'N/A'} onChange={updateItem} disabled={!dropdown}/></td>
       <td><input type="checkbox" checked={dropdown} onChange={toggleDropdown}/></td>

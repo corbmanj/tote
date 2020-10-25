@@ -1,12 +1,11 @@
 import React, { useEffect, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Icon } from '@blueprintjs/core'
 import { AppContext } from './AppState'
 import axios from 'axios'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default function GetStarted (props) {
+export default function GetStarted () {
   const context = useContext(AppContext)
   const history = useHistory()
   useEffect(() => {
@@ -24,7 +23,7 @@ export default function GetStarted (props) {
   }, []
   )
 
-  async function initializeTrip (ev) {
+  async function initializeTrip () {
     try {
       const response = await axios.post(`${baseUrl}/db/tote/newTrip/${context.userId}`)
       context.clearTote()

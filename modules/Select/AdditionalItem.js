@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { Icon } from '@blueprintjs/core'
+import DeleteIcon from '@material-ui/icons/Delete';
+import CheckIcon from '@material-ui/icons/Check';
 
 export default function AdditionalItem (props) {
   const [editing, setEditing] = useState(props.item === 'new item')
@@ -40,8 +41,8 @@ export default function AdditionalItem (props) {
           onChange={updateItemName}
           onKeyPress={logEvent}
         />
-        <Icon icon="tick" onClick={toggleEditing}/>
-        <Icon icon="delete" onClick={deleteItem} />
+        <CheckIcon onClick={toggleEditing}/>
+        <DeleteIcon icon="delete" onClick={deleteItem} />
       </div>
     )
   }

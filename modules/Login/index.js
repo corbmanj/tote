@@ -2,13 +2,13 @@ import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
-import { Icon } from '@blueprintjs/core'
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
 import { AppContext } from '../AppState'
 import './login.scss'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default function Login (props) {
+export default function Login () {
   const context = useContext(AppContext)
   const history = useHistory()
   const [state, setState] = useState({
@@ -78,7 +78,7 @@ export default function Login (props) {
           <input type="password" name="password" placeholder="password" onChange={handleChange} />
         </div>
         <div className="inputRow">
-          <Icon icon="briefcase" color="#757575" />
+          <BusinessCenterIcon /> {/*color="#757575"*/}
           <input type="submit" value="continue" disabled={!state.email || !state.password} />
         </div>
       </form>

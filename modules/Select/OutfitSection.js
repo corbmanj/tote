@@ -1,5 +1,6 @@
 import React, { useState, useRef, useContext } from 'react'
-import { Icon } from '@blueprintjs/core'
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { Collapse } from '@blueprintjs/core'
 import cloneDeep from 'lodash.clonedeep'
 import CheckboxSection from './CheckboxSection'
@@ -110,14 +111,14 @@ export default function OutfitSection (props) {
       </Collapse>
     )
   }
-  const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
+  const CarrotIcon = props.outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
   const outfitNames = context.outfitTypes.map((type, key) => (
     <option key={key} value={type.type}>{type.type}</option>
   ))
   return (
     <div className="outfit-card">
       <div className="outfit-card-header">
-        <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
+        <CarrotIcon onClick={toggleOutfitExpanded} />
         <h4 onDoubleClick={renameOutfit} className="inline-header">
           {renaming ? renderRenaming() : renderName()}
           {outfitType ? ` (${outfitType})` : null}

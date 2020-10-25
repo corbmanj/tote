@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react'
-import { Icon } from '@blueprintjs/core'
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
 import { Collapse } from '@blueprintjs/core'
 
-function NewMenu (props) {
+function NewMenu () {
   const [active, setActive] = useState('one')
   const leftThings = ['one', 'two', 'three', 'four', 'five']
   const rightThings = ['aaay', 'beee', 'ceeee', 'deee', 'eeeeey']
@@ -62,13 +63,13 @@ export default function AssignOutfit (props) {
     })
     return <div>{items}</div>
   }
-  const carotClass = outfit.expanded ? 'chevron-down' : 'chevron-right'
+  const CarrotIcon = outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
 
   return (
     <div className="outfit-card">
       <div className="outfit-card-header" onClick={updateActiveOutfit}>
         <div className="outfit-card-toggle">
-          <Icon icon={carotClass} />
+          <CarrotIcon />
           <div>{outfit.realName}</div>
         </div>
         <div className="outfit-type">{outfit.type}</div>

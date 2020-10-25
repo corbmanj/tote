@@ -1,5 +1,5 @@
 import React from 'react'
-import { Icon } from '@blueprintjs/core'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import AdditionalItem from './AdditionalItem'
 
 export default function AdditionalItemSection (props) {
@@ -25,7 +25,7 @@ export default function AdditionalItemSection (props) {
   return (
     <div>
       <h4>{props.type}</h4>
-      <Icon icon="add" onClick={addItem} />
+      <AddCircleOutlineIcon onClick={addItem} />
       {items}
     </div>
   )
