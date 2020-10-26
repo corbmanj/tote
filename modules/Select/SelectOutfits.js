@@ -3,7 +3,10 @@ import { useHistory } from 'react-router-dom'
 import { AppContext } from '../AppState'
 import DaySection from './DaySection'
 // import AdditionalItemSection from './AdditionalItemSection'
-import { Collapse } from '@blueprintjs/core'
+// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import Accordion from '@material-ui/core/Accordion';
+// import AccordionDetails from '@material-ui/core/AccordionDetails';
+// import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Modal from '../Shared/Modal'
 import moment from 'moment'
 import cloneDeep from 'lodash.clonedeep'
@@ -207,20 +210,20 @@ export default function SelectOutfits () {
         </button>
       </div>
       
-      <Collapse isOpen={error.isOutfitError}>
+      {/* <Collapse isOpen={error.isOutfitError}> */}
         <div className="error">There are errors with the following outfits:
           <ul>
             {badOutfitsArray}
           </ul>
         </div>
-      </Collapse>
-      <Collapse isOpen={error.isDayError}>
+      {/* </Collapse>
+      <Collapse isOpen={error.isDayError}> */}
         <div className="error">Please add at least one outfit to each of the following days:
           <ul>
             {badDaysArray}
           </ul>
         </div>
-      </Collapse>
+      {/* </Collapse> */}
       {/* <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
         {additionalItemTypes}

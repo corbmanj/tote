@@ -1,9 +1,12 @@
 import React, { useContext, useState } from 'react'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
-import { Collapse } from '@blueprintjs/core'
 
 function NewMenu () {
   const [active, setActive] = useState('one')
@@ -63,21 +66,23 @@ export default function AssignOutfit (props) {
     })
     return <div>{items}</div>
   }
-  const CarrotIcon = outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
+  // const CarrotIcon = outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
 
   return (
-    <div className="outfit-card">
-      <div className="outfit-card-header" onClick={updateActiveOutfit}>
-        <div className="outfit-card-toggle">
-          <CarrotIcon />
-          <div>{outfit.realName}</div>
-        </div>
+    <Accordion expanded={outfit.expanded} onChange={updateActiveOutfit}>
+      {/*<div className="outfit-card">*/}
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        {/* className="outfit-card-header" onClick={updateActiveOutfit}> */}
+        {/* <div className="outfit-card-toggle"> */}
+          {/* <CarrotIcon /> */}
+        <div>{outfit.realName}</div>
+        {/* </div> */}
         <div className="outfit-type">{outfit.type}</div>
-      </div>
-        <Collapse isOpen={outfit.expanded}>
-          <NewMenu />
+      </AccordionSummary>
+      <AccordionDetails>
+        <NewMenu />
           {/*renderItems()*/}
-        </Collapse>
-    </div>
+      </AccordionDetails>
+    </Accordion>
   )
 }

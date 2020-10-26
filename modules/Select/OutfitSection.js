@@ -1,7 +1,10 @@
 import React, { useState, useRef, useContext } from 'react'
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { Collapse } from '@blueprintjs/core'
+// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import cloneDeep from 'lodash.clonedeep'
 import CheckboxSection from './CheckboxSection'
 import { AppContext } from '../AppState'
@@ -91,7 +94,7 @@ export default function OutfitSection (props) {
 
   function renderOutfitDetails () {
     return (
-      <Collapse isOpen={props.outfit.expanded} transitionDuration={400}>
+      <AccordionDetails>
         {outfitType &&
           <CheckboxSection
             outfit={props.outfit}
@@ -108,29 +111,33 @@ export default function OutfitSection (props) {
           <button className="outfittype-select" onClick={removeOutfit}>Remove Outfit</button>
           <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
         </div>
-      </Collapse>
+      </AccordionDetails>
     )
   }
-  const CarrotIcon = props.outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
+  // const CarrotIcon = props.outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
   const outfitNames = context.outfitTypes.map((type, key) => (
     <option key={key} value={type.type}>{type.type}</option>
   ))
   return (
-    <div className="outfit-card">
-      <div className="outfit-card-header">
-        <CarrotIcon onClick={toggleOutfitExpanded} />
-        <h4 onDoubleClick={renameOutfit} className="inline-header">
-          {renaming ? renderRenaming() : renderName()}
-          {outfitType ? ` (${outfitType})` : null}
-        </h4>
-        <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
-          <option value={null}>Select one...</option>
-          {outfitNames}
-        </select>
-      </div>
-      <div className="outfit-details">
-        {renderOutfitDetails()}
-      </div>
-    </div>
+    <Accordion expanded={props.outfit.expanded} onChange={toggleOutfitExpanded}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1a-content"
+        id="panel1a-header"
+      >
+         <h4 onDoubleClick={renameOutfit} className="inline-header">
+           {renaming ? renderRenaming() : renderName()}
+           {outfitType ? ` (${outfitType})` : null}
+         </h4>
+         <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
+           <option value={null}>Select one...</option>
+           {outfitNames}
+         </select>
+      </AccordionSummary>
+       <AccordionDetails>
+         {renderOutfitDetails()}
+       </AccordionDetails>
+    </Accordion>
+    
   )
 }
