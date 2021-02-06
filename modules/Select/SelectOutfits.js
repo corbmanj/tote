@@ -149,13 +149,11 @@ export default function SelectOutfits () {
   }
   
   const daysArray = days.map((day, index) => {
-    const imageName = day.icon + index
     return(
       <DaySection
         key={index}
         index={index}
         day={day}
-        image={imageName}
         updateTote={updateTote}
         updateOutfitName={updateOutfitName}
         renderCopyModal={renderCopyModal}

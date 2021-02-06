@@ -14,9 +14,11 @@
         display: flex;
         align-items: center;
         justify-content: space-around;
+        margin: 0 10px;
         .day-temps {
           display: flex;
           flex-direction: column;
+          align-items: flex-end;
         }
       }
       .outfit-list {
@@ -24,6 +26,19 @@
         flex-direction: column;
         align-items: center;
         
+        .accordion-summary .MuiAccordionSummary-content {
+          align-items: center;
+          .outfit-name {
+            margin-right: 15px;
+          }
+        }
+        
+        .accordion-content {
+          .checkboxes {
+            padding-top: 12px;
+          } 
+        }
+
         .outfit-card {
           background: #fefefe;
           width: 90%;
@@ -34,6 +49,10 @@
             display: flex;
             align-items: center;
             margin: 0 10px;
+
+            .outfit-name {
+              margin-right: 15px;
+            }
 
             select {
               margin-left: auto;
@@ -51,7 +70,7 @@
           }
         }
         .add-outfit {
-          width: 90%;
+          width: 100%;
           margin: 10px 0;
         }
       }

@@ -6,7 +6,8 @@ import Skycons from '../Shared/Skycons'
 import cloneDeep from 'lodash.clonedeep'
 
 export default function DaySection (props) {
-  const [isOpen, setIsOpen] = useState(props.index === 0)
+  const { index, day, updateTote, updateOutfitName, renderCopyModal } = props
+  const [isOpen, setIsOpen] = useState(index === 0)
   const context = useContext(AppContext)
   function toggleOpen () {
     setIsOpen(!isOpen)
@@ -14,48 +15,47 @@ export default function DaySection (props) {
 
   function updateDay (key, outfit, inc) {
     // TODO: maybe use context.setOutfit
-    let tempState = [...props.day.outfits]
+    let tempState = [...day.outfits]
     const outfitCopy = cloneDeep(outfit)
     tempState[key].items = outfitCopy.items
     tempState[key].name = outfitCopy.name
     tempState[key].type = outfitCopy.type
-    props.updateTote(props.index, key, outfitCopy, inc)
+    updateTote(index, key, outfitCopy, inc)
   }
   function updateName (key, name) {
-    let tempState = props.day.outfits
+    let tempState = day.outfits
     tempState[key].realName = name
-    props.updateOutfitName(props.index, key, name)
+    updateOutfitName(index, key, name)
   }
   function addOutfit () {
-    context.addOutfit(props.index)
+    context.addOutfit(index)
   }
-  const outfitArray = props.day.outfits.map((outfit, index) => {
+  const outfitArray = day.outfits.map((outfit, outfitIndex) => {
     return (
       <OutfitSection
-        key={index}
-        index={index}
-        dayIndex={props.index}
+        key={outfitIndex}
+        index={outfitIndex}
+        dayIndex={index}
         outfit={outfit}
         updateDay={updateDay}
         updateName={updateName}
-        renderCopyModal={props.renderCopyModal}
+        renderCopyModal={renderCopyModal}
       />
     )
   })
-  const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
   return (
     <div className="day-section">
       <div className="day-details">
-        {moment(props.day.date).format('ddd, MMM Do YYYY')}
+        {moment(day.date).format('ddd, MMM Do')}
         <Skycons
           color='black' 
-          icon={props.day.icon.toUpperCase()}
+          icon={day.icon.toUpperCase()}
           autoplay={true}
         />
-        <div>{props.day.summary}</div>
+        <div>{day.summary}</div>
         <div className="day-temps">
-          <div>High: {props.day.high} &deg;F</div>
-          <div>Low: {props.day.low}&deg; F</div>
+          <div>High: {day.high} &deg;F</div>
+          <div>Low: {day.low}&deg; F</div>
         </div>
       </div>
       <div className="outfit-list">

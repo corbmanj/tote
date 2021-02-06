@@ -73,8 +73,8 @@ export default class ReactSkycons extends React.Component {
     } = this.props
 
     const defaultStyle = {
-      width: '8em',
-      height: '4em'
+      width: '6em',
+      height: '3em'
     }
 
     return (
