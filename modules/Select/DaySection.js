@@ -1,17 +1,13 @@
-import React, { useState, useContext } from 'react'
-import moment from 'moment'
+import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import cloneDeep from 'lodash.clonedeep'
 import { AppContext } from '../AppState'
 import OutfitSection from './OutfitSection'
-import Skycons from '../Shared/Skycons'
-import cloneDeep from 'lodash.clonedeep'
+import { DayHeader } from '../Shared/DayHeader'
 
 export default function DaySection (props) {
   const { index, day, updateTote, updateOutfitName, renderCopyModal } = props
-  const [isOpen, setIsOpen] = useState(index === 0)
   const context = useContext(AppContext)
-  function toggleOpen () {
-    setIsOpen(!isOpen)
-  }
 
   function updateDay (key, outfit, inc) {
     // TODO: maybe use context.setOutfit
@@ -44,24 +40,29 @@ export default function DaySection (props) {
     )
   })
   return (
-    <div className="day-section">
-      <div className="day-details">
-        {moment(day.date).format('ddd, MMM Do')}
-        <Skycons
-          color='black' 
-          icon={day.icon.toUpperCase()}
-          autoplay={true}
-        />
-        <div>{day.summary}</div>
-        <div className="day-temps">
-          <div>High: {day.high} &deg;F</div>
-          <div>Low: {day.low}&deg; F</div>
-        </div>
-      </div>
-      <div className="outfit-list">
-        {outfitArray}
-        <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
-      </div>
-    </div>
+    <DayHeader day={day}>
+      {outfitArray}
+      <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
+    </DayHeader>
   )
+}
+
+DaySection.propTypes = {
+  index: PropTypes.number,
+  day: PropTypes.shape({
+    outfits: PropTypes.arrayOf(PropTypes.shape({
+      type: PropTypes.string,
+      realName: PropTypes.string,
+      id: PropTypes.number,
+      expanded: PropTypes.bool,
+      items: PropTypes.arrayOf(PropTypes.shape({
+        dropdown: PropTypes.bool,
+        parentType: PropTypes.string,
+        type: PropTypes.string,
+      })),
+    }))
+  }),
+  updateTote: PropTypes.func,
+  updateOutfitName: PropTypes.func,
+  renderCopyModal: PropTypes.func,
 }

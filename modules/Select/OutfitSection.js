@@ -1,6 +1,5 @@
 import React, { useState, useRef, useContext } from 'react'
-// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import PropTypes from 'prop-types'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -12,11 +11,11 @@ import { IconButton } from '@material-ui/core';
 import { DeleteForever, Edit, FileCopy, Save } from '@material-ui/icons';
 
 export default function OutfitSection(props) {
-  const [disabled, setDisabled] = useState(props.outfit && props.outfit.type)
-  const outfitType = props.outfit && props.outfit.type
+  const { outfit, index, dayIndex, updateDay, updateName } = props
+  const [disabled, setDisabled] = useState(!!(outfit && outfit.type))
+  const outfitType = outfit && outfit.type
   const [renaming, setRenaming] = useState(false)
-  // const [expanded, setExpanded] = useState(props.dayIndex === 0)
-  const outfitName = useRef(props.outfit.realName)
+  const outfitName = useRef(outfit.realName)
   const context = useContext(AppContext)
 
   function selectText(e) {
@@ -25,16 +24,16 @@ export default function OutfitSection(props) {
 
   function saveOutfit() {
     setDisabled(true)
-    props.updateDay(props.index, props.outfit, 1)
+    updateDay(index, outfit, 1)
   }
 
   function editOutfit() {
-    props.updateDay(props.index, props.outfit, -1)
+    updateDay(index, outfit, -1)
     setDisabled(false)
   }
 
   function removeOutfit() {
-    context.removeOutfit(props.dayIndex, props.index)
+    context.removeOutfit(dayIndex, index)
   }
 
   function renameOutfit() {
@@ -43,7 +42,7 @@ export default function OutfitSection(props) {
 
   function stopRenaming() {
     setRenaming(false)
-    props.updateName(props.index, outfitName.current.value)
+    updateName(index, outfitName.current.value)
   }
 
   function handleKeyPress(ev) {
@@ -59,7 +58,7 @@ export default function OutfitSection(props) {
         autoFocus
         onFocus={selectText}
         type="text"
-        defaultValue={props.outfit.realName}
+        defaultValue={outfit.realName}
         onBlur={stopRenaming}
         onKeyPress={handleKeyPress}
       />
@@ -67,22 +66,22 @@ export default function OutfitSection(props) {
   }
 
   function renderName() {
-    return props.outfit.realName
+    return outfit.realName
   }
 
   function changeOutfitType(ev) {
     const templateOutfit = cloneDeep(context.outfitTypes.find(item => item.type === ev.target.value))
-    const newOutfit = { ...props.outfit, type: templateOutfit.type, items: templateOutfit.items }
-    context.setOutfit(props.dayIndex, props.index, newOutfit)
+    const newOutfit = { ...outfit, type: templateOutfit.type, items: templateOutfit.items }
+    context.setOutfit(dayIndex, index, newOutfit)
   }
 
   function toggleOutfitExpanded() {
     // setExpanded(!expanded)
-    context.setExpanded(props.dayIndex, props.index)
+    context.setExpanded(dayIndex, index)
   }
 
   function toggleItem(name, isChecked) {
-    let tempOutfit = props.outfit
+    let tempOutfit = outfit
 
     tempOutfit.items.forEach((item) => {
       if (item.type === name) { item.isNotIncluded = !isChecked }
@@ -90,7 +89,7 @@ export default function OutfitSection(props) {
   }
 
   function renderCopyModal() {
-    const modalProps = { outfit: props.outfit, confirmText: 'Copy Outfit' }
+    const modalProps = { outfit: outfit, confirmText: 'Copy Outfit' }
     props.renderCopyModal(modalProps)
   }
 
@@ -98,27 +97,19 @@ export default function OutfitSection(props) {
     return (
       <AccordionDetails className="accordion-content">
         <CheckboxSection
-          outfit={props.outfit}
+          outfit={outfit}
           outfitType={outfitType}
           toggle={toggleItem}
           disabled={disabled}
         />
         <div className="buttons">
           {disabled
-            ? <IconButton><Edit onClick={editOutfit} /></IconButton>
-            : <IconButton><Save disabled={!outfitType} onClick={saveOutfit} /></IconButton>
+            ? <IconButton onClick={editOutfit}><Edit /></IconButton>
+            : <IconButton disabled={!outfitType} onClick={saveOutfit}><Save /></IconButton>
           }
-          <IconButton><DeleteForever onClick={removeOutfit} /></IconButton>
-          <IconButton><FileCopy onClick={renderCopyModal} /></IconButton>
+          <IconButton onClick={removeOutfit}><DeleteForever /></IconButton>
+          <IconButton onClick={renderCopyModal}><FileCopy /></IconButton>
         </div>
-        {/* <div className="buttons">
-          {disabled
-            ? <button className="outfittype-select" onClick={editOutfit}>Edit Outfit</button>
-            : <button className="outfittype-select" disabled={!outfitType} onClick={saveOutfit}>Save Outfit</button>
-          }
-          <button className="outfittype-select" onClick={removeOutfit}>Remove Outfit</button>
-          <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
-        </div> */}
       </AccordionDetails>
     )
   }
@@ -133,11 +124,11 @@ export default function OutfitSection(props) {
   }
 
   return (
-    <Accordion expanded={props.outfit.expanded} onChange={toggleOutfitExpanded}>
+    <Accordion expanded={outfit.expanded} onChange={toggleOutfitExpanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls={`${props.index}-content`}
-        id={`${props.index}-header`}
+        aria-controls={`${index}-content`}
+        id={`${index}-header`}
         className="accordion-summary"
       >
         <h4 onClick={prevent} onDoubleClick={renameOutfit} className="outfit-name">
@@ -153,4 +144,22 @@ export default function OutfitSection(props) {
     </Accordion>
 
   )
+}
+
+OutfitSection.propTypes = {
+  outfit: PropTypes.shape({
+    type: PropTypes.string,
+    realName: PropTypes.string,
+    expanded: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      dropdown: PropTypes.bool,
+      parentType: PropTypes.string,
+      type: PropTypes.string,
+    })),
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+  dayIndex: PropTypes.number.isRequired,
+  updateDay: PropTypes.func.isRequired,
+  updateName: PropTypes.func.isRequired,
+  renderCopyModal: PropTypes.func.isRequired,
 }

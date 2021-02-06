@@ -1,3 +1,13 @@
+// screen size breakpoints
+$screen-sm-min: 576px;
+
+// mixins
+@mixin sm {
+  @media (min-width: #{$screen-sm-min}) {
+      @content;
+  }
+}
+
 .main {
   background: #B5BDC5;
   display: flex;
@@ -8,7 +18,9 @@
     max-height: calc(100vh - 12em);
     overflow-y: scroll;
     padding: 2em 1em 0 1em;
-    width: 400px;
     align-self: center;
+    @include sm {
+      padding: 0 20%;
+    }
   }
 }

@@ -14,7 +14,6 @@ export default function GetStarted () {
     async function getUserItems () {
       const userItems = await axios.get(`${baseUrl}/db/userItems/${context.userId}`)
       if (!userItems.data.outfits.length) { // user has not yet set up outfits
-        context.setStage('setup')
         history.push('/setup')
       } else {
         context.setOutfitTypes(userItems.data.outfits)

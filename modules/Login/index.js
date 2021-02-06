@@ -63,7 +63,6 @@ export default function Login() {
   }
 
   function handleChange(e) {
-    console.log('e', e.target)
     setState({ ...state, [e.target.name]: e.target.value })
   }
 

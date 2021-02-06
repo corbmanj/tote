@@ -111,7 +111,7 @@ export default function AssignItems () {
     )
   })
   return (
-    <div className="assign-items">
+    <div className="outfits">
       {editingNamedItems &&
         <Modal
           contentType="NamedItems"

@@ -188,7 +188,7 @@ export default function SelectOutfits () {
   }) : []
 
   return (
-    <div className="select-outfits">
+    <div className="outfits">
       {modalProps &&
         <Modal
           contentType="CopyOutfit"
