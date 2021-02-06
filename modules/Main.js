@@ -29,7 +29,7 @@ export default class Main extends Component {
 
   conditionallyRenderNavMenu () {
     if (!['login', 'setup'].includes(this.context.stage)) {
-      return <NavMenu active={this.context.stage} />
+      return <NavMenu />
     }
   }
 
@@ -39,35 +39,7 @@ export default class Main extends Component {
     }
   }
 
-  renderStage = (stage) => {
-    switch (stage) {
-      case 'load':
-        return <LoadTrips />
-      case 'setup':
-        return <Setup />
-      case 'schedule':
-        return <Schedule />
-      case 'select':
-        return <SelectOutfits />
-      case 'assign':
-        return <AssignItems />
-      case 'packing':
-        return <PackingList />
-      case 'print':
-        return <OutfitsList />
-      case 'home':
-        return <GetStarted />
-      default:
-        return (
-          <div>
-            <h1 className="welcome">Welcome to Tote!</h1>
-              <Login />
-          </div>
-        )
-    }
-  }
-
-  renderStageNew = () => {
+  renderStage = () => {
     return (
       <Switch>
         <Route path="/load">
@@ -106,7 +78,7 @@ export default class Main extends Component {
       <div className="main">
         {this.conditionallyRenderNavMenu()}
         <div className="stage">
-          {this.renderStageNew(this.context.stage)}
+          {this.renderStage()}
         </div>
         <CSSTransitionGroup
           transitionName="toast"

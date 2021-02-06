@@ -1,4 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 import NavItem from './NavItem'
 import * as svg from '../../public/svg/navBar'
 import './nav.scss'
@@ -20,32 +22,25 @@ function getStageValue(value) {
   }
 }
 
-export default function NavMenu (props) {
+function NavMenu (props) {
   const stages = ['Home', 'Schedule', 'Select', 'Assign', 'Packing'] //, 'Print']
-  const { active } = props
+  const { location } = props
+  const active = location.pathname.replace("/", ""); 
 
   function getSvg(stage) {
-    console.log('1', getStageValue(active), '2', getStageValue(stage))
     if (getStageValue(active) > getStageValue(stage)) {
-      console.log('a')
       return svg.completed
     }
-    console.log('get', stage, getStageValue(stage))
     switch(getStageValue(stage)) {
       case 1:
-        console.log('b')
         return getStageValue(active) === 1 ? svg.twoActive : svg.two
       case 2:
-        console.log('c')
         return getStageValue(active) === 2 ? svg.threeActive : svg.three
       case 3:
-        console.log('d')
         return getStageValue(active) === 3 ? svg.fourActive : svg.four
       case 4:
-        console.log('e')
         return getStageValue(active) === 4 ? svg.fiveActive : svg.five
       default:
-        console.log('f')
         return svg.oneAcitve
     }
   }
@@ -73,3 +68,11 @@ export default function NavMenu (props) {
   
   return <div className="header">{navLinks}</div>
 }
+
+NavMenu.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired
+  })
+}
+
+export default withRouter(NavMenu)
