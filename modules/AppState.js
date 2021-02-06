@@ -106,6 +106,7 @@ export class AppProvider extends React.Component {
     }
 
     setTripId = (tripId) => {
+        window.localStorage.setItem('tripId', tripId)
         this.setState({ tripId })
     }
 
