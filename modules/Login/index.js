@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
-import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
+// import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import SvgIcon from '@material-ui/core/SvgIcon'
@@ -37,7 +37,6 @@ export default function Login() {
             const outfitResponse = await axios.get(`${baseUrl}/db/userItems/${response.data.id}`)
             if (!outfitResponse.data.outfits.length) { // user has not yet set up outfits
               context.setUser(response.data.id)
-              context.setStage('setup')
               history.push('/home')
             }
             else {
@@ -46,7 +45,6 @@ export default function Login() {
               context.setTote(tote)
               context.setOutfitTypes(outfitResponse.data.outfits)
               context.setUser(response.data.id)
-              context.setStage('home')
               history.push('/home')
             }
           } else {

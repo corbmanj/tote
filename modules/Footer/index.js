@@ -1,17 +1,18 @@
-import React, { useContext } from 'react'
-import BusinessCenterIcon from '@material-ui/icons/BusinessCenter';
-import SettingsIcon from '@material-ui/icons/Settings';
-import { AppContext } from '../AppState'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
+import SettingsIcon from '@material-ui/icons/Settings'
 import './footer.scss'
 
 export default function Footer (props) {
-    const { setStage } = useContext(AppContext)
+    const history = useHistory()
     const { isSetup } = props
     const mainClass = isSetup ? 'footerItem' : 'footerItem active'
     const setupClass = isSetup ? 'footerItem active' : 'footerItem'
     
     function handleFooterClick(ev) {
-        setStage(ev.target.id)
+        history.push(`/${ev.target.id}`)
     }
 
     return (
@@ -20,4 +21,8 @@ export default function Footer (props) {
             <div id="setup" onClick={handleFooterClick} className={setupClass}><SettingsIcon /></div>
         </div>
     )
+}
+
+Footer.propTypes = {
+    isSetup: PropTypes.bool
 }

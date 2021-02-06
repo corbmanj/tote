@@ -44,11 +44,6 @@ export class AppProvider extends React.Component {
         }))
     }
 
-    setStage = (stage) => {
-        const conditionallySave = this.state.tripId ? this.saveTrip : () => {}
-        this.setState({ stage }, () => conditionallySave())
-    }
-
     setShowToast = (toastProps) => {
         this.setState({showToast: true, toastProps})
         setTimeout(() => { this.setState({showToast: false}) }, 1500)

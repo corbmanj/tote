@@ -29,7 +29,6 @@ export default function GetStarted () {
       const response = await axios.post(`${baseUrl}/db/tote/newTrip/${context.userId}`)
       context.clearTote()
       context.setTripId(response.data.id)
-      context.setStage('schedule')
       history.push('/schedule')
     } catch (err) {
       console.error(err)
@@ -37,7 +36,6 @@ export default function GetStarted () {
   }
 
   function loadTrip () {
-    context.setStage('load')
     history.push('/load')
   }
 

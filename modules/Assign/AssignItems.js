@@ -81,7 +81,6 @@ export default function AssignItems () {
       setErrorMsg('Please assign at least one item')
       return
     }
-    context.setStage('packing')
     history.push('/packing')
   }
   

@@ -62,7 +62,6 @@ export default function SelectOutfits () {
     const isError = validateOutfits()
     if (!isError) {
       context.expandAll()
-      context.setStage('assign')
       history.push('/assign')
     }
   }

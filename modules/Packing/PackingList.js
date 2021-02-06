@@ -1,4 +1,5 @@
 import React, { useContext }from 'react'
+import { useHistory } from 'react-router-dom'
 import UnnamedItems from './UnnamedItems'
 import NamedItems from './NamedItems'
 import AdditionalItemSectionPacking from './AdditionalItemSectionPacking'
@@ -6,9 +7,10 @@ import { AppContext } from '../AppState'
 
 export default function PackingList () {
   const context = useContext(AppContext)
+  const history = useHistory()
   
   function updateStage () {
-    context.setStage('print')
+    history.push('/print')
   }
 
   function handleCheckboxChange (section, id, type) {
