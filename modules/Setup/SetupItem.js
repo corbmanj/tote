@@ -21,7 +21,7 @@ export default function SetupItem (props) {
   return (
     <tr>
       <td>
-        <IconButton disabled={props.outfitCount} onClick={removeItem} minimal={true}>
+        <IconButton disabled={!!props.outfitCount} onClick={removeItem} minimal={true}>
           <AddCircleOutlineIcon />
         </IconButton>
       </td>

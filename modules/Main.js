@@ -1,5 +1,6 @@
-import React, {Component} from 'react'
-import { Switch, Route } from 'react-router-dom'
+import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import { Switch, Route, withRouter } from 'react-router-dom'
 import Login from './Login'
 import Schedule from './Schedule/Schedule'
 import SelectOutfits from './Select/SelectOutfits'
@@ -15,30 +16,32 @@ import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
 import { AppContext } from './AppState'
 import './main.scss'
 
-export default class Main extends Component {
+function Main(props) {
+  const { location } = props
+  const context = useContext(AppContext)
 
-  renderToast = () => {
+  function renderToast () {
     return (
       <Toast
-        message={this.context.toastProps.message || "no message"}
-        type={this.context.toastProps.type || "success"}
+        message={context.toastProps.message || "no message"}
+        type={context.toastProps.type || "success"}
       />
     )
   }
 
-  conditionallyRenderNavMenu () {
-    if (!['login', 'setup'].includes(this.context.stage)) {
+  function conditionallyRenderNavMenu() {
+    if (context.userId && location.pathname !== '/setup') {
       return <NavMenu />
     }
   }
 
-  conditionallyRenderFooter () {
-    if (!['login', 'setup'].includes(this.context.stage)) {
-      return <Footer isSetup={this.context.stage === "setup"} />
+  function conditionallyRenderFooter() {
+    if (context.userId) {
+      return <Footer isSetup={location.pathname === '/setup'} />
     }
   }
 
-  renderStage = () => {
+  function renderStage () {
     return (
       <Switch>
         <Route path="/load">
@@ -65,36 +68,40 @@ export default class Main extends Component {
         <Route path="/">
           <div>
             <h1 className="welcome">Welcome to Tote!</h1>
-              <Login />
+            <Login />
           </div>
         </Route>
       </Switch>
     )
   }
 
-  render() {
-    return (
-      <div className="main">
-        {this.conditionallyRenderNavMenu()}
-        <div className="stage">
-          {this.renderStage()}
-        </div>
-        <CSSTransitionGroup
-          transitionName="toast"
-          transitionEnter
-          transitionEnterTimeout={300}
-          transitionAppear={false}
-          transitionLeave
-          transitionLeaveTimeout={300}
-        >
-          {this.context.showToast && this.renderToast()}
-        </CSSTransitionGroup>
-        <div className="footer">
-          {this.conditionallyRenderFooter()}
-        </div>
+  return (
+    <div className="main">
+      {conditionallyRenderNavMenu()}
+      <div className="stage">
+        {renderStage()}
       </div>
-    )
-  }
+      <CSSTransitionGroup
+        transitionName="toast"
+        transitionEnter
+        transitionEnterTimeout={300}
+        transitionAppear={false}
+        transitionLeave
+        transitionLeaveTimeout={300}
+      >
+        {context.showToast && renderToast()}
+      </CSSTransitionGroup>
+      <div className="footer">
+        {conditionallyRenderFooter()}
+      </div>
+    </div>
+  )
 }
 
-Main.contextType = AppContext;
+Main.propTypes = {
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired
+  })
+}
+
+export default withRouter(Main)

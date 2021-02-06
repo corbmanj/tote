@@ -25,7 +25,7 @@ export default function NavItem (props) {
 
 NavItem.propTypes = {
   stage: PropTypes.string,
-  svg: PropTypes.string,
+  svg: PropTypes.object,
   classNames: PropTypes.string,
   disabled: PropTypes.bool,
 }
