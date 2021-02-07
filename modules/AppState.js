@@ -399,9 +399,10 @@ export class AppProvider extends React.Component {
                 throw new Error("Bad response from server")
               }
               this.setTrip(response.data[0])
+              this.setState({ userId })
             }
             else {
-                this.setStage('login')
+                console.error('no userId or tripId')
             }  
           } catch (err) {
             console.error(err)
@@ -418,8 +419,6 @@ export class AppProvider extends React.Component {
                     userId: this.state.userId,
                     clearTote: this.clearTote,
                     setUser: this.setUser,
-                    stage: this.state.stage,
-                    setStage: this.setStage,
                     showToast: this.state.showToast,
                     toastProps: this.state.toastProps,
                     setShowToast: this.setShowToast,
