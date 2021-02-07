@@ -1,16 +1,28 @@
 import React, { useContext, useState } from 'react'
+import PropTypes from 'prop-types'
 // import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Accordion from '@material-ui/core/Accordion';
+import Chip from '@material-ui/core/Chip';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
 
-function NewMenu () {
+function AssignedItem ({ thing }) {
+  function handleClick(e) {
+    console.log('clicked', e.target.label)
+  }
+
+  return <Chip label={thing} onClick={handleClick} />
+}
+
+function NewMenu ({ outfitItems }) {
   const [active, setActive] = useState('one')
-  const leftThings = ['one', 'two', 'three', 'four', 'five']
+  const leftThings = outfitItems
+    .filter(item => item.dropdown === true && item.isNotIncluded !== true)
+    .map(item => item.type)
   const rightThings = ['aaay', 'beee', 'ceeee', 'deee', 'eeeeey']
   function handleMenuClick (name) {
     setActive(name)
@@ -31,7 +43,7 @@ function NewMenu () {
         ))}
       </div>
       <div className="right-column">
-        {rightThings.map(thing => (<div key={thing}>{thing}</div>))}
+        {rightThings.map(thing => <AssignedItem key={thing} thing={thing}/>)}
       </div>
     </div>
   )
@@ -80,9 +92,25 @@ export default function AssignOutfit (props) {
         <div className="outfit-type">{outfit.type}</div>
       </AccordionSummary>
       <AccordionDetails>
-        <NewMenu />
+        <NewMenu outfitItems={outfit.items} />
           {/*renderItems()*/}
       </AccordionDetails>
     </Accordion>
   )
+}
+
+AssignOutfit.propTypes = {
+  dayIndex: PropTypes.number,
+  index: PropTypes.number,
+  updateNamedItems: PropTypes.func,
+  updateNamedItemInAllOutfits: PropTypes.func,
+  outfit: PropTypes.string,
+}
+
+AssignedItem.propTypes = {
+  thing: PropTypes.string,
+}
+
+NewMenu.propTypes = {
+  outfitItems: PropTypes.arrayOf(PropTypes.string),
 }

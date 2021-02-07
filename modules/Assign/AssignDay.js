@@ -4,16 +4,17 @@ import AssignOutfit from './AssignOutfit'
 import { DayHeader } from '../Shared/DayHeader'
 
 export default function AssignDay (props) {
+  const { day, index, updateNamedItems, updateNamedItemInAllOutfits } = props
 
-  const outfits = props.day.outfits.map((outfit, index) => {
+  const outfits = day.outfits.map((outfit, outfitIndex) => {
     return (
       <AssignOutfit
-        key={index}
-        dayIndex={props.index}
-        index={index}
+        key={outfitIndex}
+        dayIndex={index}
+        index={outfitIndex}
         outfit={outfit}
-        updateNamedItems={props.updateNamedItems}
-        updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
+        updateNamedItems={updateNamedItems}
+        updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
       />
     )
   })
