@@ -208,18 +208,22 @@ export default function SelectOutfits () {
       </div>
       
       {/* <Collapse isOpen={error.isOutfitError}> */}
+      {error.isOutfitError && (
         <div className="error">There are errors with the following outfits:
           <ul>
             {badOutfitsArray}
           </ul>
         </div>
+      )}
       {/* </Collapse>
       <Collapse isOpen={error.isDayError}> */}
+      {error.isDayError && (
         <div className="error">Please add at least one outfit to each of the following days:
           <ul>
             {badDaysArray}
           </ul>
         </div>
+      )}
       {/* </Collapse> */}
       {/* <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
