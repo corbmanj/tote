@@ -14,12 +14,9 @@ $screen-sm-min: 576px;
   min-height: 100vh;
   flex-direction: column;
   .stage {
-    flex: 1 1 auto;
-    max-height: calc(100vh - 12em);
-    overflow-y: scroll;
-    padding: 2em 1em 0 1em;
-    align-self: center;
+    padding: 0 2%;
     @include sm {
+      width: 60%;
       padding: 0 20%;
     }
   }
