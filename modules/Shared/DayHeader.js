@@ -16,8 +16,8 @@ export const DayHeader = (props) => {
         />
         <div>{day.summary}</div>
         <div className="day-temps">
-          <div>High: {day.high} &deg;F</div>
-          <div>Low: {day.low}&deg; F</div>
+          <div>High:&nbsp;{day.high}&nbsp;&deg;F</div>
+          <div>Low:&nbsp;{day.low}&nbsp;&deg;F</div>
         </div>
       </div>
       <div className="outfit-list">
