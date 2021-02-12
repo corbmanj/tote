@@ -9,12 +9,13 @@ export default function AssignItem (props) {
 
   function renderSelect () {
     const namedItems = context.tote.namedItems || []
-    const options = namedItems.filter((filteredItem) => {
-      return filteredItem.parentType === props.item.parentType
-    }).map((item) => {
-      return <option key={item.id} value={item.id}>{item.name}</option>
-    })
+    
+    const options = namedItems
+      .filter((filteredItem) => filteredItem.parentType === props.item.parentType)
+      .map((item) => (<option key={item.id} value={item.id}>{item.name}</option>))
+    
     const selectValue = props.item.id || 'select'
+    
     return (
       <select onChange={handleSelectChange} value={selectValue}>
         <option value="select">Select one...</option>

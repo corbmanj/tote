@@ -6,24 +6,25 @@
       background: #f3f3f3;
       margin-right: 20px;
       div {
-        padding: 5px 15px;
+        padding: 0 15px;
         cursor: pointer;
+        line-height: 2em;
         &.active {
           background: #fefefe;
           color: #497ea1;
           display: block;
           position: relative;
         }
-        .triangle {
-          display: inline-block;
-          position: absolute;
-          width: 0;
-          height: 0;
-          border: 7px solid transparent;
-          border-right-color: #c4c4c4;
-          left: 48px;
-          padding: 0;
-        }
+        // .triangle {
+        //   display: inline-block;
+        //   position: absolute;
+        //   width: 0;
+        //   height: 0;
+        //   border: 7px solid transparent;
+        //   border-right-color: #c4c4c4;
+        //   left: 48px;
+        //   padding: 0;
+        // }
       }
     }
     .right-column {

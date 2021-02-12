@@ -9,41 +9,83 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import { AppContext } from '../AppState'
 import AssignItem from './AssignItem'
+import { AddCircle, Done } from '@material-ui/icons';
+import { Divider, IconButton, InputBase, makeStyles, Paper } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 200,
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+}));
 
 function AssignedItem ({ thing }) {
   function handleClick(e) {
     console.log('clicked', e.target.label)
   }
 
-  return <Chip label={thing} onClick={handleClick} />
+  return <Chip label={thing.type} onClick={handleClick} />
 }
 
 function NewMenu ({ outfitItems }) {
-  const [active, setActive] = useState('one')
+  const classes = useStyles()
+  const [addingItem, setAddingItem] = useState(false)
+  const context = useContext(AppContext)
+  const namedItems = context.tote.namedItems || []
+
   const leftThings = outfitItems
-    .filter(item => item.dropdown === true && item.isNotIncluded !== true)
-    .map(item => item.type)
-  const rightThings = ['aaay', 'beee', 'ceeee', 'deee', 'eeeeey']
-  function handleMenuClick (name) {
-    setActive(name)
+  .filter(item => item.dropdown === true && item.isNotIncluded !== true)
+  const [activeItem, setActiveItem] = useState(leftThings[0])
+
+  const rightThings = namedItems
+      .filter((filteredItem) => filteredItem.parentType === activeItem.parentType)
+      .map((item) => (<option key={item.id} value={item.id}>{item.name}</option>))
+
+  function toggleAddItem() {
+    setAddingItem(!addingItem)
   }
+  
   return (
     <div className="item-picker">
       <div className="left-column-nav">
         {leftThings.map(thing => (
           <div
-            key={thing}
-            className={thing === active ? 'active' : ''}
-            name={thing}
-            onClick={() => handleMenuClick(thing)}
+            key={thing.type}
+            className={thing.type === activeItem.type ? 'active' : ''}
+            name={thing.type}
+            onClick={() => setActiveItem(thing)}
           >
-            {thing}
-            {thing === active && <div className="triangle"></div>}
+            {thing.type}
+            {/* {thing === active && <div className="triangle"></div>} */}
           </div>
         ))}
       </div>
       <div className="right-column">
         {rightThings.map(thing => <AssignedItem key={thing} thing={thing}/>)}
+        {addingItem ? (
+          <Paper component="form" className={classes.root}>
+           <InputBase placeholder="add item..." className={classes.input} />
+           <Divider orientation="vertical" className={classes.divider} />
+           <IconButton color="primary" aria-label="done" onClick={toggleAddItem} className={classes.iconButton}>
+             <Done />
+           </IconButton>
+          </Paper>
+        )
+          : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem}/>
+        }
       </div>
     </div>
   )
@@ -104,7 +146,17 @@ AssignOutfit.propTypes = {
   index: PropTypes.number,
   updateNamedItems: PropTypes.func,
   updateNamedItemInAllOutfits: PropTypes.func,
-  outfit: PropTypes.string,
+  outfit: PropTypes.shape({
+    type: PropTypes.string,
+    realName: PropTypes.string,
+    id: PropTypes.number,
+    expanded: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      dropdown: PropTypes.bool,
+      parentType: PropTypes.string,
+      type: PropTypes.string,
+    })),
+  })
 }
 
 AssignedItem.propTypes = {
@@ -112,5 +164,9 @@ AssignedItem.propTypes = {
 }
 
 NewMenu.propTypes = {
-  outfitItems: PropTypes.arrayOf(PropTypes.string),
+  outfitItems: PropTypes.arrayOf(PropTypes.shape({
+    dropdown: PropTypes.bool,
+    parentType: PropTypes.string,
+    type: PropTypes.string,
+  })),
 }
