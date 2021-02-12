@@ -15,6 +15,7 @@ $screen-sm-min: 576px;
   flex-direction: column;
   .stage {
     padding: 0 2%;
+    margin-bottom: 5em;
     @include sm {
       width: 60%;
       padding: 0 20%;
