@@ -1,12 +1,13 @@
   .item-picker {
     display: flex;
-    justify-content: space-between;
+    align-items: center;
     .left-column-nav {
       border-right: 2px solid #c4c4c4;
       background: #f3f3f3;
       margin-right: 20px;
+      flex: 0 0 auto;
       div {
-        padding: 0 15px;
+        padding: 0 25px;
         cursor: pointer;
         line-height: 2em;
         &.active {
@@ -15,19 +16,24 @@
           display: block;
           position: relative;
         }
-        // .triangle {
-        //   display: inline-block;
-        //   position: absolute;
-        //   width: 0;
-        //   height: 0;
-        //   border: 7px solid transparent;
-        //   border-right-color: #c4c4c4;
-        //   left: 48px;
-        //   padding: 0;
-        // }
       }
     }
     .right-column {
-      margin: 0 25px 0 auto;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      margin-right: 20px;
+      .existing-items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .new-item {
+        align-self: center;
+      }
+
+      .named-item-chip {
+        margin: 5px;
+      }
     }
   }

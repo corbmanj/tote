@@ -16,7 +16,7 @@
         display: flex;
         align-items: center;
         justify-content: space-around;
-        margin: 0 10px;
+        margin: 0 10px 15px 0;
         .day-temps {
           display: flex;
           flex-direction: column;
@@ -34,6 +34,11 @@
 
         .MuiAccordion-rounded {
           width: 100%;
+        }
+
+        .MuiAccordionDetails-root {
+          display: block;
+          padding: 0;
         }
         
         .accordion-summary .MuiAccordionSummary-content {

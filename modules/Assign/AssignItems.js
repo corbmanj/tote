@@ -23,7 +23,7 @@ export default function AssignItems () {
   }, [context.days])
 
   if (!context.days) {
-    return <></>
+    return null;
   }
 
   function toggleModal () {
@@ -31,22 +31,26 @@ export default function AssignItems () {
     const body = document.getElementsByTagName('body')[0]
     body.classList.toggle('no-scroll')
   }
+
   function updateNamedItems (namedItems) {
     const tote = {...context.tote}
     tote.namedItems = namedItems
     context.setTote(tote)
   }
+
   function updateNamedItemInAllOutfits (id, newName) {
     const tote = {...context.tote}
     tote.namedItems.find(item => item.id === id).name = newName
     context.setTote(tote)
   }
+
   function deleteNamedItem (id) {
     const tote = {...context.tote}
     const oldItemIndex = tote.namedItems.findIndex(item => {return item.id === id})
     tote.namedItems.splice(oldItemIndex, 1)
     context.setTote(tote)
   }
+
   function addItem (index) {
     const tote = {...context.tote}
     tote.additionalItems = tote.additionalItems || []
@@ -57,24 +61,28 @@ export default function AssignItems () {
     tote.additionalItems[index].items.push({id: newId, name: 'new item'})
     context.setTote(tote)
   }
+
   // TODO: doesn't seem like it needs to update tote for editing
   function toggleEditing (index) {
     const tote = {...context.tote}
     tote.additionalItems[index].editing = !tote.additionalItems[index].editing
     context.setTote(tote)
   }
+
   function updateItem (typeIndex, itemId, itemName) {
     const tote = {...context.tote}
     let itemToUpdate = tote.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
     tote.additionalItems[typeIndex].items[itemToUpdate].name = itemName
     context.setTote(tote)
   }
+
   function deleteItem (typeIndex, itemId) {
     const tote = {...context.tote}
     let itemToDelete = tote.additionalItems[typeIndex].items.findIndex(item => item.id === itemId)
     tote.additionalItems[typeIndex].items.splice(itemToDelete,1)
     context.setTote(tote)
   }
+
   function updateStage () {
     if (!(context.tote.namedItems && context.tote.namedItems.length)) {
       setError(true)

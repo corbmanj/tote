@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 // import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
@@ -37,12 +37,13 @@ function AssignedItem ({ thing }) {
     console.log('clicked', e.target.label)
   }
 
-  return <Chip label={thing.type} onClick={handleClick} />
+  return <Chip label={thing.name} onClick={handleClick} className="named-item-chip"/>
 }
 
-function NewMenu ({ outfitItems }) {
+function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
   const classes = useStyles()
   const [addingItem, setAddingItem] = useState(false)
+  const newItemRef = useRef()
   const context = useContext(AppContext)
   const namedItems = context.tote.namedItems || []
 
@@ -52,10 +53,22 @@ function NewMenu ({ outfitItems }) {
 
   const rightThings = namedItems
       .filter((filteredItem) => filteredItem.parentType === activeItem.parentType)
-      .map((item) => (<option key={item.id} value={item.id}>{item.name}</option>))
+      // .map((item) => (<option key={item.id} value={item.id}>{item.name}</option>))
 
-  function toggleAddItem() {
+  function toggleAddItem () {
     setAddingItem(!addingItem)
+  }
+
+  function handleSave () {
+    console.log('saving', newItemRef.current.value)
+
+    if (newItemRef.current.value.trim() !== '') {
+      const newId = context.tote.namedItems && context.tote.namedItems.length ? Math.max(...context.tote.namedItems.map(item => item.id)) + 1 : 1
+      context.addNamedItem(activeItem.parentType, newItemRef.current.value, newId)
+      context.updateOutfitItem(dayIndex, outfitIndex, activeItem.parentType, newId)
+    }
+
+    toggleAddItem()
   }
   
   return (
@@ -74,18 +87,22 @@ function NewMenu ({ outfitItems }) {
         ))}
       </div>
       <div className="right-column">
-        {rightThings.map(thing => <AssignedItem key={thing} thing={thing}/>)}
+        <div className="existing-items">
+          {rightThings.map(thing => <AssignedItem key={thing} thing={thing}/>)}
+        </div>
+        <div className="new-item">
         {addingItem ? (
           <Paper component="form" className={classes.root}>
-           <InputBase placeholder="add item..." className={classes.input} />
+           <InputBase placeholder="add item..." className={classes.input} inputRef={newItemRef}/>
            <Divider orientation="vertical" className={classes.divider} />
-           <IconButton color="primary" aria-label="done" onClick={toggleAddItem} className={classes.iconButton}>
+           <IconButton color="primary" aria-label="done" onClick={handleSave} className={classes.iconButton}>
              <Done />
            </IconButton>
           </Paper>
         )
-          : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem}/>
+          : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem} className="named-item-chip" />
         }
+        </div>
       </div>
     </div>
   )
@@ -134,7 +151,11 @@ export default function AssignOutfit (props) {
         <div className="outfit-type">{outfit.type}</div>
       </AccordionSummary>
       <AccordionDetails>
-        <NewMenu outfitItems={outfit.items} />
+        <NewMenu
+          outfitItems={outfit.items}
+          dayIndex={dayIndex}
+          outfitIndex={index}
+        />
           {/*renderItems()*/}
       </AccordionDetails>
     </Accordion>
@@ -169,4 +190,6 @@ NewMenu.propTypes = {
     parentType: PropTypes.string,
     type: PropTypes.string,
   })),
+  dayIndex: PropTypes.number,
+  outfitIndex: PropTypes.number,
 }

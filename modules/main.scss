@@ -16,6 +16,7 @@ $screen-sm-min: 576px;
   .stage {
     padding: 0 2%;
     margin-bottom: 5em;
+    margin-top: 2em;
     @include sm {
       width: 60%;
       padding: 0 20%;
