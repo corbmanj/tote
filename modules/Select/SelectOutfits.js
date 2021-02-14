@@ -8,11 +8,12 @@ import DaySection from './DaySection'
 // import AccordionDetails from '@material-ui/core/AccordionDetails';
 // import AccordionSummary from '@material-ui/core/AccordionSummary';
 import Modal from '../Shared/Modal'
+import CopyOutfit from '../Shared/CopyOutfit'
 import moment from 'moment'
 import cloneDeep from 'lodash.clonedeep'
 import './select.scss'
 
-export default function SelectOutfits () {
+export default function SelectOutfits() {
   const [modalProps, setModalProps] = useState(false)
   const [error, setError] = useState({
     isOutfitError: false,
@@ -23,7 +24,7 @@ export default function SelectOutfits () {
   const history = useHistory()
 
   useEffect(() => {
-    async function handleReload () {
+    async function handleReload() {
       await context.handleReload()
     }
     if (!days) {
@@ -35,7 +36,7 @@ export default function SelectOutfits () {
     return <></>
   }
 
-  function validateOutfits () {
+  function validateOutfits() {
     // check if all outfits have items
     let isOutfitError = false
     let isDayError = false
@@ -44,7 +45,7 @@ export default function SelectOutfits () {
       let filteredOutfits = day.outfits.filter(outfit => {
         return !outfit.items
       })
-      if (filteredOutfits.length > 0) {isOutfitError = true}
+      if (filteredOutfits.length > 0) { isOutfitError = true }
       badOutfits.push(filteredOutfits)
     })
     let badDays = []
@@ -54,11 +55,11 @@ export default function SelectOutfits () {
         isDayError = true
       }
     })
-    setError({isOutfitError: isOutfitError, isDayError: isDayError, badOutfits: badOutfits, badDays: badDays})
+    setError({ isOutfitError: isOutfitError, isDayError: isDayError, badOutfits: badOutfits, badDays: badDays })
     return (isOutfitError || isDayError)
   }
 
-  function updateOutfits () {
+  function updateOutfits() {
     const isError = validateOutfits()
     if (!isError) {
       context.expandAll()
@@ -66,15 +67,16 @@ export default function SelectOutfits () {
     }
   }
 
-  function updateTote (_dayKey, _outfitKey, outfit, inc) {
+  function updateTote(_dayKey, _outfitKey, outfit, inc) {
     const tote = context.tote
     tote.unnamed = tote.unnamed || []
     outfit.items.map((item) => {
       if (item.dropdown === false && !item.isNotIncluded) {
         let itemTypeIndex = tote.unnamed.findIndex(foundItem => {
-          return foundItem.id === item.type})
+          return foundItem.id === item.type
+        })
         if (itemTypeIndex === -1) {
-          tote.unnamed.push({id: item.type, count: 1})
+          tote.unnamed.push({ id: item.type, count: 1 })
         } else {
           tote.unnamed[itemTypeIndex].count = tote.unnamed[itemTypeIndex].count + inc
         }
@@ -84,7 +86,7 @@ export default function SelectOutfits () {
     context.setTote(tote)
   }
 
-  function updateOutfitName (dayKey, outfitKey, name) {
+  function updateOutfitName(dayKey, outfitKey, name) {
     let days = [...days]
     days[dayKey].outfits[outfitKey].realName = name
     context.setDays(days)
@@ -122,18 +124,18 @@ export default function SelectOutfits () {
   //   context.setTote(tote)
   // }
 
-  function renderCopyModal (modalProps) {
-    modalProps.days = days
+  function renderCopyModal(modalProps) {
+    modalProps.days = context.days.map(() => false)
     setModalProps(modalProps)
   }
-  
-  function closeModal () {
+
+  function closeModal() {
     setModalProps(false)
   }
 
-  function copyOutfits (copyArray, outfit) {
+  function copyOutfits(copyArray, outfit) {
     // copy outfit to each day that was selected
-    let days = [...days]
+    let days = [...context.days]
     copyArray.forEach((day, index) => {
       if (day) {
         const newOutfit = cloneDeep(outfit)
@@ -144,11 +146,11 @@ export default function SelectOutfits () {
     })
     context.setDays(days);
     setModalProps(false)
-    context.setShowToast({message: 'Outfit copied successfully', type: 'success'})
+    context.setShowToast({ message: 'Outfit copied successfully', type: 'success' })
   }
-  
+
   const daysArray = days.map((day, index) => {
-    return(
+    return (
       <DaySection
         key={index}
         index={index}
@@ -181,10 +183,20 @@ export default function SelectOutfits () {
       })
     })
   }
-  
+
   const badDaysArray = error.badDays ? error.badDays.map(day => {
-      return <li key={day.date}>{moment(day.date).format('ddd, MMM Do')}</li>
+    return <li key={day.date}>{moment(day.date).format('ddd, MMM Do')}</li>
   }) : []
+
+  const updateCopyArray = (index, value) => {
+    const newCopyArray = [...modalProps.days]
+    newCopyArray[index] = value
+    setModalProps({...modalProps, days: newCopyArray})
+  }
+
+  function confirmAction () {
+    copyOutfits(modalProps.days, modalProps.outfit)
+  }
 
   return (
     <div className="outfits">
@@ -193,8 +205,16 @@ export default function SelectOutfits () {
           contentType="CopyOutfit"
           closeModal={closeModal}
           modalProps={modalProps}
-          confirmAction={copyOutfits}
-        />
+          confirmAction={confirmAction}
+          renderActions
+          copyArray={modalProps.days}
+          headerText="Choose the days you would like to copy to"
+        >
+          <CopyOutfit
+            days={context.days}
+            updateCopyArray={updateCopyArray}
+          />
+        </Modal>
       }
       {/* <h2 className="header">Select Outfits</h2> */}
       <div className="day-list">
@@ -206,7 +226,7 @@ export default function SelectOutfits () {
           Continue
         </button>
       </div>
-      
+
       {/* <Collapse isOpen={error.isOutfitError}> */}
       {error.isOutfitError && (
         <div className="error">There are errors with the following outfits:

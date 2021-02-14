@@ -8,7 +8,7 @@ import Chip from '@material-ui/core/Chip';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import { AppContext } from '../AppState'
-import AssignItem from './AssignItem'
+// import AssignItem from './AssignItem'
 import { AddCircle, Done } from '@material-ui/icons';
 import { Divider, IconButton, InputBase, makeStyles, Paper } from '@material-ui/core';
 
@@ -76,7 +76,7 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
       <div className="left-column-nav">
         {leftThings.map(thing => (
           <div
-            key={thing.type}
+            key={`${thing.type}-${outfitIndex}`}
             className={thing.type === activeItem.type ? 'active' : ''}
             name={thing.type}
             onClick={() => setActiveItem(thing)}
@@ -88,7 +88,7 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
       </div>
       <div className="right-column">
         <div className="existing-items">
-          {rightThings.map(thing => <AssignedItem key={thing} thing={thing}/>)}
+          {rightThings.map(thing => <AssignedItem key={`${thing.name}-${outfitIndex}`} thing={thing}/>)}
         </div>
         <div className="new-item">
         {addingItem ? (
@@ -110,33 +110,39 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
 
 export default function AssignOutfit (props) {
   const context = useContext(AppContext)
-  const { dayIndex, index, updateNamedItems, updateNamedItemInAllOutfits, outfit } = props
+  const {
+    dayIndex,
+    index,
+    // updateNamedItems,
+    // updateNamedItemInAllOutfits,
+    outfit
+  } = props
 
   function updateActiveOutfit () {
     context.setExpanded(dayIndex, index)
   }
 
 
-  function renderItems () {
-    const items = outfit.items
-    .filter((item) => {
-      return item.dropdown === true && item.isNotIncluded !== true
-    })
-    .map((item, index) => {
-      return (
-        <AssignItem
-          key={index}
-          dayIndex={dayIndex}
-          outfitIndex={index}
-          index={index}
-          item={item}
-          updateNamedItems={updateNamedItems}
-          updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
-        />
-      )
-    })
-    return <div>{items}</div>
-  }
+  // function renderItems () {
+  //   const items = outfit.items
+  //   .filter((item) => {
+  //     return item.dropdown === true && item.isNotIncluded !== true
+  //   })
+  //   .map((item, index) => {
+  //     return (
+  //       <AssignItem
+  //         key={index}
+  //         dayIndex={dayIndex}
+  //         outfitIndex={index}
+  //         index={index}
+  //         item={item}
+  //         updateNamedItems={updateNamedItems}
+  //         updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
+  //       />
+  //     )
+  //   })
+  //   return <div>{items}</div>
+  // }
   // const CarrotIcon = outfit.expanded ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
 
   return (
@@ -181,7 +187,11 @@ AssignOutfit.propTypes = {
 }
 
 AssignedItem.propTypes = {
-  thing: PropTypes.string,
+  thing: PropTypes.shape({
+    id: PropTypes.number,
+    name: PropTypes.string,
+    parentType: PropTypes.string,
+  }),
 }
 
 NewMenu.propTypes = {

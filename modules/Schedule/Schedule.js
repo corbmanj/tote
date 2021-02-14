@@ -136,7 +136,7 @@ export default function Schedule () {
         <input
           className="city-input"
           placeholder="City, St"
-          value={cityState}
+          value={cityState || ''}
           type="text"
           onFocus={autofocus}
           onChange={updateCityState}

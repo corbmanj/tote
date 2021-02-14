@@ -70,7 +70,13 @@ export default function LoadTrips () {
     setState({ ...state, showModal: false })
   }
   function renderModal () {
-    return <Modal closeModal={closeModal} trip={state.modalTrip} confirmAction={deleteTrip} />
+    return (
+      <Modal
+        closeModal={closeModal}
+        trip={state.modalTrip}
+        confirmAction={deleteTrip}
+      />
+    )
   }
   
   return (

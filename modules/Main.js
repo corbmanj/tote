@@ -12,7 +12,7 @@ import GetStarted from './GetStarted'
 import Setup from './Setup/SetupMain'
 import LoadTrips from './LoadTrips'
 import Toast from './Shared/Toast'
-import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup'
+// import { CSSTransitionGroup } from 'react-transition-group'
 import { AppContext } from './AppState'
 import './main.scss'
 
@@ -81,16 +81,14 @@ function Main(props) {
       <div className="stage">
         {renderStage()}
       </div>
-      <CSSTransitionGroup
-        transitionName="toast"
-        transitionEnter
-        transitionEnterTimeout={300}
-        transitionAppear={false}
-        transitionLeave
-        transitionLeaveTimeout={300}
-      >
+      {/* <CSSTransitionGroup
+        classNames="toast"
+        enter
+        timeout={{enter: 300, exit: 300}}
+        exit
+      > */}
         {context.showToast && renderToast()}
-      </CSSTransitionGroup>
+      {/* </CSSTransitionGroup> */}
       <div className="footer">
         {conditionallyRenderFooter()}
       </div>
