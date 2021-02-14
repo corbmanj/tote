@@ -32,12 +32,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function AssignedItem ({ thing }) {
-  function handleClick(e) {
-    console.log('clicked', e.target.label)
+function AssignedItem ({ thing, dayIndex, outfitIndex, selected }) {
+  const context = useContext(AppContext)
+  function handleClick() {
+    context.updateOutfitItem(dayIndex, outfitIndex, thing.parentType, thing.id)
   }
 
-  return <Chip label={thing.name} onClick={handleClick} className="named-item-chip"/>
+  return <Chip label={thing.name} onClick={handleClick} className="named-item-chip" color={selected ? 'primary' : 'default'}/>
 }
 
 function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
@@ -82,13 +83,20 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
             onClick={() => setActiveItem(thing)}
           >
             {thing.type}
-            {/* {thing === active && <div className="triangle"></div>} */}
           </div>
         ))}
       </div>
       <div className="right-column">
         <div className="existing-items">
-          {rightThings.map(thing => <AssignedItem key={`${thing.name}-${outfitIndex}`} thing={thing}/>)}
+          {rightThings.map(thing => (
+            <AssignedItem
+              key={`${thing.name}-${outfitIndex}`}
+              thing={thing}
+              dayIndex={dayIndex}
+              outfitIndex={outfitIndex}
+              selected={activeItem.id === thing.id}
+            />
+          ))}
         </div>
         <div className="new-item">
         {addingItem ? (
@@ -192,6 +200,9 @@ AssignedItem.propTypes = {
     name: PropTypes.string,
     parentType: PropTypes.string,
   }),
+  dayIndex: PropTypes.number,
+  outfitIndex: PropTypes.number,
+  selected: PropTypes.bool,
 }
 
 NewMenu.propTypes = {
