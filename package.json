@@ -51,7 +51,7 @@
     "react-date-range": "^1.0.3",
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
-    "react-transition-group": "^1.2.1",
+    "react-transition-group": "^4.4.1",
     "sass-loader": "^8.0.2",
     "style-loader": "^0.23.1",
     "tls": "0.0.1",
