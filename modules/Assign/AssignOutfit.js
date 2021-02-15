@@ -1,36 +1,16 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 // import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 // import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Accordion from '@material-ui/core/Accordion';
-import Chip from '@material-ui/core/Chip';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Accordion from '@material-ui/core/Accordion'
+import Chip from '@material-ui/core/Chip'
+import AccordionDetails from '@material-ui/core/AccordionDetails'
+import AccordionSummary from '@material-ui/core/AccordionSummary'
 import { AppContext } from '../AppState'
+import ItemInput from '../Shared/ItemInput'
 // import AssignItem from './AssignItem'
-import { AddCircle, Done } from '@material-ui/icons';
-import { Divider, IconButton, InputBase, makeStyles, Paper } from '@material-ui/core';
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-    width: 200,
-  },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    height: 28,
-    margin: 4,
-  },
-}));
+import { AddCircle } from '@material-ui/icons'
 
 function AssignedItem ({ thing, dayIndex, outfitIndex, selected }) {
   const context = useContext(AppContext)
@@ -42,9 +22,7 @@ function AssignedItem ({ thing, dayIndex, outfitIndex, selected }) {
 }
 
 function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
-  const classes = useStyles()
   const [addingItem, setAddingItem] = useState(false)
-  const newItemRef = useRef()
   const context = useContext(AppContext)
   const namedItems = context.tote.namedItems || []
 
@@ -60,15 +38,12 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
     setAddingItem(!addingItem)
   }
 
-  function handleSave () {
-    console.log('saving', newItemRef.current.value)
-
-    if (newItemRef.current.value.trim() !== '') {
+  function handleSave (newValue) {
+    if (newValue.trim() !== '') {
       const newId = context.tote.namedItems && context.tote.namedItems.length ? Math.max(...context.tote.namedItems.map(item => item.id)) + 1 : 1
-      context.addNamedItem(activeItem.parentType, newItemRef.current.value, newId)
+      context.addNamedItem(activeItem.parentType, newValue, newId)
       context.updateOutfitItem(dayIndex, outfitIndex, activeItem.parentType, newId)
     }
-
     toggleAddItem()
   }
   
@@ -100,13 +75,7 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
         </div>
         <div className="new-item">
         {addingItem ? (
-          <Paper component="form" className={classes.root}>
-           <InputBase placeholder="add item..." className={classes.input} inputRef={newItemRef}/>
-           <Divider orientation="vertical" className={classes.divider} />
-           <IconButton color="primary" aria-label="done" onClick={handleSave} className={classes.iconButton}>
-             <Done />
-           </IconButton>
-          </Paper>
+          <ItemInput handleSave={handleSave} />
         )
           : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem} className="named-item-chip" />
         }
@@ -155,13 +124,8 @@ export default function AssignOutfit (props) {
 
   return (
     <Accordion expanded={outfit.expanded} onChange={updateActiveOutfit}>
-      {/*<div className="outfit-card">*/}
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        {/* className="outfit-card-header" onClick={updateActiveOutfit}> */}
-        {/* <div className="outfit-card-toggle"> */}
-          {/* <CarrotIcon /> */}
         <div>{outfit.realName}</div>
-        {/* </div> */}
         <div className="outfit-type">{outfit.type}</div>
       </AccordionSummary>
       <AccordionDetails>
@@ -170,7 +134,6 @@ export default function AssignOutfit (props) {
           dayIndex={dayIndex}
           outfitIndex={index}
         />
-          {/*renderItems()*/}
       </AccordionDetails>
     </Accordion>
   )

@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom'
 import Modal from '../Shared/Modal'
 import NamedItems from '../Shared/NamedItems'
 import AssignDay from './AssignDay'
-import AdditionalItemSection from '../Select/AdditionalItemSection'
+import AdditionalItemSection from '../Shared/AdditionalItems/AdditionalItemSection'
 import { AppContext } from '../AppState'
 import './assign.scss'
 
@@ -104,20 +104,7 @@ export default function AssignItems() {
       />
     )
   })
-  const additionalItemTypes = context.tote.additionalItems.map((type, index) => {
-    return (
-      <AdditionalItemSection
-        key={index}
-        index={index}
-        type={type.name}
-        items={type.items}
-        addItem={addItem}
-        updateItem={updateItem}
-        toggleEditing={toggleEditing}
-        deleteItem={deleteItem}
-      />
-    )
-  })
+
   return (
     <div className="outfits">
       {editingNamedItems &&
@@ -155,7 +142,12 @@ export default function AssignItems() {
       {/* </div> */}
       <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
-        {additionalItemTypes}
+        <AdditionalItemSection
+          addItem={addItem}
+          updateItem={updateItem}
+          toggleEditing={toggleEditing}
+          deleteItem={deleteItem}
+        />
       </div>
     </div>
   )
