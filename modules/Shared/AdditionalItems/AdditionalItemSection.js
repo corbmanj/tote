@@ -6,12 +6,13 @@ import { AppContext } from '../../AppState'
 import ItemInput from '../ItemInput'
 
 function AdditionalItem ({ thing, sectionId }) {
+  const isSelected = thing.selected !== false
   const context = useContext(AppContext)
   function handleClick() {
-    context.selectAdditionalItem(sectionId, thing.id, thing.selected)
+    context.selectAdditionalItem(sectionId, thing.id, isSelected)
   }
 
-  return <Chip label={thing.name} onClick={handleClick} className="named-item-chip" color={thing.selected ? 'primary' : 'default'}/>
+  return <Chip label={thing.name} onClick={handleClick} className="named-item-chip" color={isSelected ? 'primary' : 'default'}/>
 }
 
 export default function AdditionalItemSection() {
