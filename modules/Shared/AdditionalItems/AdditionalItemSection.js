@@ -1,9 +1,12 @@
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import AddCircle from '@material-ui/icons/AddCircle'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core'
 import Chip from '@material-ui/core/Chip'
 import { AppContext } from '../../AppState'
 import ItemInput from '../ItemInput'
+import './AdditionalItems.scss'
 
 function AdditionalItem ({ thing, sectionId }) {
   const isSelected = thing.selected !== false
@@ -35,34 +38,41 @@ export default function AdditionalItemSection() {
   }
 
   return (
-    <div className="item-picker">
-      <div className="left-column-nav">
-        {leftThings.map(thing => (
-          <div
-            key={thing.id}
-            className={thing.id === activeItemId ? 'active' : ''}
-            name={thing.name}
-            onClick={() => setActiveItemId(thing.id)}
-          >
-            {thing.name}
+    <Accordion defaultExpanded className="additionalItemsSection">
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <div>Additional Items To Pack</div>
+      </AccordionSummary>
+      <AccordionDetails className="additionalItemsDetails">
+        <div className="item-picker">
+          <div className="left-column-nav">
+            {leftThings.map(thing => (
+              <div
+                key={thing.id}
+                className={thing.id === activeItemId ? 'active' : ''}
+                name={thing.name}
+                onClick={() => setActiveItemId(thing.id)}
+              >
+                {thing.name}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <div className="right-column">
-        <div className="existing-items">
-          {rightThings.map(thing => (
-            <AdditionalItem key={thing.id} thing={thing} sectionId={activeItemId} />
-          ))}
+          <div className="right-column">
+            <div className="existing-items">
+              {rightThings.map(thing => (
+                <AdditionalItem key={thing.id} thing={thing} sectionId={activeItemId} />
+              ))}
+            </div>
+            <div className="new-item">
+            {addingItem ? (
+              <ItemInput onSave={handleSave} />
+            )
+              : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem} className="named-item-chip" />
+            }
+            </div>
+          </div>
         </div>
-        <div className="new-item">
-        {addingItem ? (
-          <ItemInput onSave={handleSave} />
-        )
-          : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem} className="named-item-chip" />
-        }
-        </div>
-      </div>
-    </div>
+      </AccordionDetails>
+    </Accordion>
   )
 
 

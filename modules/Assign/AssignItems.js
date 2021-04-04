@@ -121,14 +121,12 @@ export default function AssignItems() {
           />
         </Modal>
       }
-      {/* <div className="flex-5">
-        <button style={{float: 'right'}}
-          onClick={toggleModal}
-          disabled={!context.tote.namedItems}
-        >
-          Edit Named Items
-        </button> */}
-      {/* <h2 className="header">Pack Items</h2> */}
+      <AdditionalItemSection
+          // addItem={addItem}
+          updateItem={updateItem}
+          toggleEditing={toggleEditing}
+          deleteItem={deleteItem}
+      />
       <div className="day-list">
         {days}
         <button
@@ -139,16 +137,6 @@ export default function AssignItems() {
           </button>
       </div>
       { error ? <span style={{ float: 'right' }} className="error">{errorMsg}</span> : null}
-      {/* </div> */}
-      <div className="flex-2">
-        <h2 className="header">Other Items to Pack</h2>
-        <AdditionalItemSection
-          // addItem={addItem}
-          updateItem={updateItem}
-          toggleEditing={toggleEditing}
-          deleteItem={deleteItem}
-        />
       </div>
-    </div>
   )
 }
