@@ -188,6 +188,7 @@ export class AppProvider extends React.Component {
                     foundItem.selected = !isSelected
                 }
             }
+            newState.tote.additionalItems = newState.additionalItems
             return newState
         })
     }

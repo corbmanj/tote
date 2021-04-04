@@ -1,6 +1,5 @@
   .item-picker {
     display: flex;
-    align-items: center;
     .left-column-nav {
       border-right: 2px solid #c4c4c4;
       background: #f3f3f3;
@@ -23,6 +22,7 @@
       flex-direction: column;
       flex: 1 1 auto;
       margin-right: 20px;
+      align-self: center;
       .existing-items {
         display: flex;
         flex-wrap: wrap;
