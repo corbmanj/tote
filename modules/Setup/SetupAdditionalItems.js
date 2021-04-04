@@ -1,9 +1,15 @@
 import React, { useState, useContext, useRef } from 'react'
-import { Collapse, Icon } from '@blueprintjs/core'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import DeleteIcon from '@material-ui/icons/Delete';
 import SetupAdditionalItemsSection from './SetupAdditionalItemsSection'
 import { AppContext } from '../AppState'
 
-export default function SetupAdditionalItems (props) {
+export default function SetupAdditionalItems () {
   const context = useContext(AppContext)
   const [isOpen, setIsOpen] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -37,11 +43,13 @@ export default function SetupAdditionalItems (props) {
 
   const sections = context.additionalItems.map((section, index) => {
     const sectionName = useRef(section.name)
-    const carotClass = isOpen === index ? 'chevron-down' : 'chevron-right'
+    // const CarrotIcon = isOpen === index ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
     
     return (
       <li key={index}>
-        <Icon onClick={() => toggleOpen(index)} icon={carotClass} />
+        <Accordion expanded={isOpen === index} onChange={() => toggleOpen(index)}>
+        {/* <CarrotIcon onClick={() => toggleOpen(index)} /> */}
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <h4 className="inline-header">
           { editing === index ? 
             <input
@@ -55,16 +63,18 @@ export default function SetupAdditionalItems (props) {
             /> :
             <span onDoubleClick={() => handleEditClick(index)}>{section.name}</span>
           }
-          <Icon icon="delete" iconSize={15} onClick={() => handleDeleteClick(index)} />
+          <DeleteIcon onClick={() => handleDeleteClick(index)} />
         </h4>
-        <Collapse isOpen={isOpen === index}>
+        </AccordionSummary>
+        <AccordionDetails>
           <SetupAdditionalItemsSection
             key={index}
             id={section.id}
             items={section.items}
             name={section.name}
           />
-        </Collapse>
+        </AccordionDetails>
+        </Accordion>
       </li>
     )
   })

@@ -1,22 +1,28 @@
-import React, { useContext } from 'react'
-import { Icon } from '@blueprintjs/core'
-import { AppContext } from '../AppState'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useHistory } from 'react-router-dom'
+import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
+import SettingsIcon from '@material-ui/icons/Settings'
 import './footer.scss'
 
 export default function Footer (props) {
-    const { setStage } = useContext(AppContext)
+    const history = useHistory()
     const { isSetup } = props
     const mainClass = isSetup ? 'footerItem' : 'footerItem active'
     const setupClass = isSetup ? 'footerItem active' : 'footerItem'
     
     function handleFooterClick(ev) {
-        setStage(ev.target.id)
+        history.push(`/${ev.target.id}`)
     }
 
     return (
         <div className="footer">
-            <div id="getStarted" onClick={handleFooterClick} className={mainClass}><Icon icon="briefcase" iconSize={32} /></div>
-            <div id="setup" onClick={handleFooterClick} className={setupClass}><Icon icon="cog" iconSize={32} /></div>
+            <div id="getStarted" onClick={handleFooterClick} className={mainClass}><BusinessCenterIcon /></div>
+            <div id="setup" onClick={handleFooterClick} className={setupClass}><SettingsIcon /></div>
         </div>
     )
+}
+
+Footer.propTypes = {
+    isSetup: PropTypes.bool
 }

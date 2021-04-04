@@ -20,7 +20,7 @@ export default function Schedule () {
   useEffect(() => {
     async function handleReload () {
       await context.handleReload()
-      setDates({startDate: context.startDate || moment(new Date()), endDate: context.endDate || moment(new Date())})
+      setDates({startDate: moment(context.startDate || new Date()), endDate: moment(context.endDate || new Date())})
       setCityState(context.city)
     }
     handleReload()
@@ -80,7 +80,6 @@ export default function Schedule () {
   }
 
   // function handleSelectDates (...args) {
-  //   console.log('arg', args)
   // }
 
   // function handleKeyPress (ev) {
@@ -137,7 +136,7 @@ export default function Schedule () {
         <input
           className="city-input"
           placeholder="City, St"
-          value={cityState}
+          value={cityState || ''}
           type="text"
           onFocus={autofocus}
           onChange={updateCityState}

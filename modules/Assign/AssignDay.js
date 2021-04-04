@@ -1,48 +1,46 @@
-import React, { useState } from 'react'
-import moment from 'moment'
+import React from 'react'
+import PropTypes from 'prop-types'
 import AssignOutfit from './AssignOutfit'
-import Skycons from '../Shared/Skycons'
+import { DayHeader } from '../Shared/DayHeader'
 
 export default function AssignDay (props) {
-  const [isOpen, setIsOpen] = useState(props.index === 0)
+  const { day, index, updateNamedItems, updateNamedItemInAllOutfits } = props
 
-  function toggleOpen () {
-    setIsOpen(!isOpen)
-  }
-
-  const outfits = props.day.outfits.map((outfit, index) => {
+  const outfits = day.outfits.map((outfit, outfitIndex) => {
     return (
       <AssignOutfit
-        key={index}
-        dayIndex={props.index}
-        index={index}
+        key={outfitIndex}
+        dayIndex={index}
+        index={outfitIndex}
         outfit={outfit}
-        updateNamedItems={props.updateNamedItems}
-        updateNamedItemInAllOutfits={props.updateNamedItemInAllOutfits}
+        updateNamedItems={updateNamedItems}
+        updateNamedItemInAllOutfits={updateNamedItemInAllOutfits}
       />
     )
   })
 
-  const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
-
   return (
-    <div className="day-section">
-      <div className="day-details">
-        {moment(props.day.date).format('ddd, MMM Do YYYY')}
-        <Skycons
-          color='black' 
-          icon={props.day.icon.toUpperCase()}
-          autoplay={true}
-        />
-        <div>{props.day.summary}</div>
-        <div className="day-temps">
-          <div>High: {props.day.high} &deg;F</div>
-          <div>Low: {props.day.low}&deg; F</div>
-        </div>
-      </div>
-      <div className="outfit-list">
-        {outfits}
-      </div>
-    </div>
+    <DayHeader day={props.day}>
+      {outfits}
+    </DayHeader>
   )
+}
+
+AssignDay.propTypes = {
+  day: PropTypes.shape({
+    outfits: PropTypes.arrayOf(PropTypes.shape({
+      type: PropTypes.string,
+      realName: PropTypes.string,
+      id: PropTypes.number,
+      expanded: PropTypes.bool,
+      items: PropTypes.arrayOf(PropTypes.shape({
+        dropdown: PropTypes.bool,
+        parentType: PropTypes.string,
+        type: PropTypes.string,
+      })),
+    }))
+  }),
+  index: PropTypes.number,
+  updateNamedItems: PropTypes.func,
+  updateNamedItemInAllOutfits: PropTypes.func,
 }

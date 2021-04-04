@@ -1,103 +1,39 @@
-.assign-items {
-    .day-list {
-      display: flex;
-      flex-direction: column;
-      .continue {
-        width: 20%;
-        margin: 20px auto;
-      }
-    }
-    .day-section {
-      display: flex;
-      flex-direction: column;
-      .day-details {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        .day-temps {
-          display: flex;
-          flex-direction: column;
-        }
-      }
-      .outfit-list {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        
-        .outfit-card {
-          background: #fefefe;
-          margin: 15px 10px;
-          width: 100%;
-          display: flex;
-          flex-direction: column;
-          box-shadow: -2px 2px 2px darkgrey;
-
-          .outfit-card-header {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 10px 20px;
-
-            .outfit-card-toggle {
-              display: flex;
-            }
-
-            .outfit-type {
-              margin-left: auto;
-              padding: 5px 25px;
-              background: lightgrey;
-              border-radius: 3px;
-            }
-          }
-
-          .outfit-details {
-            .buttons {
-              display: flex;
-              justify-content: flex-end;
-              button {
-                margin: 2px 5px;
-              }
-            }
-          }
-        }
-        .add-outfit {
-          width: 90%;
-          margin: 10px 0;
-        }
-      }
-    }
-    
-  }
-
   .item-picker {
     display: flex;
-    justify-content: space-between;
-    border-top: 1px solid #c4c4c4;
     .left-column-nav {
       border-right: 2px solid #c4c4c4;
       background: #f3f3f3;
+      margin-right: 20px;
+      flex: 0 0 auto;
       div {
-        padding: 5px 15px;
+        padding: 0 25px;
         cursor: pointer;
+        line-height: 2em;
         &.active {
           background: #fefefe;
           color: #497ea1;
           display: block;
           position: relative;
         }
-        .triangle {
-          display: inline-block;
-          position: absolute;
-          width: 0;
-          height: 0;
-          border: 7px solid transparent;
-          border-right-color: #c4c4c4;
-          left: 48px;
-          padding: 0;
-        }
       }
     }
     .right-column {
-      margin: 0 25px 0 auto;
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      margin-right: 20px;
+      align-self: center;
+      .existing-items {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .new-item {
+        align-self: center;
+      }
+
+      .named-item-chip {
+        margin: 5px;
+      }
     }
   }

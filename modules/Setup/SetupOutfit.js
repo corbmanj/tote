@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from 'react'
+import DeleteIcon from '@material-ui/icons/Delete';
 import { AppContext } from '../AppState'
 import SetupOutfitItem from './SetupOutfitItem'
-import { Icon } from '@blueprintjs/core'
 
 export default function SetupOutfit (props) {
   const [editing, setEditing] = useState(false)
@@ -48,7 +48,7 @@ export default function SetupOutfit (props) {
     if (!editing) {
       return (
         <span onDoubleClick={toggleEditing}>
-          <Icon icon="delete" onClick={handleRemoveOutfit} />
+          <DeleteIcon onClick={handleRemoveOutfit} />
           {props.outfit.type}
         </span>)
     } else {
