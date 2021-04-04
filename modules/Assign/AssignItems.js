@@ -52,16 +52,16 @@ export default function AssignItems() {
     context.setTote(tote)
   }
 
-  function addItem(index) {
-    const tote = { ...context.tote }
-    tote.additionalItems = tote.additionalItems || []
-    const maxId = tote.additionalItems[index].items.reduce((a, b) => {
-      return +a > +b.id ? +a : +b.id
-    }, -1)
-    const newId = maxId + 1
-    tote.additionalItems[index].items.push({ id: newId, name: 'new item' })
-    context.setTote(tote)
-  }
+  // function addItem(index) {
+  //   const tote = { ...context.tote }
+  //   tote.additionalItems = tote.additionalItems || []
+  //   const maxId = tote.additionalItems[index].items.reduce((a, b) => {
+  //     return +a > +b.id ? +a : +b.id
+  //   }, -1)
+  //   const newId = maxId + 1
+  //   tote.additionalItems[index].items.push({ id: newId, name: 'new item' })
+  //   context.setTote(tote)
+  // }
 
   // TODO: doesn't seem like it needs to update tote for editing
   function toggleEditing(index) {
@@ -143,7 +143,7 @@ export default function AssignItems() {
       <div className="flex-2">
         <h2 className="header">Other Items to Pack</h2>
         <AdditionalItemSection
-          addItem={addItem}
+          // addItem={addItem}
           updateItem={updateItem}
           toggleEditing={toggleEditing}
           deleteItem={deleteItem}

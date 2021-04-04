@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import cloneDeep from 'lodash.clonedeep'
 
 export const AppContext = React.createContext({})
 export const AppConsumer = AppContext.Consumer
@@ -13,7 +14,7 @@ export class AppProvider extends React.Component {
         this.state = this.initialState()
     }
 
-    initialState () {
+    initialState() {
         const defaultState = {
             stage: 'login',
             showToast: false,
@@ -45,8 +46,8 @@ export class AppProvider extends React.Component {
     }
 
     setShowToast = (toastProps) => {
-        this.setState({showToast: true, toastProps})
-        setTimeout(() => { this.setState({showToast: false}) }, 1500)
+        this.setState({ showToast: true, toastProps })
+        setTimeout(() => { this.setState({ showToast: false }) }, 1500)
     }
 
     setStartDate = (startDate) => {
@@ -81,7 +82,7 @@ export class AppProvider extends React.Component {
     }
 
     setTote = (tote) => {
-        const conditionallySave = this.state.tripId ? this.saveTrip : () => {}
+        const conditionallySave = this.state.tripId ? this.saveTrip : () => { }
         this.setState({ tote }, () => conditionallySave())
     }
 
@@ -115,7 +116,7 @@ export class AppProvider extends React.Component {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
 
-        let newType = {type: "new outfit type", items: []}
+        let newType = { type: "new outfit type", items: [] }
         let outfitTypes = [...this.state.outfitTypes]
         outfitTypes.push(newType)
 
@@ -123,7 +124,7 @@ export class AppProvider extends React.Component {
             const result = await axios.post(
                 `${baseUrl}/db/addOutfit/${this.state.userId}`,
                 newType,
-                { 
+                {
                     method: 'POST',
                     headers: myHeaders,
                     mode: 'cors',
@@ -156,10 +157,10 @@ export class AppProvider extends React.Component {
     removeOutfitType = async (outfitId) => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-    
+
         try {
             const response = await axios.delete(
-                `${baseUrl}/db/deleteOutfit/${this.state.userId}/${outfitId}`, 
+                `${baseUrl}/db/deleteOutfit/${this.state.userId}/${outfitId}`,
                 {
                     method: 'DELETE',
                     headers: myHeaders,
@@ -171,10 +172,37 @@ export class AppProvider extends React.Component {
         } catch (err) {
             console.error(err)
         }
-      }
+    }
 
     setAdditionalItems = (additionalItems) => {
         this.setState({ additionalItems })
+    }
+
+    selectAdditionalItem = (sectionId, itemId, isSelected) => {
+        this.setState((prevState) => {
+            const newState = cloneDeep(prevState)
+            const section = newState.additionalItems.find(sec => sec.id === sectionId)
+            if (section) {
+                const foundItem = section.items.find(item => item.id === itemId)
+                if (foundItem) {
+                    foundItem.selected = !isSelected
+                }
+            }
+            return newState
+        })
+    }
+
+    addAdditionalItem = (categoryId, itemName) => {
+        const additionalItems = [...this.state.additionalItems]
+        const index = additionalItems.findIndex(category => categoryId === category.id)
+        if (index > -1) {
+            const maxId = additionalItems[index].items.reduce((a, b) => {
+                return +a > +b.id ? +a : +b.id
+            }, -1)
+            const newId = maxId + 1
+            additionalItems[index].items.push({ id: newId, name: itemName })
+            this.setState({ additionalItems })
+        }
     }
 
     addAdditionalItemCategory = async () => {
@@ -186,19 +214,19 @@ export class AppProvider extends React.Component {
         }
         try {
             const result = await axios.post(
-            `${baseUrl}/db/additionalItems/${this.state.userId}`, 
-            newCategory,
-            {
-                method: 'POST',
-                headers: myHeaders,
-                mode: 'cors',
-                cache: 'default'
-            })
+                `${baseUrl}/db/additionalItems/${this.state.userId}`,
+                newCategory,
+                {
+                    method: 'POST',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
+                })
             newCategory.id = result.id
             const tempItemCategories = [...this.state.additionalItems]
             tempItemCategories.push(newCategory)
             this.setAdditionalItems(tempItemCategories)
-        } catch(err) {
+        } catch (err) {
             console.error(err)
         }
     }
@@ -211,16 +239,16 @@ export class AppProvider extends React.Component {
             items: itemList
         }
         myHeaders.append('Content-Type', 'application/json');
-    
+
         try {
             await axios.put(
-                `${baseUrl}/db/updateAdditionalItems/${this.state.userId}/${id}`, 
+                `${baseUrl}/db/updateAdditionalItems/${this.state.userId}/${id}`,
                 itemSection,
                 {
-                method: 'PUT',
-                headers: myHeaders,
-                mode: 'cors',
-                cache: 'default'
+                    method: 'PUT',
+                    headers: myHeaders,
+                    mode: 'cors',
+                    cache: 'default'
                 }
             )
             const tempItemCategories = [...this.state.additionalItems]
@@ -236,10 +264,10 @@ export class AppProvider extends React.Component {
         myHeaders.append('Content-Type', 'application/json');
 
         const sectionId = this.state.additionalItems[index].id
-    
+
         try {
             const response = await axios.delete(
-                `${baseUrl}/db/deleteAdditionalItemSection/${this.state.userId}/${sectionId}`, 
+                `${baseUrl}/db/deleteAdditionalItemSection/${this.state.userId}/${sectionId}`,
                 {
                     method: 'DELETE',
                     headers: myHeaders,
@@ -310,9 +338,9 @@ export class AppProvider extends React.Component {
     addNamedItem = (parentType, value, newId) => {
         this.setState(prevState => {
             let namedItems = prevState.tote.namedItems || []
-            let newItem = {parentType: parentType, name: value, id: newId}
+            let newItem = { parentType: parentType, name: value, id: newId }
             namedItems.push(newItem)
-            return { tote: {...prevState.tote, namedItems}}
+            return { tote: { ...prevState.tote, namedItems } }
         }, () => this.saveTrip())
     }
 
@@ -326,9 +354,9 @@ export class AppProvider extends React.Component {
 
     saveTrip = async (currentState = this.state) => {
         var myHeaders = new Headers();
-    
+
         myHeaders.append('Content-Type', 'application/json');
-    
+
         try {
             const response = await axios.post(
                 `${baseUrl}/db/tote/updateTrip/${this.state.tripId}`,
@@ -357,9 +385,9 @@ export class AppProvider extends React.Component {
         }
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
-    
+
         try {
-            const response = await axios.put(url, 
+            const response = await axios.put(url,
                 update,
                 {
                     method: 'PUT',
@@ -368,7 +396,7 @@ export class AppProvider extends React.Component {
                     cache: 'default'
                 }
             )
-            
+
             if (response.status >= 400) {
                 throw new Error("Bad response from server")
             }
@@ -379,34 +407,34 @@ export class AppProvider extends React.Component {
 
     handleReload = async () => {
         if (!this.state.userId && !this.state.tripId) {
-          var myHeaders = new Headers();
-          myHeaders.append('Content-Type', 'application/json');
-    
-          try {
-            const userId = window.localStorage.getItem('userId')
-            const tripId = window.localStorage.getItem('tripId')
-            if (userId && tripId) {
-              const url = `${baseUrl}/db/tote/getTrip/${userId}/${tripId}`
-              const response = await axios.get(url,
-                {
-                    method: 'GET',
-                    headers: myHeaders,
-                    mode: 'cors',
-                    cache: 'default'
+            var myHeaders = new Headers();
+            myHeaders.append('Content-Type', 'application/json');
+
+            try {
+                const userId = window.localStorage.getItem('userId')
+                const tripId = window.localStorage.getItem('tripId')
+                if (userId && tripId) {
+                    const url = `${baseUrl}/db/tote/getTrip/${userId}/${tripId}`
+                    const response = await axios.get(url,
+                        {
+                            method: 'GET',
+                            headers: myHeaders,
+                            mode: 'cors',
+                            cache: 'default'
+                        }
+                    )
+                    if (response.status >= 400) {
+                        throw new Error("Bad response from server")
+                    }
+                    this.setTrip(response.data[0])
+                    this.setState({ userId })
                 }
-              )
-              if (response.status >= 400) {
-                throw new Error("Bad response from server")
-              }
-              this.setTrip(response.data[0])
-              this.setState({ userId })
+                else {
+                    console.error('no userId or tripId')
+                }
+            } catch (err) {
+                console.error(err)
             }
-            else {
-                console.error('no userId or tripId')
-            }  
-          } catch (err) {
-            console.error(err)
-          }
         }
     }
 
@@ -441,6 +469,8 @@ export class AppProvider extends React.Component {
                     addOutfitType: this.addOutfitType,
                     additionalItems: this.state.additionalItems,
                     setAdditionalItems: this.setAdditionalItems,
+                    selectAdditionalItem: this.selectAdditionalItem,
+                    addAdditionalItem: this.addAdditionalItem,
                     addAdditionalItemCategory: this.addAdditionalItemCategory,
                     updateAdditionalItemCategory: this.updateAdditionalItemCategory,
                     deleteAdditionalItemCategory: this.deleteAdditionalItemCategory,

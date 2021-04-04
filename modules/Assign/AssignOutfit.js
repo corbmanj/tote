@@ -75,7 +75,7 @@ function NewMenu ({ outfitItems, dayIndex, outfitIndex }) {
         </div>
         <div className="new-item">
         {addingItem ? (
-          <ItemInput handleSave={handleSave} />
+          <ItemInput onSave={handleSave} />
         )
           : <Chip key="add" icon={<AddCircle />} label="Add item" onClick={toggleAddItem} className="named-item-chip" />
         }
