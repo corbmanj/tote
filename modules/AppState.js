@@ -5,7 +5,7 @@ import cloneDeep from 'lodash.clonedeep'
 export const AppContext = React.createContext({})
 export const AppConsumer = AppContext.Consumer
 
-const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
+const baseUrl = process.env.NODE_ENV === 'production' ? `http://localhost:${process.env.PORT}` : 'http://localhost:8080'
 
 export class AppProvider extends React.Component {
     constructor(props) {
