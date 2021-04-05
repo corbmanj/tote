@@ -6,7 +6,7 @@ import { Accordion, AccordionSummary, AccordionDetails } from '@material-ui/core
 import Chip from '@material-ui/core/Chip'
 import { AppContext } from '../../AppState'
 import ItemInput from '../ItemInput'
-import './AdditionalItems.scss'
+import './additionalItems.scss'
 
 function AdditionalItem ({ thing, sectionId }) {
   const isSelected = thing.selected !== false
