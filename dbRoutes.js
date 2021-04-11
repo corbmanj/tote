@@ -18,10 +18,11 @@ const config = {
 }
 // 
 const dburl = process.env.TOTE_DB_URL || 'postgres://localhost:5432/tote_local';
-let client = new pg.Client({
+
+let client = process.env.NODE_ENV === 'production' ? new pg.Client({
   connectionString: dburl,
   ssl: { rejectUnauthorized: false }
-});
+}) : new pg.Client({connectionString: dburl})
 // if (process.env.NODE_ENV === 'production') {
 //   client = new pg.Client({
 //     user: process.env.RDS_USERNAME,
