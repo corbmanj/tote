@@ -3,10 +3,10 @@ import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import moment from 'moment'
 import DeleteIcon from '@material-ui/icons/Delete';
-import Modal from './Shared/ConfirmModal'
-import { AppContext } from './AppState';
+import Modal from '../Shared/ConfirmModal'
+import { AppContext } from '../AppState';
 
-const baseUrl = process.env.API_URL || 'http://localhost:8080'
+const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
 export default function LoadTrips () {
   const context = useContext(AppContext)
@@ -14,15 +14,7 @@ export default function LoadTrips () {
   const [state, setState] = useState({})
   
   useEffect(() => {
-    async function getTripList () {
-      try { 
-        const response = await axios.get(`${baseUrl}/db/tote/getTrips/${context.userId}`)
-        setState({ ...state, tripList: response.data })
-      } catch (err)  {
-        console.error(err)
-      }
-    }
-    getTripList()
+    context.getTripList()
   }, [])
   
   async function loadTrip (trip) {
@@ -34,7 +26,7 @@ export default function LoadTrips () {
     setState({ ...state, showModal: true, modalTrip: trip })
   }
   async function deleteTrip (id) {
-    const newList = state.tripList
+    const newList = context.tripList
     const deleteIndex = newList.findIndex(trip => {return trip.tripId === id})
     try { 
       await axios.delete(`${baseUrl}/db/tote/deleteTrip/${id}`)
@@ -45,7 +37,7 @@ export default function LoadTrips () {
     }
   }
   function renderTripList () {
-    const tripList = state.tripList.sort((a,b) => {
+    const tripList = context.tripList.sort((a,b) => {
       if (a.startDate > b.startDate) {
         return -1
       } else if (a.startDate < b.startDate) {
@@ -69,7 +61,10 @@ export default function LoadTrips () {
   function closeModal () {
     setState({ ...state, showModal: false })
   }
-  function renderModal () {
+  function DeleteTripModal ({ isOpen }) {
+    if (!isOpen) {
+      return null
+    }
     return (
       <Modal
         closeModal={closeModal}
@@ -81,9 +76,9 @@ export default function LoadTrips () {
   
   return (
     <div className="tripList">
-      {state.showModal && renderModal()}
+      <DeleteTripModal isOpen={state.showModal} />
       <ol>
-        {state.tripList && renderTripList()}
+        {context.tripList && renderTripList()}
       </ol>
     </div>
   )

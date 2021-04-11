@@ -45,6 +45,15 @@ export class AppProvider extends React.Component {
         }))
     }
 
+    getTripList = async () => {
+        try { 
+          const response = await axios.get(`${baseUrl}/db/tote/getTrips/${this.state.userId}`)
+          this.setState({ tripList: response.data })
+        } catch (err)  {
+          console.error(err)
+        }
+      }
+
     setShowToast = (toastProps) => {
         this.setState({ showToast: true, toastProps })
         setTimeout(() => { this.setState({ showToast: false }) }, 1500)
@@ -488,7 +497,9 @@ export class AppProvider extends React.Component {
                     updateOutfitItem: this.updateOutfitItem,
                     addNamedItem: this.addNamedItem,
                     rawState: this.state,
-                    handleReload: this.handleReload
+                    handleReload: this.handleReload,
+                    tripList: this.state.tripList,
+                    getTripList: this.getTripList,
                 }}
             >
                 {children}
