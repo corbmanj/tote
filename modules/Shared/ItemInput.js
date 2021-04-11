@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Done } from '@material-ui/icons';
 import { Divider, IconButton, InputBase, makeStyles, Paper } from '@material-ui/core';
@@ -31,9 +31,16 @@ export default function ItemInput({ onSave }) {
     onSave(newItemRef.current.value)
   }
 
+  function handleKeyPress(ev) {
+    if (ev.key === 'Enter') {
+      ev.preventDefault()
+      handleSave()
+    }
+  }
+
   return (
     <Paper component="form" className={classes.root}>
-      <InputBase placeholder="add item..." className={classes.input} inputRef={newItemRef} />
+      <InputBase placeholder="add item..." autoFocus className={classes.input} inputRef={newItemRef} onKeyPress={handleKeyPress} />
       <Divider orientation="vertical" className={classes.divider} />
       <IconButton color="primary" aria-label="done" onClick={handleSave} className={classes.iconButton}>
         <Done />
