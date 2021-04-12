@@ -1,29 +1,40 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
+import Chip from '@material-ui/core/Chip'
+import { AppContext } from '../AppState'
+
+function OutfitItem({type, isNotIncluded, disabled, onClick}) {
+  const [tempSelected, setTempSelected] = useState(isNotIncluded)
+  function toggleItem() {
+    setTempSelected(!tempSelected)
+    onClick(type, isNotIncluded)
+  }
+  return (
+    <Chip
+      label={type}
+      onClick={toggleItem}
+      color={tempSelected ? 'default' : 'primary'}
+      disabled={disabled}
+    />
+  )
+
+}
 
 export default function CheckboxSection(props) {
-  const { toggle, disabled, outfit } = props
+  const context = useContext(AppContext)
+  const { toggle, disabled, outfitIndex, dayIndex } = props
 
-  function toggleItem(ev) {
-    toggle(ev.target.value, ev.target.checked)
-  }
+  const outfitItems = context.days[dayIndex].outfits[outfitIndex].items
 
-  const outfitItems = outfit.items || []
-
-  const checkboxes = outfitItems.map((item, key) => {
-    return (
-      <label key={key} className="checkbox-input">
-        <input
-          type="checkbox"
-          value={item.type}
-          defaultChecked={!item.isNotIncluded}
-          onClick={toggleItem}
-          disabled={disabled}
-        />
-        {item.type}
-      </label>
-    )
-  })
+  const checkboxes = outfitItems.map((item, key) => (
+    <OutfitItem
+      key={key}
+      type={item.type}
+      onClick={toggle}
+      disabled={disabled}
+      isNotIncluded={!!item.isNotIncluded}
+    />
+  ))
 
   return (
     <div className="checkboxes">
@@ -42,4 +53,13 @@ CheckboxSection.propTypes = {
   }).isRequired,
   disabled: PropTypes.bool,
   toggle: PropTypes.func,
+  outfitIndex: PropTypes.number,
+  dayIndex: PropTypes.number
+}
+
+OutfitItem.propTypes = {
+  type: PropTypes.string,
+  isNotIncluded: PropTypes.bool,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
 }

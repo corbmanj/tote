@@ -81,11 +81,7 @@ export default function OutfitSection(props) {
   }
 
   function toggleItem(name, isChecked) {
-    let tempOutfit = outfit
-
-    tempOutfit.items.forEach((item) => {
-      if (item.type === name) { item.isNotIncluded = !isChecked }
-    })
+    context.toggleOutfitItem(dayIndex, index, name, isChecked)
   }
 
   function renderCopyModal() {
@@ -97,6 +93,8 @@ export default function OutfitSection(props) {
     return (
       <AccordionDetails className="accordion-content">
         <CheckboxSection
+          outfitIndex={index}
+          dayIndex={dayIndex}
           outfit={outfit}
           outfitType={outfitType}
           toggle={toggleItem}

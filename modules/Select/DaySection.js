@@ -5,11 +5,11 @@ import { AppContext } from '../AppState'
 import OutfitSection from './OutfitSection'
 import { DayHeader } from '../Shared/DayHeader'
 
-export default function DaySection (props) {
+export default function DaySection(props) {
   const { index, day, updateTote, updateOutfitName, renderCopyModal } = props
   const context = useContext(AppContext)
 
-  function updateDay (key, outfit, inc) {
+  function updateDay(key, outfit, inc) {
     // TODO: maybe use context.setOutfit
     let tempState = [...day.outfits]
     const outfitCopy = cloneDeep(outfit)
@@ -18,30 +18,30 @@ export default function DaySection (props) {
     tempState[key].type = outfitCopy.type
     updateTote(index, key, outfitCopy, inc)
   }
-  function updateName (key, name) {
+  function updateName(key, name) {
     let tempState = day.outfits
     tempState[key].realName = name
     updateOutfitName(index, key, name)
   }
-  function addOutfit () {
+  function addOutfit() {
     context.addOutfit(index)
   }
-  const outfitArray = day.outfits.map((outfit, outfitIndex) => {
-    return (
-      <OutfitSection
-        key={outfitIndex}
-        index={outfitIndex}
-        dayIndex={index}
-        outfit={outfit}
-        updateDay={updateDay}
-        updateName={updateName}
-        renderCopyModal={renderCopyModal}
-      />
-    )
-  })
+
   return (
     <DayHeader day={day}>
-      {outfitArray}
+      {day.outfits.map((item, outfitIndex) => {
+        const outfit = context.days[index].outfits[outfitIndex]
+        return (
+        <OutfitSection
+          key={outfitIndex}
+          index={outfitIndex}
+          dayIndex={index}
+          outfit={outfit}
+          updateDay={updateDay}
+          updateName={updateName}
+          renderCopyModal={renderCopyModal}
+        />
+      )})}
       <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
     </DayHeader>
   )

@@ -46,13 +46,13 @@ export class AppProvider extends React.Component {
     }
 
     getTripList = async () => {
-        try { 
-          const response = await axios.get(`${baseUrl}/db/tote/getTrips/${this.state.userId}`)
-          this.setState({ tripList: response.data })
-        } catch (err)  {
-          console.error(err)
+        try {
+            const response = await axios.get(`${baseUrl}/db/tote/getTrips/${this.state.userId}`)
+            this.setState({ tripList: response.data })
+        } catch (err) {
+            console.error(err)
         }
-      }
+    }
 
     setShowToast = (toastProps) => {
         this.setState({ showToast: true, toastProps })
@@ -344,6 +344,17 @@ export class AppProvider extends React.Component {
         })
     }
 
+    toggleOutfitItem = (dayIndex, outfitIndex, itemName, isChecked) => {
+        this.setState(prevState => {
+            let tempOutfit = cloneDeep(prevState.days[dayIndex].outfits[outfitIndex])
+            tempOutfit.items.forEach((item) => {
+                if (item.type === itemName) { item.isNotIncluded = !isChecked }
+            })
+            prevState.days[dayIndex].outfits[outfitIndex] = tempOutfit
+        })
+
+    }
+
     // Assign Items
     addNamedItem = (parentType, value, newId) => {
         this.setState(prevState => {
@@ -500,6 +511,7 @@ export class AppProvider extends React.Component {
                     handleReload: this.handleReload,
                     tripList: this.state.tripList,
                     getTripList: this.getTripList,
+                    toggleOutfitItem: this.toggleOutfitItem,
                 }}
             >
                 {children}
