@@ -300,7 +300,8 @@ export class AppProvider extends React.Component {
             const newOutfit = {
                 id: newId,
                 realName: 'Outfit ' + newId,
-                expanded: true
+                expanded: true,
+                items: []
             }
             let updatedDays = [...prevState.days]
             updatedDays[dayIndex].outfits.push(newOutfit)
@@ -351,6 +352,7 @@ export class AppProvider extends React.Component {
                 if (item.type === itemName) { item.isNotIncluded = !isChecked }
             })
             prevState.days[dayIndex].outfits[outfitIndex] = tempOutfit
+            return { days: prevState.days }
         })
 
     }

@@ -1,19 +1,17 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import Chip from '@material-ui/core/Chip'
 import { AppContext } from '../AppState'
 
 function OutfitItem({type, isNotIncluded, disabled, onClick}) {
-  const [tempSelected, setTempSelected] = useState(isNotIncluded)
   function toggleItem() {
-    setTempSelected(!tempSelected)
     onClick(type, isNotIncluded)
   }
   return (
     <Chip
       label={type}
       onClick={toggleItem}
-      color={tempSelected ? 'default' : 'primary'}
+      color={isNotIncluded ? 'default' : 'primary'}
       disabled={disabled}
     />
   )
