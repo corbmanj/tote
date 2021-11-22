@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Button } from '@material-ui/core'
 import Modal from '../Shared/Modal'
 import NamedItems from '../Shared/NamedItems'
 import AssignDay from './AssignDay'
@@ -129,12 +130,9 @@ export default function AssignItems() {
       />
       <div className="day-list">
         {days}
-        <button
-          className="continue"
-          onClick={updateStage}
-        >
-          Continue
-          </button>
+        <Button className="continue" onClick={updateStage}>
+            Continue
+        </Button>
       </div>
       { error ? <span style={{ float: 'right' }} className="error">{errorMsg}</span> : null}
       </div>

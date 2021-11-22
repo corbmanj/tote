@@ -63,6 +63,7 @@ export default function OutfitItems ({ outfitItems, dayIndex, outfitIndex }) {
                 dayIndex={dayIndex}
                 outfitIndex={outfitIndex}
                 selected={activeItem.id === thing.id}
+                allowClick
               />
             ))}
           </div>

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
+import { Button } from '@material-ui/core'
 import { AppContext } from '../AppState'
 import DaySection from './DaySection'
 // import AdditionalItemSection from './AdditionalItemSection'
@@ -219,12 +220,15 @@ export default function SelectOutfits() {
       {/* <h2 className="header">Select Outfits</h2> */}
       <div className="day-list">
         {daysArray}
-        <button
+        <Button className="continue" onClick={updateOutfits}>
+            Continue
+        </Button>
+        {/* <button
           className="continue"
           onClick={updateOutfits}
         >
           Continue
-        </button>
+        </button> */}
       </div>
 
       {/* <Collapse isOpen={error.isOutfitError}> */}

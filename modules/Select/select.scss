@@ -55,9 +55,12 @@
             padding: 12px 20px 0 0;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center;
             .checkbox-input {
               margin-right: 5px;
+            }
+            .select-chip {
+              margin: 5px;
             }
           }
           .buttons {
