@@ -23,6 +23,10 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
+app.get('/bundle', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'bundle.js'))
+})
+
 // Following is an example to proxy client request to DarkSky forecast API
 var DARKSKY_SECRET_KEY = process.env.DARKSKY_SECRET_KEY
 

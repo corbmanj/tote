@@ -1,5 +1,8 @@
 /* LOGIN */
 
+.login-input .MuiOutlinedInput-root {
+  background-color: white;
+}
 h1.welcome {
     text-align: center;
     line-height: 5em;
@@ -54,10 +57,6 @@ h1.welcome {
   ul.sectionList {
     list-style-type: none;
     padding-left: 30px;
-  }
-  
-  .checkbox-input {
-    display: inline-block;
   }
   
   .inline-header {

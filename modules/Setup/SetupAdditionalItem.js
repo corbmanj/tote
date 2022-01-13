@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { Icon } from '@blueprintjs/core'
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function SetupAdditionalItem (props) {
   const [editing, setEditing] = useState(false)
@@ -41,7 +41,7 @@ export default function SetupAdditionalItem (props) {
           onKeyPress={handleKeyPress}
         />
         <button onClick={saveItem}>Save</button>
-        <Icon icon="delete" iconSize={15} onClick={deleteItem} />
+        <DeleteIcon onClick={deleteItem} />
       </>
     )
   }

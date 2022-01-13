@@ -1,21 +1,63 @@
-import React from 'react'
-export default function CheckboxSection (props) {
-  function toggleItem (ev) {
-    props.toggle(ev.target.value, ev.target.checked)
+import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import Chip from '@material-ui/core/Chip'
+import { AppContext } from '../AppState'
+
+function OutfitItem({type, isNotIncluded, disabled, onClick}) {
+  function toggleItem() {
+    onClick(type, isNotIncluded)
   }
-  const checkboxes = props.outfit.items.map((item, key) => {
-    return (
-        <label key={key} className="checkbox-input">
-          <input
-            type="checkbox"
-            value={item.type}
-            defaultChecked={!item.isNotIncluded}
-            onClick={toggleItem}
-            disabled={props.disabled}
-          />
-          {item.type}
-        </label>
-    )
-  })
-  return <form>{checkboxes}</form>
+  return (
+    <Chip
+      label={type}
+      onClick={toggleItem}
+      color={isNotIncluded ? 'default' : 'primary'}
+      disabled={disabled}
+    />
+  )
+
+}
+
+export default function CheckboxSection(props) {
+  const context = useContext(AppContext)
+  const { toggle, disabled, outfitIndex, dayIndex } = props
+
+  const outfitItems = context.days[dayIndex].outfits[outfitIndex].items
+
+  const checkboxes = outfitItems.map((item, key) => (
+    <OutfitItem
+      key={key}
+      type={item.type}
+      onClick={toggle}
+      disabled={disabled}
+      isNotIncluded={!!item.isNotIncluded}
+    />
+  ))
+
+  return (
+    <div className="checkboxes">
+      {checkboxes}
+    </div>
+  )
+}
+
+CheckboxSection.propTypes = {
+  outfit: PropTypes.shape({
+    items: PropTypes.arrayOf(PropTypes.shape({
+      dropdown: PropTypes.bool,
+      parentType: PropTypes.string,
+      type: PropTypes.string,
+    })),
+  }).isRequired,
+  disabled: PropTypes.bool,
+  toggle: PropTypes.func,
+  outfitIndex: PropTypes.number,
+  dayIndex: PropTypes.number
+}
+
+OutfitItem.propTypes = {
+  type: PropTypes.string,
+  isNotIncluded: PropTypes.bool,
+  disabled: PropTypes.bool,
+  onClick: PropTypes.func,
 }

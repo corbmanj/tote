@@ -1,70 +1,68 @@
-import React, { useState, useContext } from 'react'
-import moment from 'moment'
-import { Icon } from '@blueprintjs/core'
+import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import cloneDeep from 'lodash.clonedeep'
 import { AppContext } from '../AppState'
 import OutfitSection from './OutfitSection'
-import Skycons from '../Shared/Skycons'
-import { Collapse } from '@blueprintjs/core'
-import cloneDeep from 'lodash.clonedeep'
+import { DayHeader } from '../Shared/DayHeader'
 
-export default function DaySection (props) {
-  const [isOpen, setIsOpen] = useState(props.index === 0)
+export default function DaySection(props) {
+  const { index, day, updateTote, updateOutfitName, renderCopyModal } = props
   const context = useContext(AppContext)
-  function toggleOpen () {
-    setIsOpen(!isOpen)
-  }
 
-  function updateDay (key, outfit, inc) {
+  function updateDay(key, outfit, inc) {
     // TODO: maybe use context.setOutfit
-    let tempState = [...props.day.outfits]
+    let tempState = [...day.outfits]
     const outfitCopy = cloneDeep(outfit)
     tempState[key].items = outfitCopy.items
     tempState[key].name = outfitCopy.name
     tempState[key].type = outfitCopy.type
-    props.updateTote(props.index, key, outfitCopy, inc)
+    updateTote(index, key, outfitCopy, inc)
   }
-  function updateName (key, name) {
-    let tempState = props.day.outfits
+  function updateName(key, name) {
+    let tempState = day.outfits
     tempState[key].realName = name
-    props.updateOutfitName(props.index, key, name)
+    updateOutfitName(index, key, name)
   }
-  function addOutfit () {
-    context.addOutfit(props.index)
+  function addOutfit() {
+    context.addOutfit(index)
   }
-  const outfitArray = props.day.outfits.map((outfit, index) => {
-    return (
-      <OutfitSection
-        key={index}
-        index={index}
-        dayIndex={props.index}
-        outfit={outfit}
-        updateDay={updateDay}
-        updateName={updateName}
-        renderCopyModal={props.renderCopyModal}
-      />
-    )
-  })
-  const carotClass = isOpen ? 'chevron-down' : 'chevron-right'
+
   return (
-    <div className="day-section">
-      <div className="day-details">
-        {/* <Icon icon={carotClass} /> */}
-        {moment(props.day.date).format('ddd, MMM Do YYYY')}
-        <Skycons
-          color='black' 
-          icon={props.day.icon.toUpperCase()}
-          autoplay={true}
+    <DayHeader day={day}>
+      {day.outfits.map((item, outfitIndex) => {
+        const outfit = context.days[index].outfits[outfitIndex]
+        return (
+        <OutfitSection
+          key={outfitIndex}
+          index={outfitIndex}
+          dayIndex={index}
+          outfit={outfit}
+          updateDay={updateDay}
+          updateName={updateName}
+          renderCopyModal={renderCopyModal}
         />
-        <div>{props.day.summary}</div>
-        <div className="day-temps">
-          <div>High: {props.day.high} &deg;F</div>
-          <div>Low: {props.day.low}&deg; F</div>
-        </div>
-      </div>
-      <div className="outfit-list">
-        {outfitArray}
-        <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
-      </div>
-    </div>
+      )})}
+      <button className="add-outfit" onClick={addOutfit}>+ Outfit</button>
+    </DayHeader>
   )
+}
+
+DaySection.propTypes = {
+  index: PropTypes.number,
+  day: PropTypes.shape({
+    outfits: PropTypes.arrayOf(PropTypes.shape({
+      type: PropTypes.string,
+      realName: PropTypes.string,
+      id: PropTypes.number,
+      expanded: PropTypes.bool,
+      items: PropTypes.arrayOf(PropTypes.shape({
+        dropdown: PropTypes.bool,
+        parentType: PropTypes.string,
+        type: PropTypes.string,
+      })),
+    }))
+  }),
+  updateTote: PropTypes.func,
+  updateOutfitName: PropTypes.func,
+  renderCopyModal: PropTypes.func,
 }

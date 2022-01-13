@@ -2,7 +2,7 @@ import React from 'react'
 
 export const line = (
     <svg className="line" width="20" height="2" viewBox="0 0 20 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <line y1="1" x2="20" y2="1" stroke="#DEDEDE" stroke-width="2"/>
+    <line y1="1" x2="20" y2="1" stroke="#DEDEDE" strokeWidth="2"/>
     </svg>
 )
 

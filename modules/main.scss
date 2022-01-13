@@ -1,4 +1,12 @@
-@import '~@blueprintjs/core/lib/css/blueprint.css';
+// screen size breakpoints
+$screen-sm-min: 1125px;
+
+// mixins
+@mixin sm {
+  @media (min-width: #{$screen-sm-min}) {
+      @content;
+  }
+}
 
 .main {
   background: #B5BDC5;
@@ -6,11 +14,20 @@
   min-height: 100vh;
   flex-direction: column;
   .stage {
-    flex: 1 1 auto;
-    max-height: calc(100vh - 12em);
-    overflow-y: scroll;
-    padding: 2em 1em 0 1em;
-    width: 400px;
-    align-self: center;
+    padding: 0 2%;
+    margin-bottom: 5em;
+    margin-top: 2em;
+    @include sm {
+      width: 60%;
+      padding: 0 20%;
+    }
   }
+}
+
+.MuiAccordionSummary-root.Mui-expanded {
+  border-bottom: 1px solid #c4c4c4;
+}
+
+.MuiAccordion-rounded {
+  border-radius: 4px;
 }

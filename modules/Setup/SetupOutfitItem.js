@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
+import DeleteIcon from '@material-ui/icons/Delete';
 import { AppContext } from '../AppState'
-import { Icon } from '@blueprintjs/core'
 
 export default function SetupOutfitItem (props) {
   const { outfitTypes, updateOutfitType } = useContext(AppContext) 
@@ -24,7 +24,7 @@ export default function SetupOutfitItem (props) {
         <option value="0">select one...</option>
         {options}
       </select>
-      <Icon icon="delete" onClick={removeOutfitItem} />
+      <DeleteIcon onClick={removeOutfitItem} />
     </div>
   )
 }

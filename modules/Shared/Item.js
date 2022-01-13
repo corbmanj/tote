@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
-import { Icon } from '@blueprintjs/core'
+import CheckIcon from '@material-ui/icons/Check';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export default function Item (props) {
   const [editing, setEditing] = useState(false)
@@ -44,8 +45,8 @@ export default function Item (props) {
           onFocus={autoSelect}
           onKeyPress={handleKeyPress}
         />
-        <Icon onClick={toggleEditing} icon="tick" />
-        <Icon onClick={deleteItem} icon="delete" />
+        <CheckIcon onClick={toggleEditing} />
+        <DeleteIcon onClick={deleteItem} />
       </li>
     )
   }

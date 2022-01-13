@@ -1,135 +1,163 @@
 import React, { useState, useRef, useContext } from 'react'
-import { Icon } from '@blueprintjs/core'
-import { Collapse } from '@blueprintjs/core'
+import PropTypes from 'prop-types'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
 import cloneDeep from 'lodash.clonedeep'
 import CheckboxSection from './CheckboxSection'
 import { AppContext } from '../AppState'
+import { IconButton } from '@material-ui/core';
+import { DeleteForever, Edit, FileCopy, Save } from '@material-ui/icons';
 
-export default function OutfitSection (props) {
-  const [disabled, setDisabled] = useState(props.outfit && props.outfit.type)
-  const outfitType = props.outfit && props.outfit.type
+export default function OutfitSection(props) {
+  const { outfit, index, dayIndex, updateDay, updateName } = props
+  const [disabled, setDisabled] = useState(!!(outfit && outfit.type))
+  const outfitType = outfit && outfit.type
   const [renaming, setRenaming] = useState(false)
-  // const [expanded, setExpanded] = useState(props.dayIndex === 0)
-  const outfitName = useRef(props.outfit.realName)
+  const outfitName = useRef(outfit.realName)
   const context = useContext(AppContext)
 
-  function selectText (e) {
+  function selectText(e) {
     e.target.select()
   }
 
-  function saveOutfit () {
+  function saveOutfit() {
     setDisabled(true)
-    props.updateDay(props.index, props.outfit, 1)
+    updateDay(index, outfit, 1)
   }
 
-  function editOutfit () {
-    props.updateDay(props.index, props.outfit, -1)
+  function editOutfit() {
+    updateDay(index, outfit, -1)
     setDisabled(false)
   }
 
-  function removeOutfit () {
-    context.removeOutfit(props.dayIndex, props.index)
+  function removeOutfit() {
+    context.removeOutfit(dayIndex, index)
   }
 
-  function renameOutfit () {
+  function renameOutfit() {
     setRenaming(true)
   }
-  
-  function stopRenaming () {
+
+  function stopRenaming() {
     setRenaming(false)
-    props.updateName(props.index, outfitName.current.value)
+    updateName(index, outfitName.current.value)
   }
 
-  function handleKeyPress (ev) {
+  function handleKeyPress(ev) {
     if (ev.charCode === 13) {
       stopRenaming()
     }
   }
 
-  function renderRenaming () {
+  function renderRenaming() {
     return (
       <input
         ref={outfitName}
         autoFocus
         onFocus={selectText}
         type="text"
-        defaultValue={props.outfit.realName}
+        defaultValue={outfit.realName}
         onBlur={stopRenaming}
         onKeyPress={handleKeyPress}
       />
     )
   }
 
-  function renderName () {
-    return props.outfit.realName
+  function renderName() {
+    return outfit.realName
   }
 
-  function changeOutfitType (ev) {
+  function changeOutfitType(ev) {
     const templateOutfit = cloneDeep(context.outfitTypes.find(item => item.type === ev.target.value))
-    const newOutfit = {...props.outfit, type: templateOutfit.type, items: templateOutfit.items}
-    context.setOutfit(props.dayIndex, props.index, newOutfit)
+    const newOutfit = { ...outfit, type: templateOutfit.type, items: templateOutfit.items }
+    context.setOutfit(dayIndex, index, newOutfit)
   }
 
-  function toggleOutfitExpanded () {
+  function toggleOutfitExpanded() {
     // setExpanded(!expanded)
-    context.setExpanded(props.dayIndex, props.index)
+    context.setExpanded(dayIndex, index)
   }
 
-  function toggleItem (name, isChecked) {
-    let tempOutfit = props.outfit
-
-    tempOutfit.items.forEach((item) => {
-      if (item.type === name) { item.isNotIncluded = !isChecked }
-    })
+  function toggleItem(name, isChecked) {
+    context.toggleOutfitItem(dayIndex, index, name, isChecked)
   }
-  
-  function renderCopyModal () {
-    const modalProps = {outfit: props.outfit, confirmText: 'Copy Outfit'}
+
+  function renderCopyModal() {
+    const modalProps = { outfit: outfit, confirmText: 'Copy Outfit' }
     props.renderCopyModal(modalProps)
   }
 
-  function renderOutfitDetails () {
+  function renderOutfitDetails() {
     return (
-      <Collapse isOpen={props.outfit.expanded} transitionDuration={400}>
-        {outfitType &&
-          <CheckboxSection
-            outfit={props.outfit}
-            outfitType={outfitType}
-            toggle={toggleItem}
-            disabled={disabled}
-          />
-        }
+      <AccordionDetails className="accordion-content">
+        <CheckboxSection
+          outfitIndex={index}
+          dayIndex={dayIndex}
+          outfit={outfit}
+          outfitType={outfitType}
+          toggle={toggleItem}
+          disabled={disabled}
+        />
         <div className="buttons">
           {disabled
-            ? <button className="outfittype-select" onClick={editOutfit}>Edit Outfit</button>
-            : <button className="outfittype-select" disabled={!outfitType} onClick={saveOutfit}>Save Outfit</button>
+            ? <IconButton onClick={editOutfit}><Edit /></IconButton>
+            : <IconButton disabled={!outfitType} onClick={saveOutfit}><Save /></IconButton>
           }
-          <button className="outfittype-select" onClick={removeOutfit}>Remove Outfit</button>
-          <button className="outfittype-select" onClick={renderCopyModal}>Copy Outfit</button>
+          <IconButton onClick={removeOutfit}><DeleteForever /></IconButton>
+          <IconButton onClick={renderCopyModal}><FileCopy /></IconButton>
         </div>
-      </Collapse>
+      </AccordionDetails>
     )
   }
-  const carotClass = props.outfit.expanded ? 'chevron-down' : 'chevron-right'
+
   const outfitNames = context.outfitTypes.map((type, key) => (
     <option key={key} value={type.type}>{type.type}</option>
   ))
+
+  function prevent(e) {
+    e.stopPropagation()
+    e.preventDefault()
+  }
+
   return (
-    <div className="outfit-card">
-      <div className="outfit-card-header">
-        <Icon icon={carotClass} onClick={toggleOutfitExpanded} />
-        <h4 onDoubleClick={renameOutfit} className="inline-header">
+    <Accordion expanded={outfit.expanded} onChange={toggleOutfitExpanded}>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls={`${index}-content`}
+        id={`${index}-header`}
+        className="accordion-summary"
+      >
+        <h4 onClick={prevent} onDoubleClick={renameOutfit} className="outfit-name">
           {renaming ? renderRenaming() : renderName()}
           {outfitType ? ` (${outfitType})` : null}
         </h4>
-        <select className="outfittype-select" onChange={changeOutfitType} value={outfitType} disabled={disabled}>
+        <select className="outfittype-select" onClick={prevent} onChange={changeOutfitType} value={outfitType} disabled={disabled}>
           <option value={null}>Select one...</option>
           {outfitNames}
         </select>
-      </div>
-      <div className="outfit-details">
-        {renderOutfitDetails()}
-      </div>
-    </div>
+      </AccordionSummary>
+      {renderOutfitDetails()}
+    </Accordion>
+
   )
+}
+
+OutfitSection.propTypes = {
+  outfit: PropTypes.shape({
+    type: PropTypes.string,
+    realName: PropTypes.string,
+    expanded: PropTypes.bool,
+    items: PropTypes.arrayOf(PropTypes.shape({
+      dropdown: PropTypes.bool,
+      parentType: PropTypes.string,
+      type: PropTypes.string,
+    })),
+  }).isRequired,
+  index: PropTypes.number.isRequired,
+  dayIndex: PropTypes.number.isRequired,
+  updateDay: PropTypes.func.isRequired,
+  updateName: PropTypes.func.isRequired,
+  renderCopyModal: PropTypes.func.isRequired,
 }

@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { AppContext } from '../AppState'
 import SetupOutfits from './SetupOutfits'
@@ -8,19 +9,21 @@ import SetupAdditionalItems from './SetupAdditionalItems'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export default class SetupMain extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      outfitEditor: true,
-      items: []
-    }
-  }
-  
+export default function SetupMain() {
+  const context = useContext(AppContext)
+  const history = useHistory()
+  const [outfitEditor, setOutfitEditor] = useState(true)
+  const [items, setItems] = useState([])
 
-  async componentDidMount () {
-    const response = await axios.get(`${baseUrl}/db/userItems/${this.context.userId}`)
-      const items  = []
+  function returnHome() {
+    history.push('/home')
+  }
+
+
+  useEffect(() => {
+    async function setup() {
+      const response = await axios.get(`${baseUrl}/db/userItems/${context.userId}`)
+      const items = []
       response.data.outfits.forEach(outfit => {
         outfit.items.forEach(item => {
           let alreadyExists = false
@@ -34,78 +37,75 @@ export default class SetupMain extends Component {
           }
         })
       })
-      this.setState({ items })
-      this.context.setOutfitTypes(response.data.outfits)
-  }
-  updateOutfitItem = (outfitIndex, itemIndex, itemType) => {
-    let itemObj = this.state.items.find(item => item.type === itemType)
-    let tempOutfit = {...this.context.outfitTypes[outfitIndex]}
+      setItems(items)
+      context.setOutfitTypes(response.data.outfits)
+    }
+    setup()
+  }, [])
+
+  function updateOutfitItem(outfitIndex, itemIndex, itemType) {
+    let itemObj = items.find(item => item.type === itemType)
+    let tempOutfit = { ...context.outfitTypes[outfitIndex] }
     tempOutfit.items[itemIndex] = itemObj
-    this.context.updateOutfitType(tempOutfit)
+    context.updateOutfitType(tempOutfit)
   }
-  addItem = () => {
-    this.setState((prevState) => {
-      const newItems = [...prevState.items, {type: 'new item', parentType: 'none', dropdown: false}]
-      return {items: newItems}
-    })
+
+  function addItem() {
+    setItems([...items, { type: 'new item', parentType: 'none', dropdown: false }])
   }
-  updateItem = (itemIndex, item) => {
-    this.setState((prevState) => {
-      let newItems = [...prevState.items]
-      newItems[itemIndex] = item
-      return {items: newItems}
-    })
+
+  function updateItem(itemIndex, item) {
+    let newItems = [...items]
+    newItems[itemIndex] = item
+    setItems(newItems)
   }
-  removeItem = (itemIndex) => {
-    this.setState(prevState => {
-      const newItems = [...prevState.items]
-      newItems.splice(itemIndex, 1)
-      return {items: newItems}
-    })
+
+  function removeItem(itemIndex) {
+    const newItems = [...items]
+    newItems.splice(itemIndex, 1)
+    setItems(newItems)
   }
-  toggleEditor = () => {
-    this.setState(prevState => {return {outfitEditor: !prevState.outfitEditor}})
+
+  function toggleEditor() {
+    setOutfitEditor(!outfitEditor)
   }
-  renderOutfitEditor () {
+
+  function renderOutfitEditor() {
     return (
       <div>
-        <div>{!!this.context.outfitTypes || 'You have not set up your outfits yet!'}</div>
+        <div>{!!context.outfitTypes || 'You have not set up your outfits yet!'}</div>
         <div className="flex-container">
           <SetupOutfits
-            updateOutfitItem={this.updateOutfitItem}
-            items={this.state.items}
-            />
+            updateOutfitItem={updateOutfitItem}
+            items={items}
+          />
 
           <SetupItems
-            items={this.state.items}
-            addItem={this.addItem}
-            updateItem={this.updateItem}
-            removeItem={this.removeItem}
+            items={items}
+            addItem={addItem}
+            updateItem={updateItem}
+            removeItem={removeItem}
           />
         </div>
       </div>
     )
   }
 
-  renderItemEditor () {
+  function renderItemEditor() {
     return (
       <SetupAdditionalItems
-        addItem={this.addItem}
-        updateItem={this.updateItem}
-        removeItem={this.removeItem}
+        addItem={addItem}
+        updateItem={updateItem}
+        removeItem={removeItem}
       />
     )
   }
 
-  render () {
-    return (
-      <div id="setup">
-        <div><button onClick={() => {this.context.setStage('home')}}>&lt;- Return To Home</button></div>
-        <button onClick={this.toggleEditor}>{this.state.outfitEditor ? 'Edit Additional Items' : 'Edit Outfits'}</button>
-        {this.state.outfitEditor ? this.renderOutfitEditor() : this.renderItemEditor()}
-      </div>
-    )
-  }
+  return (
+    <div id="setup">
+      <div><button onClick={returnHome}>&lt;- Return To Home</button></div>
+      <button onClick={toggleEditor}>{outfitEditor ? 'Edit Additional Items' : 'Edit Outfits'}</button>
+      {outfitEditor ? renderOutfitEditor() : renderItemEditor()}
+    </div>
+  )
 }
-
-SetupMain.contextType = AppContext;

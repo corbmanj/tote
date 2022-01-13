@@ -1,8 +1,9 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
-export default function Toast (props) {
+export default function Toast ({type, message}) {
   function renderIcon () {
-    switch (props.type) {
+    switch (type) {
       case 'warning':
         return (
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
@@ -27,7 +28,7 @@ export default function Toast (props) {
     }
   }
 
-  const className = [props.type] + ' toast-container'
+  const className = [type] + ' toast-container'
   return (
     <span
       className={className}
@@ -35,8 +36,13 @@ export default function Toast (props) {
       <div className="toast-status-icon">
         {renderIcon()}
       </div>
-      <span>{props.message}</span>
+      <span>{message}</span>
       {/* {props.action ? renderUndo() : null} */}
     </span>
   )
+}
+
+Toast.propTypes = {
+  type: PropTypes.string,
+  message: PropTypes.string,
 }

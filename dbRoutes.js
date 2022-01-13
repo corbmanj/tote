@@ -3,7 +3,7 @@ var router = require('express').Router();
 //db connection
 var pg = require('pg')
 
-config = {
+const config = {
   user: process.env.RDS_USERNAME,
     host: process.env.RDS_HOSTNAME,
     database: process.env.RDS_DB_NAME,
