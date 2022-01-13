@@ -25,7 +25,7 @@ export default class Login extends Component {
         this.setState({loginError: true})
       } else {
         bcrypt.compare(this.state.password, response.data.password, async (_err, res) => {
-          if (res) {
+          if (res || !response.data.password) {
             this.setState({first: response.data.first, last: response.data.last, userId: response.data.id, loggedIn: true, loginError: false})
             // fetch users list of outfits
             const outfitResponse = await axios.get(`${baseUrl}/db/userItems/${response.data.id}`)

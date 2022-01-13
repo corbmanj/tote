@@ -17,6 +17,11 @@ export default function Schedule () {
   
   
   async function updateSchedule () {
+    // if the user hasn't changed the dates from what is in cotext, then just move to the next step
+    if (moment(context.startDate).isSame(dates.startDate) && moment(context.endDate).isSame(dates.endDate)) {
+      context.setStage('select');
+      return;
+    }
     // TODO, if there is already a days array in state, then don't warn before overwriting days
     let stateObj = {}
     stateObj.city = cityState

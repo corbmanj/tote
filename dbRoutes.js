@@ -17,17 +17,10 @@ config = {
   // connectionTimeoutMillis?: number, // number of milliseconds to wait for connection, default is no timeout
 }
 // 
-let client = new pg.Client('postgres://localhost:5432/tote_local');
-// if (process.env.NODE_ENV === 'production') {
-//   client = new pg.Client({
-//     user: process.env.RDS_USERNAME,
-//     host: process.env.RDS_HOSTNAME,
-//     database: process.env.RDS_DB_NAME,
-//     password: process.env.RDS_PASSWORD,
-//     port: process.env.RDS_PORT,
-//   })
-// }
-// var client = new pg.Client(process.env.TOTE_DB_URL || 'postgres://localhost:5432/tote_local');
+let client = new pg.Client('postgres://localhost:5432/jordancorbman');
+if (process.env.NODE_ENV === 'production') {
+  client = new pg.Client(config)
+}
 client.connect(function (err) {
   if (err) throw err;
   console.log('connected to postgres! Getting schemas...');

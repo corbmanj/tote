@@ -5,7 +5,7 @@ import { AppContext } from '../AppState'
 export default function SetupOutfits (props) {
   const context = useContext(AppContext)
   
-  const types = context.outfitTypes.map((type, index) => {
+  const types = context.outfitTypes ? context.outfitTypes.map((type, index) => {
     return (
       <SetupOutfit
         key={index}
@@ -15,7 +15,7 @@ export default function SetupOutfits (props) {
         updateOutfitItem={props.updateOutfitItem}
       />
     )
-  })
+  }) : null
   return (
     <div className="flex-2">
       <h2>Outfit Section</h2>
