@@ -22,10 +22,11 @@ function getStageValue(value) {
 
 export default function NavMenu (props) {
   const stages = ['Home', 'Schedule', 'Select', 'Assign', 'Packing'] //, 'Print']
+  const { active } = props
 
   function getSvg(stage) {
-    console.log('1', getStageValue(props.active), '2', getStageValue(stage))
-    if (getStageValue(props.active) > getStageValue(stage)) {
+    console.log('1', getStageValue(active), '2', getStageValue(stage))
+    if (getStageValue(active) > getStageValue(stage)) {
       console.log('a')
       return svg.completed
     }
@@ -33,16 +34,16 @@ export default function NavMenu (props) {
     switch(getStageValue(stage)) {
       case 1:
         console.log('b')
-        return getStageValue(props.active) === 1 ? svg.twoActive : svg.two
+        return getStageValue(active) === 1 ? svg.twoActive : svg.two
       case 2:
         console.log('c')
-        return getStageValue(props.active) === 2 ? svg.threeActive : svg.three
+        return getStageValue(active) === 2 ? svg.threeActive : svg.three
       case 3:
         console.log('d')
-        return getStageValue(props.active) === 3 ? svg.fourActive : svg.four
+        return getStageValue(active) === 3 ? svg.fourActive : svg.four
       case 4:
         console.log('e')
-        return getStageValue(props.active) === 4 ? svg.fiveActive : svg.five
+        return getStageValue(active) === 4 ? svg.fiveActive : svg.five
       default:
         console.log('f')
         return svg.oneAcitve
@@ -50,7 +51,7 @@ export default function NavMenu (props) {
   }
   
   const navLinks = stages.map((stage, index) => {
-    let classNames = (stage.toLowerCase() === props.active) ? 'navLink active' : 'navLink'
+    let classNames = (stage.toLowerCase() === active) ? 'navLink active' : 'navLink'
     let last = (index === stages.length-1)
     classNames = props[stage] ? 'disabled' : classNames
     return (
@@ -61,6 +62,7 @@ export default function NavMenu (props) {
           stage={stage}
           isLast={last}
           classNames={classNames}
+          isActive={stage.toLowerCase() === active}
           disabled={props[stage]}
           svg={getSvg(stage)}
         />

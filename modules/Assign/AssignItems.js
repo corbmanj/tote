@@ -1,4 +1,5 @@
-import React, { useState, useContext} from 'react'
+import React, { useState, useContext, useEffect} from 'react'
+import { useHistory } from 'react-router-dom'
 import Modal from '../Shared/Modal'
 import AssignDay from './AssignDay'
 import AdditionalItemSection from '../Select/AdditionalItemSection'
@@ -10,6 +11,20 @@ export default function AssignItems () {
   const [error, setError] = useState(false)
   const [errorMsg, setErrorMsg] = useState()
   const context = useContext(AppContext)
+  const history = useHistory()
+
+  useEffect(() => {
+    async function handleReload () {
+      await context.handleReload()
+    }
+    if (!days) {
+      handleReload()
+    }
+  }, [context.days])
+
+  if (!context.days) {
+    return <></>
+  }
 
   function toggleModal () {
     setEditingNamedItems(!editingNamedItems)
@@ -67,6 +82,7 @@ export default function AssignItems () {
       return
     }
     context.setStage('packing')
+    history.push('/packing')
   }
   
   const days = context.days.map((day, index) => {
