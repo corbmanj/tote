@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import axios from 'axios'
 import bcrypt from 'bcryptjs'
-// import BusinessCenterIcon from '@material-ui/icons/BusinessCenter'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import SvgIcon from '@material-ui/core/SvgIcon'
@@ -110,7 +109,7 @@ export default function Login() {
         <Grid item>
           <Button disabled={!state.email || !state.password} onClick={submitLogin}>
             Continue
-            </Button>
+          </Button>
         </Grid>
       </Grid>
       {/* <div className="inputRow">

@@ -9,6 +9,7 @@ function OutfitItem({type, isNotIncluded, disabled, onClick}) {
   }
   return (
     <Chip
+      className="select-chip"
       label={type}
       onClick={toggleItem}
       color={isNotIncluded ? 'default' : 'primary'}

@@ -1,16 +1,14 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-// import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
-// import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import { AppContext } from '../AppState'
-// import AssignItem from './AssignItem'
+import SelectedOutfitItems from './SelectedOutfitItems'
 import OutfitItems from './OutfitItems'
 
-export default function AssignOutfit (props) {
+export default function AssignOutfit(props) {
   const context = useContext(AppContext)
   const {
     dayIndex,
@@ -20,24 +18,25 @@ export default function AssignOutfit (props) {
     outfit
   } = props
 
-  function updateActiveOutfit () {
+  function updateActiveOutfit() {
     context.setExpanded(dayIndex, index)
   }
 
   return (
-    <Accordion expanded={outfit.expanded} onChange={updateActiveOutfit}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <div>{outfit.realName}</div>
-        <div className="outfit-type">{outfit.type}</div>
-      </AccordionSummary>
-      <AccordionDetails>
-        <OutfitItems
-          outfitItems={outfit.items}
-          dayIndex={dayIndex}
-          outfitIndex={index}
-        />
-      </AccordionDetails>
-    </Accordion>
+      <Accordion expanded={outfit.expanded} onChange={updateActiveOutfit}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <div>{outfit.realName}</div>
+          <div className="outfit-type">{": " + outfit.type}</div>
+        </AccordionSummary>
+        <AccordionDetails>
+          <OutfitItems
+            outfitItems={outfit.items}
+            dayIndex={dayIndex}
+            outfitIndex={index}
+          />
+          <SelectedOutfitItems outfitItems={outfit.items} />
+        </AccordionDetails>
+      </Accordion>
   )
 }
 
