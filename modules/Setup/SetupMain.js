@@ -22,6 +22,11 @@ export default function SetupMain() {
 
   useEffect(() => {
     async function setup() {
+      if (!context.userId) {
+        // don't know if I need this, need to push outfit types and additional items
+        // into context so they don't get lost on reload
+        await context.handleReload()
+      }
       const response = await axios.get(`${baseUrl}/db/userItems/${context.userId}`)
       const items = []
       response.data.outfits.forEach(outfit => {

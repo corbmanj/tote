@@ -1,14 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import SetupAdditionalItem from './SetupAdditionalItem';
+import { AppContext } from '../AppState'
 
-export default function SetupAdditionalItemsSection (props) {
+function SetupAdditionalItemsSection (props) {
+  const { updateAdditionalItemCategory } = useContext(AppContext)
   const [items, setItems] = useState(props.items)
 
   function saveEditedItem (itemName, itemId) {
     const tempItems = [...items]
     let itemToUpdate = tempItems.findIndex(item => item.id === itemId)
     tempItems[itemToUpdate].name = itemName
-    context.updateAdditionalItemCategory(tempItems, props.id)
+    updateAdditionalItemCategory(tempItems, props.id)
     setItems(tempItems)
   }
 
@@ -16,7 +18,7 @@ export default function SetupAdditionalItemsSection (props) {
     const tempItems = [...items]
     let itemIndex = tempItems.findIndex(item => item.id === itemId)
     tempItems.splice(itemIndex, 1)
-    context.updateAdditionalItemCategory(tempItems, props.id)
+    updateAdditionalItemCategory(tempItems, props.id)
     setItems(tempItems)
   }
   
@@ -47,3 +49,5 @@ export default function SetupAdditionalItemsSection (props) {
     </div>
   )
 }
+
+export default SetupAdditionalItemsSection

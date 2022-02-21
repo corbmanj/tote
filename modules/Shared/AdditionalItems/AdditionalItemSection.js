@@ -21,9 +21,9 @@ function AdditionalItem ({ thing, sectionId }) {
 export default function AdditionalItemSection() {
   const [addingItem, setAddingItem] = useState(false)
   const context = useContext(AppContext)
-  const leftThings = context.additionalItems
-  const [activeItemId, setActiveItemId] = useState(leftThings[0].id)
-  const activeSection = leftThings.find(sec => sec.id === activeItemId)
+  const leftThings = context.additionalItems || []
+  const [activeItemId, setActiveItemId] = useState(leftThings[0] ? leftThings[0].id : undefined)
+  const activeSection = leftThings.find(sec => sec.id === activeItemId) || {}
   const rightThings = activeSection.items
 
   function toggleAddItem () {
@@ -58,7 +58,7 @@ export default function AdditionalItemSection() {
           </div>
           <div className="right-column">
             <div className="existing-items">
-              {rightThings.map(thing => (
+              {!!rightThings && rightThings.map(thing => (
                 <AdditionalItem key={thing.id} thing={thing} sectionId={activeItemId} />
               ))}
             </div>

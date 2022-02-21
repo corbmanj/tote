@@ -9,62 +9,42 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import SetupAdditionalItemsSection from './SetupAdditionalItemsSection'
 import { AppContext } from '../AppState'
 
-export default function SetupAdditionalItems () {
-  const context = useContext(AppContext)
-  const [isOpen, setIsOpen] = useState(false)
-  const [editing, setEditing] = useState(false)
-  
-  function toggleOpen (index) {
-    setIsOpen(isOpen !== index ? index : false)
+function Section({
+  section,
+  index,
+  editing,
+  toggleOpen,
+  handleDeleteClick,
+  handleEditClick,
+  handleFocus,
+  saveOption,
+  handleKeyPress,
+  isOpen
+}) {
+  const sectionName = useRef(section.name)
+  function handleToggle() {
+    toggleOpen(section.id)
   }
 
-  function handleDeleteClick (index) {
-    context.deleteAdditionalItemCategory(index)
-  }
-
-  function handleEditClick (index) {
-    setEditing(index)
-  }
-
-  function handleFocus (e) {
-    e.target.select()
-  }
-
-  function saveOption (items, id, name) {
-    context.updateAdditionalItemCategory(items, id, name)
-    setEditing(false)
-  }
-
-  function handleKeyPress (e, items, id, name) {
-    if (e.charCode === 13) {
-      saveOption(items, id, name)
-    }
-  }
-
-  const sections = context.additionalItems.map((section, index) => {
-    const sectionName = useRef(section.name)
-    // const CarrotIcon = isOpen === index ? KeyboardArrowDownIcon : KeyboardArrowRightIcon
-    
-    return (
-      <li key={index}>
-        <Accordion expanded={isOpen === index} onChange={() => toggleOpen(index)}>
-        {/* <CarrotIcon onClick={() => toggleOpen(index)} /> */}
+  return (
+    <li key={index}>
+      <Accordion expanded={isOpen} onChange={handleToggle}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <h4 className="inline-header">
-          { editing === index ? 
-            <input
-              ref={sectionName}
-              defaultValue={section.name}
-              type="text"
-              autoFocus
-              onFocus={handleFocus}
-              onBlur={() => saveOption(section.items, section.id, sectionName.current.value)}
-              onKeyPress={(e) => handleKeyPress(e, section.items, section.id, sectionName.current.value)}
-            /> :
-            <span onDoubleClick={() => handleEditClick(index)}>{section.name}</span>
-          }
-          <DeleteIcon onClick={() => handleDeleteClick(index)} />
-        </h4>
+          <h4 className="inline-header">
+            {editing === index ?
+              <input
+                ref={sectionName}
+                defaultValue={section.name}
+                type="text"
+                autoFocus
+                onFocus={handleFocus}
+                onBlur={() => saveOption(section.items, section.id, sectionName.current.value)}
+                onKeyPress={(e) => handleKeyPress(e, section.items, section.id, sectionName.current.value)}
+              /> :
+              <span onDoubleClick={() => handleEditClick(index)}>{section.name}</span>
+            }
+            <DeleteIcon onClick={() => handleDeleteClick(index)} />
+          </h4>
         </AccordionSummary>
         <AccordionDetails>
           <SetupAdditionalItemsSection
@@ -74,17 +54,65 @@ export default function SetupAdditionalItems () {
             name={section.name}
           />
         </AccordionDetails>
-        </Accordion>
-      </li>
-    )
-  })
+      </Accordion>
+    </li>
+  )
+}
+
+export default function SetupAdditionalItems() {
+  const { deleteAdditionalItemCategory, updateAdditionalItemCategory, additionalItems, addAdditionalItemCategory } = useContext(AppContext)
+  const [openId, setOpenId] = useState(0)
+  const [editing, setEditing] = useState(false)
+
+  function toggleOpen(clickedId) {
+    setOpenId(openId !== clickedId ? clickedId : 0)
+  }
+
+  function handleDeleteClick(index) {
+    deleteAdditionalItemCategory(index)
+  }
+
+  function handleEditClick(index) {
+    setEditing(index)
+  }
+
+  function handleFocus(e) {
+    e.target.select()
+  }
+
+  function saveOption(items, id, name) {
+    updateAdditionalItemCategory(items, id, name)
+    setEditing(false)
+  }
+
+  function handleKeyPress(e, items, id, name) {
+    if (e.charCode === 13) {
+      saveOption(items, id, name)
+    }
+  }
+
+  const sections = additionalItems ? additionalItems.map((section, index) => (
+    <Section
+      key={section.id}
+      section={section}
+      index={index}
+      editing={editing}
+      toggleOpen={toggleOpen}
+      handleDeleteClick={handleDeleteClick}
+      handleEditClick={handleEditClick}
+      handleFocus={handleFocus}
+      saveOption={saveOption}
+      handleKeyPress={handleKeyPress}
+      isOpen={section.id === openId}
+    />
+  )) : []
 
   return (
     <div className="flex-5">
       <h2>Item Section</h2>
-      <div><button className="button" onClick={context.addAdditionalItemCategory}>Add New Category</button></div>
+      <div><button className="button" onClick={addAdditionalItemCategory}>Add New Category</button></div>
       <ul className="sectionList">
-        {sections}
+        {!!sections.length && sections}
       </ul>
     </div>
   )

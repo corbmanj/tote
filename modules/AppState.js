@@ -1,39 +1,42 @@
-import React from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import cloneDeep from 'lodash.clonedeep'
+import { useHistory } from 'react-router-dom'
 
 export const AppContext = React.createContext({})
 export const AppConsumer = AppContext.Consumer
 
 const baseUrl = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080'
 
-export class AppProvider extends React.Component {
-    constructor(props) {
-        super(props)
+export function AppProvider(props) {
+    const history = useHistory()
+    const [state, setState] = useState({
+        stage: 'login',
+        showToast: false,
+        tote: {}
+    })
 
-        this.state = this.initialState()
-    }
 
-    initialState() {
-        const defaultState = {
-            stage: 'login',
-            showToast: false,
-            tote: {}
-        };
-        // if localStorage.userId, load user info
+    // initialState() {
+    //     const defaultState = {
+    //         stage: 'login',
+    //         showToast: false,
+    //         tote: {}
+    //     };
+    //     // if localStorage.userId, load user info
 
-        // if localStorage.tripId, load trip info
+    //     // if localStorage.tripId, load trip info
 
-        return defaultState;
-    }
+    //     return defaultState;
+    // }
 
-    setUser = (userId) => {
+    const setUser = (userId) => {
         window.localStorage.setItem('userId', userId)
-        this.setState({ userId })
+        setState({ userId })
     }
 
-    clearTote = () => {
-        this.setState((prevState) => ({
+    const clearTote = () => {
+        setState((prevState) => ({
             tote: {
                 additionalItems: prevState.additionalItems
             },
@@ -45,59 +48,59 @@ export class AppProvider extends React.Component {
         }))
     }
 
-    getTripList = async () => {
+    const getTripList = async () => {
         try {
-            const response = await axios.get(`${baseUrl}/db/tote/getTrips/${this.state.userId}`)
-            this.setState({ tripList: response.data })
+            const response = await axios.get(`${baseUrl}/db/tote/getTrips/${state.userId}`)
+            setState({ tripList: response.data })
         } catch (err) {
             console.error(err)
         }
     }
 
-    setShowToast = (toastProps) => {
-        this.setState({ showToast: true, toastProps })
-        setTimeout(() => { this.setState({ showToast: false }) }, 1500)
+    const setShowToast = (toastProps) => {
+        setState({ showToast: true, toastProps })
+        setTimeout(() => { setState({ showToast: false }) }, 1500)
     }
 
-    setStartDate = (startDate) => {
-        this.setState({ startDate })
+    const setStartDate = (startDate) => {
+        setState({ startDate })
     }
 
-    setEndDate = (endDate) => {
-        this.setState({ endDate })
+    const setEndDate = (endDate) => {
+        setState({ endDate })
     }
 
-    setCity = (city) => {
-        this.setState({ city })
+    const setCity = (city) => {
+        setState({ city })
     }
 
-    setDays = (days) => {
-        this.setState({ days })
+    const setDays = (days) => {
+        setState({ days })
     }
 
-    setNumDays = (numDays) => {
-        this.setState({ numDays: numDays })
+    const setNumDays = (numDays) => {
+        setState({ numDays: numDays })
     }
 
-    setSchedule = async (startDate, endDate, numDays, days, city) => {
-        this.setState({
+    const setSchedule = async (startDate, endDate, numDays, days, city) => {
+        setState({
             startDate,
             endDate,
             numDays: numDays,
             days,
             city,
             stage: 'select'
-        }, () => this.saveTrip())
+        }, () => saveTrip())
     }
 
-    setTote = (tote) => {
-        const conditionallySave = this.state.tripId ? this.saveTrip : () => { }
-        this.setState({ tote }, () => conditionallySave())
+    const setTote = (tote) => {
+        const conditionallySave = state.tripId ? saveTrip : () => { }
+        setState({ tote }, () => conditionallySave())
     }
 
-    setTrip = async (trip) => {
+    const setTrip = async (trip) => {
         window.localStorage.setItem('tripId', trip.tripId)
-        this.setState({
+        setState({
             tripId: trip.tripId,
             additionalItems: trip.additionalItems,
             city: trip.city,
@@ -110,28 +113,28 @@ export class AppProvider extends React.Component {
         })
     }
 
-    setTripId = (tripId) => {
+    const setTripId = (tripId) => {
         window.localStorage.setItem('tripId', tripId)
-        this.setState({ tripId })
+        setState({ tripId })
     }
 
-    setOutfitTypes = (outfitTypes) => {
-        this.setState({ outfitTypes })
+    const setOutfitTypes = (outfitTypes) => {
+        setState({ outfitTypes })
     }
 
     // Setup Section
 
-    addOutfitType = async () => {
+    const addOutfitType = async () => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
 
-        let newType = { type: "new outfit type", items: [] }
-        let outfitTypes = [...this.state.outfitTypes]
+        let newType = { type: "double click to edit", items: [] }
+        let outfitTypes = state.outfitTypes ? [...state.outfitTypes] : []
         outfitTypes.push(newType)
 
         try {
             const result = await axios.post(
-                `${baseUrl}/db/addOutfit/${this.state.userId}`,
+                `${baseUrl}/db/addOutfit/${state.userId}`,
                 newType,
                 {
                     method: 'POST',
@@ -141,54 +144,54 @@ export class AppProvider extends React.Component {
                 }
             )
             outfitTypes[outfitTypes.length - 1].id = result.data.id
-            this.setOutfitTypes(outfitTypes)
+            setOutfitTypes(outfitTypes)
         } catch (err) {
             console.error(err)
         }
     }
 
-    updateOutfitTypeById = (newOutfit) => {
-        this.setState(prevState => {
+    const updateOutfitTypeById = (newOutfit) => {
+        setState(prevState => {
             const newOutfits = [...prevState.outfitTypes]
             const oldIndex = newOutfits.findIndex(outfit => outfit.id === newOutfit.id)
             newOutfits.splice(oldIndex, 1, newOutfit)
-        }, () => this.saveUserSettings('outfit', newOutfit))
+        }, () => saveUserSettings('outfit', newOutfit))
     }
 
-    updateOutfitType = (newOutfit, outfitIndex) => {
-        this.setState(prevState => {
+    const updateOutfitType = (newOutfit, outfitIndex) => {
+        setState(prevState => {
             const newOutfits = [...prevState.outfitTypes]
             newOutfits[outfitIndex] = newOutfit
             return { outfitTypes: newOutfits }
-        }, () => this.saveUserSettings('outfit', newOutfit))
+        }, () => saveUserSettings('outfit', newOutfit))
     }
 
-    removeOutfitType = async (outfitId) => {
+    const removeOutfitType = async (outfitId) => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
 
         try {
             const response = await axios.delete(
-                `${baseUrl}/db/deleteOutfit/${this.state.userId}/${outfitId}`,
+                `${baseUrl}/db/deleteOutfit/${state.userId}/${outfitId}`,
                 {
                     method: 'DELETE',
                     headers: myHeaders,
                     mode: 'cors',
                     cache: 'default'
                 })
-            const newOutfits = this.state.outfitTypes.filter(outfit => outfit.id !== response.data.id)
-            this.setOutfitTypes(newOutfits)
+            const newOutfits = state.outfitTypes.filter(outfit => outfit.id !== response.data.id)
+            setOutfitTypes(newOutfits)
         } catch (err) {
             console.error(err)
         }
     }
 
-    setAdditionalItems = (additionalItems) => {
-        this.setState({ additionalItems })
+    const setAdditionalItems = (additionalItems) => {
+        setState({ additionalItems })
     }
 
-    selectAdditionalItem = (sectionId, itemId, isSelected) => {
-        this.setState((prevState) => {
+    const selectAdditionalItem = (sectionId, itemId, isSelected) => {
+        setState((prevState) => {
             const newState = cloneDeep(prevState)
             const section = newState.additionalItems.find(sec => sec.id === sectionId)
             if (section) {
@@ -202,8 +205,8 @@ export class AppProvider extends React.Component {
         })
     }
 
-    addAdditionalItem = (categoryId, itemName) => {
-        const additionalItems = [...this.state.additionalItems]
+    const addAdditionalItem = (categoryId, itemName) => {
+        const additionalItems = [...state.additionalItems]
         const index = additionalItems.findIndex(category => categoryId === category.id)
         if (index > -1) {
             const maxId = additionalItems[index].items.reduce((a, b) => {
@@ -211,20 +214,20 @@ export class AppProvider extends React.Component {
             }, -1)
             const newId = maxId + 1
             additionalItems[index].items.push({ id: newId, name: itemName })
-            this.setState({ additionalItems })
+            setState({ additionalItems })
         }
     }
 
-    addAdditionalItemCategory = async () => {
+    const addAdditionalItemCategory = async () => {
         let myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
         const newCategory = {
-            name: "temporary",
+            name: "double click to edit",
             items: []
         }
         try {
             const result = await axios.post(
-                `${baseUrl}/db/additionalItems/${this.state.userId}`,
+                `${baseUrl}/db/additionalItems/${state.userId}`,
                 newCategory,
                 {
                     method: 'POST',
@@ -233,26 +236,27 @@ export class AppProvider extends React.Component {
                     cache: 'default'
                 })
             newCategory.id = result.id
-            const tempItemCategories = [...this.state.additionalItems]
+            const tempItemCategories = [...state.additionalItems]
             tempItemCategories.push(newCategory)
-            this.setAdditionalItems(tempItemCategories)
+            setAdditionalItems(tempItemCategories)
         } catch (err) {
             console.error(err)
         }
     }
 
-    updateAdditionalItemCategory = async (itemList, id, name) => {
+    const updateAdditionalItemCategory = async (itemList, id, name) => {
         var myHeaders = new Headers();
-        let sectionToUpdate = this.state.additionalItems.findIndex(section => section.id === id)
+        let sectionToUpdate = state.additionalItems.findIndex(section => section.id === id)
         const itemSection = {
-            name: name || this.state.additionalItems[sectionToUpdate].name,
+            id,
+            name: name || state.additionalItems[sectionToUpdate].name,
             items: itemList
         }
         myHeaders.append('Content-Type', 'application/json');
 
         try {
             await axios.put(
-                `${baseUrl}/db/updateAdditionalItems/${this.state.userId}/${id}`,
+                `${baseUrl}/db/updateAdditionalItems/${state.userId}/${id}`,
                 itemSection,
                 {
                     method: 'PUT',
@@ -261,23 +265,23 @@ export class AppProvider extends React.Component {
                     cache: 'default'
                 }
             )
-            const tempItemCategories = [...this.state.additionalItems]
+            const tempItemCategories = [...state.additionalItems]
             tempItemCategories[sectionToUpdate] = itemSection
-            this.setAdditionalItems(tempItemCategories)
+            setAdditionalItems(tempItemCategories)
         } catch (err) {
             console.error(err)
         }
     }
 
-    deleteAdditionalItemCategory = async (index) => {
+    const deleteAdditionalItemCategory = async (index) => {
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
 
-        const sectionId = this.state.additionalItems[index].id
+        const sectionId = state.additionalItems[index].id
 
         try {
             const response = await axios.delete(
-                `${baseUrl}/db/deleteAdditionalItemSection/${this.state.userId}/${sectionId}`,
+                `${baseUrl}/db/deleteAdditionalItemSection/${state.userId}/${sectionId}`,
                 {
                     method: 'DELETE',
                     headers: myHeaders,
@@ -285,8 +289,8 @@ export class AppProvider extends React.Component {
                     cache: 'default'
                 }
             )
-            const newAdditionalItems = this.state.additionalItems.filter(section => section.id !== response.data.id)
-            this.setAdditionalItems(newAdditionalItems)
+            const newAdditionalItems = state.additionalItems.filter(section => section.id !== response.data.id)
+            setAdditionalItems(newAdditionalItems)
         } catch (err) {
             console.error(err)
         }
@@ -294,8 +298,8 @@ export class AppProvider extends React.Component {
     }
 
     // select Outfits
-    addOutfit = (dayIndex) => {
-        this.setState(prevState => {
+    const addOutfit = (dayIndex) => {
+        setState(prevState => {
             const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
             const newOutfit = {
                 id: newId,
@@ -306,35 +310,35 @@ export class AppProvider extends React.Component {
             let updatedDays = [...prevState.days]
             updatedDays[dayIndex].outfits.push(newOutfit)
             return { days: updatedDays }
-        }, () => this.saveTrip())
+        }, () => saveTrip())
     }
 
-    setOutfit = (dayIndex, outfitIndex, outfit) => {
-        this.setState(prevState => {
+    const setOutfit = (dayIndex, outfitIndex, outfit) => {
+        setState(prevState => {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits[outfitIndex] = outfit
             return { days: tempDays }
-        }, () => this.saveTrip())
+        }, () => saveTrip())
     }
 
-    removeOutfit = (dayIndex, outfitIndex) => {
-        this.setState(prevState => {
+    const removeOutfit = (dayIndex, outfitIndex) => {
+        setState(prevState => {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits.splice(outfitIndex, 1)
             return { days: tempDays }
-        }, () => this.saveTrip())
+        }, () => saveTrip())
     }
 
-    setExpanded = (dayIndex, outfitIndex) => {
-        this.setState(prevState => {
+    const setExpanded = (dayIndex, outfitIndex) => {
+        setState(prevState => {
             const tempDays = [...prevState.days]
             tempDays[dayIndex].outfits[outfitIndex].expanded = !prevState.days[dayIndex].outfits[outfitIndex].expanded
             return { days: tempDays }
         })
     }
 
-    expandAll = () => {
-        this.setState(prevState => {
+    const expandAll = () => {
+        setState(prevState => {
             const tempDays = [...prevState.days]
             tempDays.forEach(day => {
                 day.outfits.forEach(outfit => {
@@ -345,8 +349,8 @@ export class AppProvider extends React.Component {
         })
     }
 
-    toggleOutfitItem = (dayIndex, outfitIndex, itemName, isChecked) => {
-        this.setState(prevState => {
+    const toggleOutfitItem = (dayIndex, outfitIndex, itemName, isChecked) => {
+        setState(prevState => {
             let tempOutfit = cloneDeep(prevState.days[dayIndex].outfits[outfitIndex])
             tempOutfit.items.forEach((item) => {
                 if (item.type === itemName) { item.isNotIncluded = !isChecked }
@@ -358,31 +362,31 @@ export class AppProvider extends React.Component {
     }
 
     // Assign Items
-    addNamedItem = (parentType, value, newId) => {
-        this.setState(prevState => {
+    const addNamedItem = (parentType, value, newId) => {
+        setState(prevState => {
             let namedItems = prevState.tote.namedItems || []
             let newItem = { parentType: parentType, name: value, id: newId }
             namedItems.push(newItem)
             return { tote: { ...prevState.tote, namedItems } }
-        }, () => this.saveTrip())
+        }, () => saveTrip())
     }
 
-    updateOutfitItem = (dayIndex, outfitIndex, parentType, itemId) => {
-        this.setState(prevState => {
+    const updateOutfitItem = (dayIndex, outfitIndex, parentType, itemId) => {
+        setState(prevState => {
             const days = [...prevState.days]
             days[dayIndex].outfits[outfitIndex].items.find(item => item.parentType === parentType).id = itemId
             return { days }
-        }, () => this.saveTrip())
+        }, () => saveTrip())
     }
 
-    saveTrip = async (currentState = this.state) => {
+    const saveTrip = async (currentState = state) => {
         var myHeaders = new Headers();
 
         myHeaders.append('Content-Type', 'application/json');
 
         try {
             const response = await axios.post(
-                `${baseUrl}/db/tote/updateTrip/${this.state.tripId}`,
+                `${baseUrl}/db/tote/updateTrip/${state.tripId}`,
                 currentState,
                 {
                     method: 'POST',
@@ -399,12 +403,12 @@ export class AppProvider extends React.Component {
         }
     }
 
-    saveUserSettings = async (setting, update) => {
+    const saveUserSettings = async (setting, update) => {
         let url = ''
         switch (setting) {
             case 'outfit':
             default:
-                url = `${baseUrl}/db/userItems/${this.state.userId}/${update.id}`
+                url = `${baseUrl}/db/userItems/${state.userId}/${update.id}`
         }
         var myHeaders = new Headers();
         myHeaders.append('Content-Type', 'application/json');
@@ -428,8 +432,8 @@ export class AppProvider extends React.Component {
         }
     }
 
-    handleReload = async () => {
-        if (!this.state.userId && !this.state.tripId) {
+    const handleReload = async () => {
+        if (!state.userId && !state.tripId) {
             var myHeaders = new Headers();
             myHeaders.append('Content-Type', 'application/json');
 
@@ -449,11 +453,12 @@ export class AppProvider extends React.Component {
                     if (response.status >= 400) {
                         throw new Error("Bad response from server")
                     }
-                    this.setTrip(response.data[0])
-                    this.setState({ userId })
+                    setTrip(response.data[0])
+                    setState({ userId })
                 }
                 else {
                     console.error('no userId or tripId')
+                    history.push('/login')
                 }
             } catch (err) {
                 console.error(err)
@@ -461,63 +466,59 @@ export class AppProvider extends React.Component {
         }
     }
 
-    render() {
-        const { children } = this.props;
-
         return (
             <AppContext.Provider
                 value={{
-                    userId: this.state.userId,
-                    clearTote: this.clearTote,
-                    setUser: this.setUser,
-                    showToast: this.state.showToast,
-                    toastProps: this.state.toastProps,
-                    setShowToast: this.setShowToast,
-                    startDate: this.state.startDate,
-                    setStartDate: this.setStartDate,
-                    endDate: this.state.endDate,
-                    setEndDate: this.setEndDate,
-                    city: this.state.city,
-                    setCity: this.setCity,
-                    days: this.state.days,
-                    setDays: this.setDays,
-                    numDays: this.state.numDays,
-                    setNumDays: this.setNumDays,
-                    setSchedule: this.setSchedule,
-                    outfitTypes: this.state.outfitTypes,
-                    setOutfitTypes: this.setOutfitTypes,
-                    updateOutfitType: this.updateOutfitType,
-                    updateOutfitTypeById: this.updateOutfitTypeById,
-                    removeOutfitType: this.removeOutfitType,
-                    addOutfitType: this.addOutfitType,
-                    additionalItems: this.state.additionalItems,
-                    setAdditionalItems: this.setAdditionalItems,
-                    selectAdditionalItem: this.selectAdditionalItem,
-                    addAdditionalItem: this.addAdditionalItem,
-                    addAdditionalItemCategory: this.addAdditionalItemCategory,
-                    updateAdditionalItemCategory: this.updateAdditionalItemCategory,
-                    deleteAdditionalItemCategory: this.deleteAdditionalItemCategory,
-                    tote: this.state.tote,
-                    setTote: this.setTote,
-                    tripId: this.state.tripId,
-                    setTripId: this.setTripId,
-                    setTrip: this.setTrip,
-                    addOutfit: this.addOutfit,
-                    setOutfit: this.setOutfit,
-                    removeOutfit: this.removeOutfit,
-                    setExpanded: this.setExpanded,
-                    expandAll: this.expandAll,
-                    updateOutfitItem: this.updateOutfitItem,
-                    addNamedItem: this.addNamedItem,
-                    rawState: this.state,
-                    handleReload: this.handleReload,
-                    tripList: this.state.tripList,
-                    getTripList: this.getTripList,
-                    toggleOutfitItem: this.toggleOutfitItem,
+                    userId: state.userId,
+                    clearTote: clearTote,
+                    setUser: setUser,
+                    showToast: state.showToast,
+                    toastProps: state.toastProps,
+                    setShowToast: setShowToast,
+                    startDate: state.startDate,
+                    setStartDate: setStartDate,
+                    endDate: state.endDate,
+                    setEndDate: setEndDate,
+                    city: state.city,
+                    setCity: setCity,
+                    days: state.days,
+                    setDays: setDays,
+                    numDays: state.numDays,
+                    setNumDays: setNumDays,
+                    setSchedule: setSchedule,
+                    outfitTypes: state.outfitTypes,
+                    setOutfitTypes: setOutfitTypes,
+                    updateOutfitType: updateOutfitType,
+                    updateOutfitTypeById: updateOutfitTypeById,
+                    removeOutfitType: removeOutfitType,
+                    addOutfitType: addOutfitType,
+                    additionalItems: state.additionalItems,
+                    setAdditionalItems: setAdditionalItems,
+                    selectAdditionalItem: selectAdditionalItem,
+                    addAdditionalItem: addAdditionalItem,
+                    addAdditionalItemCategory: addAdditionalItemCategory,
+                    updateAdditionalItemCategory: updateAdditionalItemCategory,
+                    deleteAdditionalItemCategory: deleteAdditionalItemCategory,
+                    tote: state.tote,
+                    setTote: setTote,
+                    tripId: state.tripId,
+                    setTripId: setTripId,
+                    setTrip: setTrip,
+                    addOutfit: addOutfit,
+                    setOutfit: setOutfit,
+                    removeOutfit: removeOutfit,
+                    setExpanded: setExpanded,
+                    expandAll: expandAll,
+                    updateOutfitItem: updateOutfitItem,
+                    addNamedItem: addNamedItem,
+                    rawState: state,
+                    handleReload: handleReload,
+                    tripList: state.tripList,
+                    getTripList: getTripList,
+                    toggleOutfitItem: toggleOutfitItem,
                 }}
             >
-                {children}
+                {props.children}
             </AppContext.Provider>
         );
-    }
 }
