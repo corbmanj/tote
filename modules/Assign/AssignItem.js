@@ -1,4 +1,5 @@
 import React, { useState, useRef, useContext } from 'react'
+import PropTypes from 'prop-types'
 import { AppContext } from '../AppState'
 
 export default function AssignItem (props) {
@@ -58,7 +59,7 @@ export default function AssignItem (props) {
     if (value.trim() === '') {
       setError('Item name cannot be blank')
     } else {
-      const newId = context.tote.namedItems && context.tote.namedItems.length ? Math.max(...context.tote.namedItems.map(item => item.id)) + 1 : 1
+      const newId = context.tote.named && context.tote.named.length ? Math.max(...context.tote.named.map(item => item.id)) + 1 : 1
       context.addNamedItem(props.item.parentType, value, newId)
       context.updateOutfitItem(props.dayIndex, props.outfitIndex, props.item.parentType, newId)
       setEditing(false)
@@ -80,4 +81,13 @@ export default function AssignItem (props) {
       {editing ? renderInput() : renderSelect()}
     </li>
   )  
+}
+
+AssignItem.propTypes = {
+  item: PropTypes.shape({
+    parentType: PropTypes.string,
+    type: PropTypes.string,
+  }),
+  dayIndex: PropTypes.number,
+  outfitIndex: PropTypes.number,
 }

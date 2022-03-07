@@ -31,7 +31,7 @@ DayHeader.propTypes = {
   day: PropTypes.shape({
     outfit: PropTypes.shape({
       type: PropTypes.string,
-      realName: PropTypes.string,
+      name: PropTypes.string,
       expanded: PropTypes.bool,
       items: PropTypes.arrayOf(PropTypes.shape({
         dropdown: PropTypes.bool,
@@ -42,8 +42,8 @@ DayHeader.propTypes = {
     date: PropTypes.date,
     icon: PropTypes.string,
     summary: PropTypes.string,
-    high: PropTypes.string,
-    low: PropTypes.string,
+    high: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    low: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }).isRequired,
   children: PropTypes.node.isRequired
 }

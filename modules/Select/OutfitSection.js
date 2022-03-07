@@ -15,7 +15,7 @@ export default function OutfitSection(props) {
   const [disabled, setDisabled] = useState(!!(outfit && outfit.type))
   const outfitType = outfit && outfit.type
   const [renaming, setRenaming] = useState(false)
-  const outfitName = useRef(outfit.realName)
+  const outfitName = useRef(outfit.name)
   const context = useContext(AppContext)
 
   function selectText(e) {
@@ -58,7 +58,7 @@ export default function OutfitSection(props) {
         autoFocus
         onFocus={selectText}
         type="text"
-        defaultValue={outfit.realName}
+        defaultValue={outfit.name}
         onBlur={stopRenaming}
         onKeyPress={handleKeyPress}
       />
@@ -66,7 +66,7 @@ export default function OutfitSection(props) {
   }
 
   function renderName() {
-    return outfit.realName
+    return outfit.name
   }
 
   function changeOutfitType(ev) {
@@ -147,7 +147,7 @@ export default function OutfitSection(props) {
 OutfitSection.propTypes = {
   outfit: PropTypes.shape({
     type: PropTypes.string,
-    realName: PropTypes.string,
+    name: PropTypes.string,
     expanded: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape({
       dropdown: PropTypes.bool,

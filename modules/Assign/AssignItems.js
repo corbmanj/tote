@@ -86,7 +86,7 @@ export default function AssignItems() {
   }
 
   function updateStage() {
-    if (!(context.tote.namedItems && context.tote.namedItems.length)) {
+    if (!(context.tote.named && context.tote.named.length)) {
       setError(true)
       setErrorMsg('Please assign at least one item')
       return

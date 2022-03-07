@@ -26,8 +26,8 @@ export default function GetStarted () {
 
   async function initializeTrip () {
     try {
-      const response = await axios.post(`${baseUrl}/db/tote/newTrip/${context.userId}`)
       context.clearTote()
+      const response = await axios.post(`${baseUrl}/db/tote/newTrip/${context.userId}`)
       context.setTripId(response.data.id)
       history.push('/schedule')
     } catch (err) {

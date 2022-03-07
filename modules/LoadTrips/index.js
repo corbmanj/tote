@@ -38,20 +38,20 @@ export default function LoadTrips () {
   }
   function renderTripList () {
     const tripList = context.tripList.sort((a,b) => {
-      if (a.startDate > b.startDate) {
+      if (a.start > b.start) {
         return -1
-      } else if (a.startDate < b.startDate) {
+      } else if (a.start < b.start) {
         return 1
       } else { return 0 }
     }).map((trip, index) => {
       if (trip) {
         return (
           <li key={index} onClick={() => loadTrip(trip)} className="card">
-            <p>City: {trip.city}
+            <p>City: {trip.location}
               <DeleteIcon onClick={(ev) => handleDeleteClick(ev, trip)} />
             </p>
-            <p>Start: {moment(trip.startDate).format('dddd, MMMM Do')}</p>
-            <p>End: {moment(trip.endDate).format('dddd, MMMM Do')}</p>
+            <p>Start: {moment(trip.start).format('dddd, MMMM Do')}</p>
+            <p>End: {moment(trip.end).format('dddd, MMMM Do')}</p>
           </li>
         )
       }

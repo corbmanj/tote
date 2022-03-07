@@ -30,7 +30,7 @@ AssignDay.propTypes = {
   day: PropTypes.shape({
     outfits: PropTypes.arrayOf(PropTypes.shape({
       type: PropTypes.string,
-      realName: PropTypes.string,
+      name: PropTypes.string,
       id: PropTypes.number,
       expanded: PropTypes.bool,
       items: PropTypes.arrayOf(PropTypes.shape({

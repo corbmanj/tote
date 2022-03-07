@@ -16,7 +16,7 @@ export default function OutfitList (props) {
   })
   return (
     <div>
-      <h3>{props.outfit.realName} ({props.outfit.type})</h3>
+      <h3>{props.outfit.name} ({props.outfit.type})</h3>
       {items}
     </div>
   )

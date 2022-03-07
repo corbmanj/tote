@@ -88,9 +88,9 @@ export default function SelectOutfits() {
   }
 
   function updateOutfitName(dayKey, outfitKey, name) {
-    let days = [...days]
-    days[dayKey].outfits[outfitKey].realName = name
-    context.setDays(days)
+    let newDays = [...days]
+    newDays[dayKey].outfits[outfitKey].name = name
+    context.setDays(newDays)
   }
 
   // function addItem (index) {
@@ -180,7 +180,7 @@ export default function SelectOutfits() {
   if (error.badOutfits) {
     error.badOutfits.forEach((day, index) => {
       day.map(outfit => {
-        badOutfitsArray.push(<li key={`${index}-${outfit.id}`}>{moment(days[index].date).format('ddd, MMM Do')} - {outfit.realName}</li>)
+        badOutfitsArray.push(<li key={`${index}-${outfit.id}`}>{moment(days[index].date).format('ddd, MMM Do')} - {outfit.name}</li>)
       })
     })
   }

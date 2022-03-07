@@ -20,7 +20,7 @@ export default function DaySection(props) {
   }
   function updateName(key, name) {
     let tempState = day.outfits
-    tempState[key].realName = name
+    tempState[key].name = name
     updateOutfitName(index, key, name)
   }
   function addOutfit() {
@@ -52,7 +52,7 @@ DaySection.propTypes = {
   day: PropTypes.shape({
     outfits: PropTypes.arrayOf(PropTypes.shape({
       type: PropTypes.string,
-      realName: PropTypes.string,
+      name: PropTypes.string,
       id: PropTypes.number,
       expanded: PropTypes.bool,
       items: PropTypes.arrayOf(PropTypes.shape({

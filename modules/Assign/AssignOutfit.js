@@ -25,7 +25,7 @@ export default function AssignOutfit(props) {
   return (
       <Accordion expanded={outfit.expanded} onChange={updateActiveOutfit}>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <div>{outfit.realName}</div>
+          <div>{outfit.name}</div>
           <div className="outfit-type">{": " + outfit.type}</div>
         </AccordionSummary>
         <AccordionDetails>
@@ -47,7 +47,7 @@ AssignOutfit.propTypes = {
   updateNamedItemInAllOutfits: PropTypes.func,
   outfit: PropTypes.shape({
     type: PropTypes.string,
-    realName: PropTypes.string,
+    name: PropTypes.string,
     id: PropTypes.number,
     expanded: PropTypes.bool,
     items: PropTypes.arrayOf(PropTypes.shape({

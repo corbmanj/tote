@@ -95,19 +95,37 @@ export class AppProvider extends React.Component {
         this.setState({ tote }, () => conditionallySave())
     }
 
-    setTrip = async (trip) => {
-        window.localStorage.setItem('tripId', trip.tripId)
+    getTrip = async (tripId) => {
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type', 'application/json');
+        const url = `${baseUrl}/db/tote/getTrip/${tripId}`
+        const response = await axios.get(url,
+            {
+                method: 'GET',
+                headers: myHeaders,
+                mode: 'cors',
+                cache: 'default'
+            }
+        )
+        if (response.status >= 400) {
+            throw new Error("Bad response from server")
+        }
+        const { trip, tote } = response.data
+        const { days, startDate, endDate, location } = trip
+        this.setTripId(trip.id)
         this.setState({
-            tripId: trip.tripId,
-            additionalItems: trip.additionalItems,
-            city: trip.city,
-            days: trip.days,
-            startDate: trip.startDate,
-            endDate: trip.endDate,
-            outfitTypes: trip.outfitTypes,
-            tote: trip.tote,
-            stage: 'schedule'
+            days,
+            startDate,
+            endDate,
+            city: location,
+            tote
         })
+    }
+
+    setTrip = async (trip, stage = 'schedule') => {
+        window.localStorage.setItem('tripId', trip.id)
+        await this.getTrip(trip.id)
+        this.setState({ stage })
     }
 
     setTripId = (tripId) => {
@@ -298,8 +316,7 @@ export class AppProvider extends React.Component {
         this.setState(prevState => {
             const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
             const newOutfit = {
-                id: newId,
-                realName: 'Outfit ' + newId,
+                name: 'Outfit ' + newId,
                 expanded: true,
                 items: []
             }
@@ -360,10 +377,10 @@ export class AppProvider extends React.Component {
     // Assign Items
     addNamedItem = (parentType, value, newId) => {
         this.setState(prevState => {
-            let namedItems = prevState.tote.namedItems || []
+            let named = prevState.tote.named || []
             let newItem = { parentType: parentType, name: value, id: newId }
-            namedItems.push(newItem)
-            return { tote: { ...prevState.tote, namedItems } }
+            named.push(newItem)
+            return { tote: { ...prevState.tote, named } }
         }, () => this.saveTrip())
     }
 
@@ -379,11 +396,12 @@ export class AppProvider extends React.Component {
         var myHeaders = new Headers();
 
         myHeaders.append('Content-Type', 'application/json');
+        const { startDate, endDate, city, days, tote } = currentState
 
         try {
             const response = await axios.post(
                 `${baseUrl}/db/tote/updateTrip/${this.state.tripId}`,
-                currentState,
+                { startDate, endDate, city, days, tote },
                 {
                     method: 'POST',
                     headers: myHeaders,
@@ -393,6 +411,17 @@ export class AppProvider extends React.Component {
             )
             if (response.status >= 400) {
                 throw new Error("Bad response from server")
+            } else {
+                const { trip, tote } = response.data
+                const { days, startDate, endDate, location } = trip
+                this.setTripId(trip.id)
+                this.setState({
+                    days,
+                    startDate,
+                    endDate,
+                    city: location,
+                    tote
+                })
             }
         } catch (err) {
             console.error(err)
@@ -437,20 +466,7 @@ export class AppProvider extends React.Component {
                 const userId = window.localStorage.getItem('userId')
                 const tripId = window.localStorage.getItem('tripId')
                 if (userId && tripId) {
-                    const url = `${baseUrl}/db/tote/getTrip/${userId}/${tripId}`
-                    const response = await axios.get(url,
-                        {
-                            method: 'GET',
-                            headers: myHeaders,
-                            mode: 'cors',
-                            cache: 'default'
-                        }
-                    )
-                    if (response.status >= 400) {
-                        throw new Error("Bad response from server")
-                    }
-                    this.setTrip(response.data[0])
-                    this.setState({ userId })
+                    this.getTrip(tripId)
                 }
                 else {
                     console.error('no userId or tripId')
