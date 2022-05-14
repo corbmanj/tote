@@ -33,7 +33,7 @@ export default function OutfitSection(props) {
   }
 
   function removeOutfit() {
-    context.removeOutfit(dayIndex, index)
+    context.removeOutfit(outfit.id)
   }
 
   function renameOutfit() {
@@ -146,6 +146,7 @@ export default function OutfitSection(props) {
 
 OutfitSection.propTypes = {
   outfit: PropTypes.shape({
+    id: PropTypes.number,
     type: PropTypes.string,
     name: PropTypes.string,
     expanded: PropTypes.bool,

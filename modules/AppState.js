@@ -314,7 +314,7 @@ export class AppProvider extends React.Component {
     // select Outfits
     addOutfit = (dayIndex) => {
         this.setState(prevState => {
-            const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => item.id)) + 1 : 1
+            const newId = prevState.days[dayIndex].outfits.length ? Math.max(...prevState.days[dayIndex].outfits.map(item => Number(item.id))) + 1 : 1
             const newOutfit = {
                 name: 'Outfit ' + newId,
                 expanded: true,
@@ -334,12 +334,30 @@ export class AppProvider extends React.Component {
         }, () => this.saveTrip())
     }
 
-    removeOutfit = (dayIndex, outfitIndex) => {
-        this.setState(prevState => {
-            const tempDays = [...prevState.days]
-            tempDays[dayIndex].outfits.splice(outfitIndex, 1)
-            return { days: tempDays }
-        }, () => this.saveTrip())
+    removeOutfit = async (outfitId) => {
+        var myHeaders = new Headers();
+
+        myHeaders.append('Content-Type', 'application/json');
+
+        try {
+            const response = await axios.delete(`${baseUrl}/db/tote/deleteTripOutfit/${this.state.tripId}/${outfitId}`)
+            if (response.status >= 400) {
+                throw new Error("Bad response from server")
+            } else {
+                const { trip, tote } = response.data
+                const { days, startDate, endDate, location } = trip
+                this.setTripId(trip.id)
+                this.setState({
+                    days,
+                    startDate,
+                    endDate,
+                    city: location,
+                    tote
+                })
+            }
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     setExpanded = (dayIndex, outfitIndex) => {

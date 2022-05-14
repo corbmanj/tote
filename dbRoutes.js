@@ -195,6 +195,14 @@ router.delete('/tote/deleteTrip/:id', async function (req, response) {
   response.json(result.rows[0])
 });
 
+router.delete('tote/deleteTripOutfit/:tripId/:outfitId', async function (req, response) {
+  await client.query(`
+    DELETE FROM outfits
+    WHERE id=$1;`, [req.params.outfitId]
+  )
+  response.json(await getTrip(client, req.params.tripId));
+})
+
 // delete an additional item section
 router.delete('/deleteAdditionalItemSection/:user_id/:id', async function (req, response) {
   const result = await client.query(`

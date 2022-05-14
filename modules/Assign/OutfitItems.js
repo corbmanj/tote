@@ -21,7 +21,7 @@ export default function OutfitItems ({ outfitItems, dayIndex, outfitIndex }) {
     const namedItems = context.tote.named || []
   
     const leftThings = outfitItems
-    .filter(item => item.dropdown === true && item.isNotIncluded !== true)
+      .filter(item => item.dropdown === true && item.isNotIncluded !== true)
     const [activeItem, setActiveItem] = useState(leftThings[0])
   
     const rightThings = namedItems.filter((filteredItem) => {
