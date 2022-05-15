@@ -68,7 +68,7 @@ export default function SelectOutfits() {
     }
   }
 
-  function updateTote(_dayKey, _outfitKey, outfit, inc) {
+  function updateTote(_dayKey, _outfitKey, outfit, inc, shouldSave = true) {
     const tote = context.tote
     tote.unnamed = tote.unnamed || []
     outfit.items.map((item) => {
@@ -84,7 +84,7 @@ export default function SelectOutfits() {
       }
     })
     // TODO
-    context.setTote(tote)
+    context.setTote(tote, shouldSave)
   }
 
   function updateOutfitName(dayKey, outfitKey, name) {
@@ -134,18 +134,21 @@ export default function SelectOutfits() {
     setModalProps(false)
   }
 
+  // need to update this function to update all the days and then updateTote only once
   function copyOutfits(copyArray, outfit) {
     // copy outfit to each day that was selected
     let days = [...context.days]
     copyArray.forEach((day, index) => {
       if (day) {
-        const newOutfit = cloneDeep(outfit)
-        newOutfit.id = days[index].outfits.length + 1
-        days[index].outfits.push(newOutfit)
-        updateTote(index, null, newOutfit, 1)
+        const newOutfit = cloneDeep(outfit);
+        delete newOutfit.id;
+        newOutfit.name = newOutfit.name + ' copy';
+        days[index].outfits.push(newOutfit);
+        updateTote(index, null, newOutfit, 1, false);
       }
     })
     context.setDays(days);
+    context.saveTrip();
     setModalProps(false)
     context.setShowToast({ message: 'Outfit copied successfully', type: 'success' })
   }

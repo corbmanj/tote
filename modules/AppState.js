@@ -90,8 +90,8 @@ export class AppProvider extends React.Component {
         }, () => this.saveTrip())
     }
 
-    setTote = (tote) => {
-        const conditionallySave = this.state.tripId ? this.saveTrip : () => { }
+    setTote = (tote, shouldSave = true) => {
+        const conditionallySave = (this.state.tripId && shouldSave) ? this.saveTrip : () => { }
         this.setState({ tote }, () => conditionallySave())
     }
 
@@ -534,6 +534,7 @@ export class AppProvider extends React.Component {
                     tote: this.state.tote,
                     setTote: this.setTote,
                     tripId: this.state.tripId,
+                    saveTrip: this.saveTrip,
                     setTripId: this.setTripId,
                     setTrip: this.setTrip,
                     addOutfit: this.addOutfit,

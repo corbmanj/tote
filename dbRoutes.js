@@ -195,7 +195,7 @@ router.delete('/tote/deleteTrip/:id', async function (req, response) {
   response.json(result.rows[0])
 });
 
-router.delete('tote/deleteTripOutfit/:tripId/:outfitId', async function (req, response) {
+router.delete('/tote/deleteTripOutfit/:tripId/:outfitId', async function (req, response) {
   await client.query(`
     DELETE FROM outfits
     WHERE id=$1;`, [req.params.outfitId]
