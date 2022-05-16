@@ -6,7 +6,7 @@ export default function UnnamedItems (props) {
   const items = context.tote.unnamed ? context.tote.unnamed.map((item, index) => {
     return (
       <div key={index}>
-        <label>
+        <label className="container">
           <input type="checkbox" defaultChecked={item.packed} onChange={() => props.handleCheckboxChange('unnamed', item.id)}/>
           {item.id} - {item.count}
         </label>

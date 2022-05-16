@@ -8,7 +8,7 @@ export default function AdditionalItemSectionPacking(props) {
     .map((item, index) => {
       return (
         <div key={index}>
-          <label>
+          <label className="container">
             <input defaultChecked={item.packed} type="checkbox" onChange={() => handleCheckboxChange('additional', item.id, props.type)} />
             {item.name}
           </label>

@@ -4,6 +4,7 @@ import UnnamedItems from './UnnamedItems'
 import NamedItems from './NamedItems'
 import AdditionalItemSectionPacking from './AdditionalItemSectionPacking'
 import { AppContext } from '../AppState'
+import './packing.scss'
 
 export default function PackingList () {
   const context = useContext(AppContext)
