@@ -61,7 +61,8 @@ async function getTrip(client, tripId) {
             type: outfit.type,
             expanded: outfit.expanded,
             name: outfit.name,
-            items: outfit.items
+            items: outfit.items,
+            order: outfit.ordering
           }))
       }))
       .sort((dayA, dayB) => dayA.date - dayB.date)
@@ -78,10 +79,10 @@ async function saveDays(client, days, tripId) {
   VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
   returning id;`
   const updateOutfitQuery = `UPDATE outfits
-  SET day_id=$1, type=$2, expanded=$3, name=$4, items=$5
-  WHERE id=$6;`
-  const createOutfitQuery = `INSERT INTO outfits (day_id, type, expanded, name, items)
-    VALUES ($1, $2, $3, $4, $5);`
+  SET day_id=$1, type=$2, expanded=$3, name=$4, items=$5, ordering=$6
+  WHERE id=$7;`
+  const createOutfitQuery = `INSERT INTO outfits (day_id, type, expanded, name, items, ordering)
+    VALUES ($1, $2, $3, $4, $5, $6);`
   for (const day of days) {
     // create or update the day
     const { date, low, high, icon, precip, sunset, sunrise, summary, id } = day
@@ -96,7 +97,7 @@ async function saveDays(client, days, tripId) {
     const dayId = rows[0].id
     // create or update the outfits
     const outfitUpdates = day.outfits.map(outfit => {
-      const outfitParams = [dayId, outfit.type, outfit.expanded, outfit.name, JSON.stringify(outfit.items)]
+      const outfitParams = [dayId, outfit.type, outfit.expanded, outfit.name, JSON.stringify(outfit.items), +outfit.order]
       if (outfit.id) {
         outfitParams.push(outfit.id)
       }

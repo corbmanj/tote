@@ -29,11 +29,13 @@ export default function DaySection(props) {
 
   return (
     <DayHeader day={day}>
-      {day.outfits.map((item, outfitIndex) => {
-        const outfit = context.days[index].outfits[outfitIndex]
+      {day.outfits
+        .sort((a, b) => a.order - b.order)
+        .map((outfit, outfitIndex) => {
+        // const outfit = context.days[index].outfits[outfitIndex]
         return (
         <OutfitSection
-          key={outfitIndex}
+          key={outfit.order}
           index={outfitIndex}
           dayIndex={index}
           outfit={outfit}
