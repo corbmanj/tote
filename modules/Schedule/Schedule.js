@@ -54,7 +54,8 @@ export default function Schedule () {
         newDay.icon = daily.data[0].icon
         newDay.sunrise = daily.data[0].sunriseTime
         newDay.sunset = daily.data[0].sunsetTime
-        newDay.outfits = []
+        newDay.outfits = Array.isArray(context.days) ? context.days[i].outfits : []
+        newDay.id = Array.isArray(context.days) && context.days[i].id
         stateObj.days.push(newDay)
         j++
         if (j === stateObj.numDays) {
@@ -79,15 +80,6 @@ export default function Schedule () {
     setDates({startDate: moment(startDate), endDate: moment(endDate)})
   }
 
-  // function handleSelectDates (...args) {
-  // }
-
-  // function handleKeyPress (ev) {
-  //   if (ev.charCode === 13 && dates.endDate.isAfter(dates.startDate) && context.city) {
-  //     updateSchedule()
-  //   }
-
-  // }
   function autofocus (e) {
     e.target.select()
   }
