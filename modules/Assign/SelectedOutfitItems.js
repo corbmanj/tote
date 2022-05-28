@@ -14,9 +14,9 @@ function AssignedItem({ allowClick, thing, dayIndex, outfitIndex, selected }) {
   return <Chip size="small" label={thing.name} onClick={allowClick ? handleClick : noop} className="selected-item-chip" color={selected ? 'primary' : 'default'} />
 }
 
-export default function OutfitItems({ allowClick, outfitItems, dayIndex, outfitIndex }) {
+export default function SelectedOutfitItems({ allowClick, outfitItems, dayIndex, outfitIndex }) {
   const context = useContext(AppContext)
-  const namedItems = context.tote.namedItems || []
+  const namedItems = context.tote.named || []
   const selectedItems = outfitItems
     .map(outfitItem => namedItems.find(item => item.id === outfitItem.id))
     .filter(Boolean)
@@ -53,7 +53,7 @@ AssignedItem.propTypes = {
   selected: PropTypes.bool,
 }
 
-OutfitItems.propTypes = {
+SelectedOutfitItems.propTypes = {
   allowClick: PropTypes.bool,
   outfitItems: PropTypes.arrayOf(PropTypes.shape({
     dropdown: PropTypes.bool,
