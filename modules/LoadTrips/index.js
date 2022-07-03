@@ -25,11 +25,11 @@ export default function LoadTrips () {
     ev.stopPropagation()
     setState({ ...state, showModal: true, modalTrip: trip })
   }
-  async function deleteTrip (id) {
+  async function deleteTrip () {
     const newList = context.tripList
-    const deleteIndex = newList.findIndex(trip => {return trip.tripId === id})
+    const deleteIndex = newList.findIndex(trip => trip.id === state.modalTrip.id)
     try { 
-      await axios.delete(`${baseUrl}/db/tote/deleteTrip/${id}`)
+      await axios.delete(`${baseUrl}/db/tote/deleteTrip/${state.modalTrip.id}`)
       newList.splice(deleteIndex, 1)
       setState({ ...state, showModal: false, tripList: newList })
     } catch (err)  {

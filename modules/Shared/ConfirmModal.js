@@ -3,7 +3,7 @@ import moment from 'moment'
 
 export default function ConfirmModal (props) {
   function handleConfirmClick () {
-    props.confirmAction(props.trip.tripId)
+    props.confirmAction(props.trip.id)
   }
 
   return (
@@ -18,9 +18,9 @@ export default function ConfirmModal (props) {
           <span>Are you sure you want to delete this trip?</span>
         </div>
         <div className="modal-body modal-body-with-header">
-          <p>City: {props.trip.city}</p>
-          <p>Start: {moment(props.trip.startDate).format('dddd, MMMM Do')}</p>
-          <p>End: {moment(props.trip.endDate).format('dddd, MMMM Do')}</p>
+          <p>City: {props.trip.location}</p>
+          <p>Start: {moment(props.trip.start).format('dddd, MMMM Do')}</p>
+          <p>End: {moment(props.trip.end).format('dddd, MMMM Do')}</p>
         </div>
         <div className="modal-actions">
           <button
