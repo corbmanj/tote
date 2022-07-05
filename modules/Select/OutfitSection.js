@@ -122,9 +122,9 @@ export default function OutfitSection(props) {
   }
 
   return (
-    <Accordion expanded={outfit.expanded} onChange={toggleOutfitExpanded}>
+    <Accordion expanded={outfit.expanded}>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<ExpandMoreIcon onClick={toggleOutfitExpanded} />}
         aria-controls={`${index}-content`}
         id={`${index}-header`}
         className="accordion-summary"
